@@ -1,0 +1,151 @@
+/* ==========================================================================
+   Lumina Odontologia — Design Tokens
+   Fonte única de verdade do sistema. Nenhum valor bruto (hex, px, ms) deve
+   aparecer em outro arquivo CSS: todo componente consome os tokens daqui.
+
+   Organizado em duas camadas:
+     1. PRIMITIVAS — os valores brutos da marca. Nomes conforme Seção 4 do
+        PROJECT_BIBLE.md. Mudar aqui muda a marca inteira.
+     2. SEMÂNTICAS  — papéis de uso ("cor de borda", "fundo elevado"), que
+        apontam para as primitivas. Componentes usam SEMPRE esta camada.
+
+   A separação existe para que trocar uma cor da marca seja uma edição de uma
+   linha, e para que a intenção de cada cor fique legível no componente
+   (--color-border-subtle diz o que faz; #E5E3DD não diz nada).
+   ========================================================================== */
+
+:root {
+  /* ======================================================================
+     1. PRIMITIVAS — COR
+     Valores exatos da Seção 4.1 do Project Bible. Não alterar sem atualizar
+     o Bible primeiro.
+     ====================================================================== */
+  --color-primary: #F7F6F3;   /* fundo principal — quase branco, quente */
+  --color-text:    #202020;   /* texto principal        — 15.08:1 sobre primary */
+  --color-gray:    #666666;   /* texto secundário       —  5.31:1 sobre primary */
+  --color-accent:  #B58C5A;   /* dourado da marca       —  2.83:1 — DECORATIVO */
+  --color-success: #688B6A;   /* verde de confirmação   —  3.54:1 — não-texto  */
+  --color-white:   #FFFFFF;   /* superfícies elevadas sobre o primary */
+
+  /* --- Variantes acessíveis (extensão registrada na Seção 4.1 do Bible) ---
+     O dourado e o verde da marca não atingem 4.5:1 sobre o fundo. Eles
+     permanecem intactos para uso DECORATIVO (preenchimentos, formas grandes,
+     filetes que não carregam sozinhos a informação). Quando a cor precisa
+     carregar texto ou um ícone informativo, usa-se a variante -ink. */
+  --color-accent-ink:  #8A6636;  /* 4.82:1 sobre primary — texto/ícone dourado */
+  --color-success-ink: #56745A;  /* 4.81:1 sobre primary — texto de sucesso    */
+
+  /* --- Neutros derivados ---
+     Cinzas com viés quente puxado do fundo (não cinza puro), para que as
+     bordas pareçam parte do papel e não linhas coladas por cima. */
+  --color-hairline: #E5E3DD;  /* divisor sutil, decorativo */
+  --color-border:   #D5D1C7;  /* borda de componente */
+  --color-border-strong: #B9B4A6; /* borda em estado de foco/hover */
+
+  /* ======================================================================
+     2. SEMÂNTICAS — COR
+     O que os componentes realmente usam.
+     ====================================================================== */
+  --surface-page:      var(--color-primary);
+  --surface-raised:    var(--color-white);
+  --surface-inverse:   var(--color-text);
+
+  --text-primary:      var(--color-text);
+  --text-secondary:    var(--color-gray);
+  --text-on-inverse:   var(--color-primary);
+  --text-accent:       var(--color-accent-ink);
+  --text-success:      var(--color-success-ink);
+
+  --border-subtle:     var(--color-hairline);
+  --border-default:    var(--color-border);
+  --border-strong:     var(--color-border-strong);
+
+  --decor-accent:      var(--color-accent);   /* filetes, formas, preenchimentos */
+  --focus-ring:        var(--color-accent-ink);
+
+  /* ======================================================================
+     3. TIPOGRAFIA
+     Escala fluida via clamp() — sem breakpoints de font-size.
+     ====================================================================== */
+  --font-heading: "Instrument Serif", "Cormorant Garamond", Georgia, serif;
+  --font-body:    "Inter", "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, "SF Mono", Consolas, monospace;
+
+  --text-hero:    clamp(2.5rem,   4vw    + 1rem,    5.5rem);
+  --text-h1:      clamp(2rem,     2.5vw  + 1rem,    3.5rem);
+  --text-h2:      clamp(1.5rem,   1.5vw  + 1rem,    2.5rem);
+  --text-h3:      clamp(1.25rem,  1vw    + 0.75rem, 1.75rem);
+  --text-body-lg: clamp(1.125rem, 0.5vw  + 1rem,    1.25rem);
+  --text-body:    1rem;
+  --text-small:   0.875rem;
+  --text-micro:   0.75rem;
+
+  --leading-tight: 1.1;   /* headings */
+  --leading-snug:  1.35;  /* subtítulos, texto grande */
+  --leading-body:  1.6;   /* parágrafos */
+
+  --tracking-heading: -0.01em;
+  --tracking-label:    0.08em;  /* rótulos em caixa alta */
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+
+  --measure: 65ch;  /* largura máxima confortável de leitura */
+
+  /* ======================================================================
+     4. ESPAÇAMENTO — escala base 8
+     ====================================================================== */
+  --space-1:  0.5rem;
+  --space-2:  1rem;
+  --space-3:  1.5rem;
+  --space-4:  2rem;
+  --space-6:  3rem;
+  --space-8:  4rem;
+  --space-12: 6rem;
+
+  /* Espaços fluidos de composição de página */
+  --space-section:   clamp(4rem, 8vw, 10rem);  /* respiro vertical entre seções */
+  --space-container: clamp(1.5rem, 5vw, 6rem); /* recuo lateral do container */
+
+  /* ======================================================================
+     5. LAYOUT
+     ====================================================================== */
+  --width-content: 72rem;  /* largura máxima do container principal */
+  --width-text:    42rem;  /* coluna de texto corrido */
+  --radius:        2px;    /* quase reto — nunca pill, nunca quadrado total */
+  --radius-media:  3px;
+
+  /* ======================================================================
+     6. ELEVAÇÃO
+     Sombras muito baixas — a hierarquia vem do espaço, não da profundidade.
+     ====================================================================== */
+  --shadow-raised: 0 1px 2px rgba(32, 32, 32, 0.04),
+                   0 8px 24px rgba(32, 32, 32, 0.05);
+  --shadow-hover:  0 2px 4px rgba(32, 32, 32, 0.05),
+                   0 12px 32px rgba(32, 32, 32, 0.07);
+
+  /* ======================================================================
+     7. MOTION
+     Consumido de fato na Fase 6; definido aqui para que nenhuma animação
+     futura invente sua própria duração.
+     ====================================================================== */
+  --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);  /* padrão do projeto */
+  --duration-fast: 180ms;  /* hover, mudança de estado */
+  --duration-base: 320ms;  /* entrada de elemento */
+  --duration-slow: 560ms;  /* revelação de seção */
+  --stagger-step:   80ms;  /* atraso entre itens de uma lista */
+}
+
+/* ==========================================================================
+   Preferência de movimento reduzido
+   Anula os tokens na origem: qualquer componente que use --duration-* passa a
+   ser instantâneo sem precisar de regra própria.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 1ms;
+    --duration-base: 1ms;
+    --duration-slow: 1ms;
+    --stagger-step:  0ms;
+  }
+}

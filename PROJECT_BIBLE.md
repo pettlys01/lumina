@@ -105,10 +105,36 @@ Regras de uso:
 - `--color-accent` é usado com moderação — CTA principal, sublinhados decorativos, ícones ativos,
   indicadores de progresso. Nunca como cor de fundo de seção inteira.
 - Nunca usar azul em nenhum contexto médico (nem em ícones de "check", nem em links).
-- Contraste mínimo AA: `--color-text` sobre `--color-primary` = 15.5:1 (passa). `--color-gray` sobre
-  `--color-primary` = 4.6:1 (passa AA para texto normal, verificar em texto pequeno). `--color-accent`
-  sobre `--color-primary` = 2.9:1 — **não usar accent como cor de texto de corpo**, apenas para
-  elementos gráficos, ícones grandes (≥3:1 exigido) ou texto grande (≥24px / bold ≥19px).
+
+**Contrastes reais, medidos na Fase 2** (cálculo WCAG 2.1 contra `--color-primary`; os valores
+estimados na v1.0 deste documento estavam otimistas e foram corrigidos aqui):
+
+| Token | Valor | Contraste | Veredito |
+|---|---|---|---|
+| `--color-text` | `#202020` | 15.08:1 | passa AA para qualquer tamanho |
+| `--color-gray` | `#666666` | 5.31:1 | passa AA para texto normal |
+| `--color-accent` | `#B58C5A` | **2.83:1** | **reprova até no piso de 3:1** — só decorativo |
+| `--color-success` | `#688B6A` | **3.54:1** | reprova em texto normal; passa 3:1 (gráfico) |
+
+Consequência (decisão da Fase 2, registrada aqui): a paleta aprovada **não muda**. O dourado e o
+verde da marca continuam idênticos, mas passam a ser **exclusivamente decorativos** — preenchimentos,
+formas, filetes e bordas que não carregam sozinhos a informação. Para os casos em que a cor precisa
+carregar texto ou um ícone informativo, foram criadas duas variantes derivadas, que são a escolha
+mais clara possível ainda passando AA:
+
+```css
+--color-accent-ink:  #8A6636;  /* 4.82:1 — texto/ícone dourado, e hover do botão primário */
+--color-success-ink: #56745A;  /* 4.81:1 — mensagens de sucesso em texto */
+```
+
+**Correção ao botão primário (Seção 4.4):** o hover especificado na v1.0 (fundo `--color-accent` com
+texto claro) daria 2.83:1 e reprovaria em AA. O hover usa `--color-accent-ink`, que dá 5.21:1 com
+texto branco. O restante do comportamento (scale 1.02, 180ms) permanece.
+
+**Camadas de token:** `tokens.css` tem duas camadas — primitivas (os valores da marca acima, nomes
+exatos desta seção) e semânticas (papéis de uso: `--surface-raised`, `--text-secondary`,
+`--border-default`, `--decor-accent`…). Componentes consomem **sempre** a camada semântica; nenhum
+arquivo além de `tokens.css` pode conter um valor bruto (hex, px, ms).
 
 ### 4.2 Tipografia
 
@@ -285,6 +311,17 @@ Práticas obrigatórias:
       (evitar duplicação entre Hero/CTA/Cards).
 - [ ] HTML validado semanticamente (um `<h1>` por página, landmarks corretos).
 - [ ] Testado em pelo menos um viewport mobile real (não só DevTools) antes de marcar a fase como concluída.
+- [ ] Overflow horizontal medido (não observado a olho) em 320, 360, 390, 768 e 1280px.
+
+**Armadilha de teste descoberta na Fase 2 — ler antes de conferir qualquer layout mobile:** o Chrome
+headless impõe **largura mínima de janela de 500px**. Pedir `--window-size=390,H` renderiza a página a
+500px e depois *recorta* a imagem em 390px, o que produz uma captura com texto cortado à direita que
+parece um bug de layout e não é. Duas consequências obrigatórias:
+1. capturas mobile devem ser feitas com a página dentro de um `<iframe>` de largura exata, nunca via
+   `--window-size` abaixo de 500px;
+2. overflow se **mede** (`documentElement.scrollWidth > clientWidth`), não se julga por captura — e o
+   harness de medição deve ter um auto-teste (injetar um elemento largo demais e confirmar que ele
+   acusa) antes de se confiar em um resultado "ok".
 
 ---
 
@@ -331,12 +368,16 @@ forçar uma citação que não existe.
 ## 12. Fases do projeto e critérios de aceite
 
 - [x] **Fase 0 — Project Bible** (este documento). Aceite: documento revisado e aprovado pelo usuário.
-- [ ] **Fase 1 — Arquitetura, UX, wireframe, fluxo.** Aceite: wireframes de baixa fidelidade de todas as
+- [x] **Fase 1 — Arquitetura, UX, wireframe, fluxo.** Aceite: wireframes de baixa fidelidade de todas as
       seções da Home + fluxo de navegação (incluindo página de Especialidade) aprovados; nenhum pixel de
-      design visual final ainda.
-- [ ] **Fase 2 — Sistema de Design.** Aceite: `styles/tokens.css` e `styles/typography.css` implementados
+      design visual final ainda. — *Aprovado em 2026-08-12.*
+- [x] **Fase 2 — Sistema de Design.** Aceite: `styles/tokens.css` e `styles/typography.css` implementados
       exatamente conforme seção 4; página de estilo isolada (style guide) renderizando cores, tipos,
-      espaçamentos e estados de componente-base (botão, card) sem conteúdo real.
+      espaçamentos e estados de componente-base (botão, card) sem conteúdo real. — *Concluída em
+      2026-08-12. Entregues: `styles/tokens.css`, `styles/typography.css`, `styleguide.html` +
+      `styles/styleguide.css`, fontes auto-hospedadas em `assets/fonts/`, e `tools/inline.py` para gerar
+      cópias de revisão em arquivo único. Verificado: sem overflow horizontal de 320px a 1280px
+      (harness com auto-teste), contrastes calculados ao vivo na própria folha.*
 - [ ] **Fase 3 — Componentes.** Aceite: Hero, Botões, Cards, Navbar, Footer implementados isoladamente,
       responsivos, acessíveis por teclado, revisados com `web-design-guidelines`.
 - [ ] **Fase 4 — Homepage.** Aceite: todas as 11 seções da seção 5 montadas com conteúdo fictício
@@ -353,25 +394,28 @@ forçar uma citação que não existe.
 
 ## 13. Organização de arquivos (referência para Fase 2 em diante)
 
+Alvo (estrutura completa ao fim do projeto):
+
 ```
-components/
-    Hero/
-    Services/
-    Team/
-    Testimonials/
-    CTA/
-    FAQ/
-    Footer/
+components/          Hero/ Services/ Team/ Testimonials/ CTA/ FAQ/ Footer/
+styles/              tokens.css  typography.css  layout.css  animations.css
+scripts/             animations.js  observers.js  forms.js
+assets/              fonts/  img/
+```
+
+Estado real ao fim da Fase 2 — arquivos são criados quando a fase que os justifica chega,
+não antes (`layout.css` na Fase 3, `animations.js` na Fase 6):
+
+```
+PROJECT_BIBLE.md
+styleguide.html          folha técnica interna do sistema (não faz parte do site)
 styles/
-    tokens.css
-    typography.css
-    layout.css
-    animations.css
-scripts/
-    animations.js
-    observers.js
-    forms.js
-assets/
+    tokens.css           ✅ Fase 2 — fonte única de verdade
+    typography.css       ✅ Fase 2 — @font-face + base tipográfica
+    styleguide.css       ✅ Fase 2 — estilos só da folha técnica
+assets/fonts/            ✅ Instrument Serif 400, Inter 400/500 (subconjunto latino)
+tools/inline.py          ✅ gera cópia de revisão em arquivo único
+build/                   saída regenerável, fora do git
 ```
 
 Modularidade real: cada componente em sua própria pasta com seu HTML/partial, CSS e (se precisar) JS

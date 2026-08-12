@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Especificação de Materiais — Lumina Odontologia</title>
+  <meta name="description" content="Folha técnica do sistema de design da Lumina Odontologia: cor, tipografia, espaçamento, componentes e motion.">
+  <meta name="robots" content="noindex">
+  <link rel="preload" href="assets/fonts/instrumentserif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/typography.css">
+  <link rel="stylesheet" href="styles/styleguide.css">
+</head>
+<body>
+
+<main class="sheet">
+
+  <header class="doc-head">
+    <div class="doc-head__meta">
+      <span class="t-label">Lumina Odontologia · Documento B</span>
+      <span class="chip">Fase 2 · sistema de design</span>
+    </div>
+    <h1 class="doc-head__title">Especificação de materiais</h1>
+    <p class="t-lead doc-head__lead">
+      Folha técnica do sistema. Todos os valores abaixo são lidos em tempo real
+      de <code class="t-mono">tokens.css</code> — os contrastes e os tamanhos são
+      calculados nesta página, não digitados nela. Se um token mudar, esta folha
+      muda junto.
+    </p>
+  </header>
+
+  <!-- ================= B-01 COR ================= -->
+  <section class="spec" id="cor">
+    <div class="spec__head">
+      <span class="spec__code">B-01</span>
+      <h2 class="spec__title">Cor</h2>
+    </div>
+    <p class="spec__note">
+      Contraste medido contra o fundo da página conforme WCAG 2.1. Dois achados
+      da implementação: o dourado da marca mede <strong>2,83:1</strong> e o verde
+      <strong>3,54:1</strong> — nenhum dos dois atinge 4,5:1. Ambos permanecem
+      exatamente como aprovados, mas restritos a <strong>uso decorativo</strong>;
+      quando a cor precisa carregar texto, entra a variante <code class="t-mono">-ink</code>.
+    </p>
+    <div class="swatch-grid" id="swatch-grid"><!-- preenchido por script --></div>
+  </section>
+
+  <!-- ================= B-02 TIPOGRAFIA ================= -->
+  <section class="spec" id="tipografia">
+    <div class="spec__head">
+      <span class="spec__code">B-02</span>
+      <h2 class="spec__title">Tipografia</h2>
+    </div>
+    <p class="spec__note">
+      Instrument Serif nos títulos, em <strong>peso único 400</strong> — a
+      hierarquia vem do tamanho e do espaço, nunca do negrito. Inter no texto.
+      A coluna da esquerda mostra o tamanho <strong>computado neste viewport</strong>:
+      redimensione a janela e os números mudam, porque a escala é fluida
+      (<code class="t-mono">clamp()</code>), não fixa por breakpoint.
+    </p>
+    <div id="type-scale"><!-- preenchido por script --></div>
+  </section>
+
+  <!-- ================= B-03 ESPAÇAMENTO ================= -->
+  <section class="spec" id="espacamento">
+    <div class="spec__head">
+      <span class="spec__code">B-03</span>
+      <h2 class="spec__title">Espaçamento</h2>
+    </div>
+    <p class="spec__note">
+      Escala base 8. Os dois últimos são fluidos e governam o respiro entre
+      seções e o recuo lateral — é deles que vem o "muito espaço" do brief.
+    </p>
+    <div id="space-scale"><!-- preenchido por script --></div>
+  </section>
+
+  <!-- ================= B-04 COMPONENTES ================= -->
+  <section class="spec" id="componentes">
+    <div class="spec__head">
+      <span class="spec__code">B-04</span>
+      <h2 class="spec__title">Componentes base</h2>
+    </div>
+    <p class="spec__note">
+      Estados reais, não maquete: passe o mouse e navegue por teclado
+      (<kbd class="t-mono">Tab</kbd>) para ver foco e hover. O raio de borda é de
+      2px — quase reto, nunca arredondado tipo pílula.
+    </p>
+
+    <div class="demo-grid">
+      <div class="demo">
+        <span class="demo__label">botão primário — repouso / foco / desabilitado</span>
+        <div class="demo__stage">
+          <button type="button" class="btn btn--primary">Agendar avaliação</button>
+          <button type="button" class="btn btn--primary btn--focus-demo">Estado de foco</button>
+          <button type="button" class="btn btn--primary" disabled>Desabilitado</button>
+        </div>
+      </div>
+
+      <div class="demo">
+        <span class="demo__label">botão secundário</span>
+        <div class="demo__stage">
+          <button type="button" class="btn btn--ghost">Ver especialidades</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo" style="margin-block-start: var(--space-4)">
+      <span class="demo__label">card de especialidade — elevação por sombra sutil, sem borda pesada</span>
+      <div class="demo__stage">
+        <article class="card" style="max-inline-size: 18rem">
+          <span class="card__icon" aria-hidden="true"></span>
+          <h3 class="t-h3">Implantes</h3>
+          <p class="t-small t-muted">Reposição unitária ou total, planejada digitalmente antes do procedimento.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= B-05 MOTION ================= -->
+  <section class="spec" id="motion">
+    <div class="spec__head">
+      <span class="spec__code">B-05</span>
+      <h2 class="spec__title">Motion</h2>
+    </div>
+    <p class="spec__note">
+      Definido agora para que nenhuma animação da Fase 6 invente a própria
+      duração. Passe o mouse em cada trilha. Com
+      <strong>movimento reduzido</strong> ativo no sistema, os três tokens caem
+      para 1ms na origem — nenhum componente precisa tratar isso por conta própria.
+    </p>
+    <div id="motion-scale"><!-- preenchido por script --></div>
+  </section>
+
+  <footer class="doc-foot">
+    <p>
+      <strong>Fase 2 concluída.</strong> Arquivos entregues:
+      <code class="t-mono">styles/tokens.css</code> e
+      <code class="t-mono">styles/typography.css</code>. Próximo passo conforme
+      Seção 12 do Project Bible: <strong>Fase 3 — Componentes</strong>
+      (Hero, Botões, Cards, Navbar, Footer).
+    </p>
+  </footer>
+
+</main>
+
+<script>
+/* ==========================================================================
+   Folha de especificação — leitura ao vivo dos tokens.
+   Nada aqui roda no site final; é instrumentação desta página.
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var root = document.documentElement;
+
+  function token(name) {
+    return getComputedStyle(root).getPropertyValue(name).trim();
+  }
+
+  /* --- Contraste WCAG 2.1 ------------------------------------------------ */
+  function parseColor(value) {
+    var probe = document.createElement("div");
+    probe.style.color = value;
+    document.body.appendChild(probe);
+    var rgb = getComputedStyle(probe).color;
+    document.body.removeChild(probe);
+    var m = rgb.match(/\d+/g);
+    return m ? [+m[0], +m[1], +m[2]] : [0, 0, 0];
+  }
+
+  function luminance(rgb) {
+    var a = rgb.map(function (v) {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+  }
+
+  function contrast(fg, bg) {
+    var l1 = luminance(parseColor(fg));
+    var l2 = luminance(parseColor(bg));
+    var hi = Math.max(l1, l2);
+    var lo = Math.min(l1, l2);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  function toHex(value) {
+    var rgb = parseColor(value);
+    return "#" + rgb.map(function (v) {
+      return v.toString(16).padStart(2, "0");
+    }).join("").toUpperCase();
+  }
+
+  /* --- B-01 Cor ---------------------------------------------------------- */
+  /* surface: true = a cor é um fundo, não um primeiro plano. Medir contraste
+     de texto contra ela mesma não significaria nada, então esses recebem o
+     rótulo "superfície" em vez de um veredito. */
+  var COLORS = [
+    { token: "--color-primary", surface: true, role: "Fundo principal de toda a página." },
+    { token: "--color-white",   surface: true, role: "Superfícies elevadas sobre o fundo: cards, modais." },
+    { token: "--color-text",    role: "Texto principal e fundo do botão primário." },
+    { token: "--color-gray",    role: "Texto secundário, legendas e metadados." },
+    { token: "--color-accent",  role: "Dourado da marca. Apenas decorativo: filetes, formas, preenchimentos." },
+    { token: "--color-accent-ink", role: "Variante para texto e ícones dourados, e para o hover do botão." },
+    { token: "--color-success", role: "Verde de confirmação. Apenas como elemento gráfico." },
+    { token: "--color-success-ink", role: "Variante para mensagens de sucesso em texto." }
+  ];
+
+  var bg = token("--color-primary");
+  var grid = document.getElementById("swatch-grid");
+
+  COLORS.forEach(function (item) {
+    var value = token(item.token);
+    var ratio = contrast(value, bg);
+    var passesText = ratio >= 4.5;
+
+    var el = document.createElement("div");
+    el.className = "swatch";
+
+    var chip = document.createElement("div");
+    chip.className = "swatch__chip";
+    chip.style.backgroundColor = value;
+    el.appendChild(chip);
+
+    var body = document.createElement("div");
+    body.className = "swatch__body";
+
+    var name = document.createElement("span");
+    name.className = "swatch__name";
+    name.textContent = item.token;
+    body.appendChild(name);
+
+    var role = document.createElement("span");
+    role.className = "swatch__role";
+    role.textContent = item.role;
+    body.appendChild(role);
+
+    var data = document.createElement("div");
+    data.className = "swatch__data";
+
+    var hex = document.createElement("span");
+    hex.textContent = toHex(value);
+    data.appendChild(hex);
+
+    var verdict = document.createElement("span");
+    if (item.surface) {
+      verdict.className = "verdict";
+      verdict.textContent = "superfície";
+    } else {
+      verdict.className = "verdict " + (passesText ? "verdict--pass" : "verdict--warn");
+      verdict.textContent = ratio.toFixed(2) + ":1 · " + (passesText ? "AA texto" : "decorativo");
+    }
+    data.appendChild(verdict);
+
+    body.appendChild(data);
+    el.appendChild(body);
+    grid.appendChild(el);
+  });
+
+  /* --- B-02 Tipografia --------------------------------------------------- */
+  var TYPE = [
+    { token: "--text-hero",    sample: "Confiança para sorrir", cls: "t-hero" },
+    { token: "--text-h1",      sample: "Especialidades",        cls: "t-h1"   },
+    { token: "--text-h2",      sample: "Nossa equipe",          cls: "t-h2"   },
+    { token: "--text-h3",      sample: "Implantes",             cls: "t-h3"   },
+    { token: "--text-body-lg", sample: "Texto de destaque, usado em parágrafos de abertura.", cls: "t-lead" },
+    { token: "--text-body",    sample: "Texto corrido padrão do site, em Inter regular.",     cls: "t-body" },
+    { token: "--text-small",   sample: "Legenda, metadado e texto de apoio.",                 cls: "t-small t-muted" },
+    { token: "--text-micro",   sample: "RÓTULO EM CAIXA ALTA",                                cls: "t-label" }
+  ];
+
+  var typeWrap = document.getElementById("type-scale");
+  var typeRows = [];
+
+  TYPE.forEach(function (item) {
+    var row = document.createElement("div");
+    row.className = "type-row";
+
+    var meta = document.createElement("div");
+    meta.className = "type-row__meta";
+
+    var tk = document.createElement("span");
+    tk.className = "type-row__token";
+    tk.textContent = item.token;
+    meta.appendChild(tk);
+
+    var size = document.createElement("span");
+    size.className = "type-row__size";
+    meta.appendChild(size);
+
+    row.appendChild(meta);
+
+    var sample = document.createElement("div");
+    sample.className = "type-row__sample " + item.cls;
+    sample.textContent = item.sample;
+    row.appendChild(sample);
+
+    typeWrap.appendChild(row);
+    typeRows.push({ el: sample, out: size });
+  });
+
+  /* Os tamanhos são fluidos: precisam ser relidos quando o viewport muda.
+     ResizeObserver em vez de listener de resize — Seção "Tecnologias" do brief. */
+  function refreshTypeSizes() {
+    typeRows.forEach(function (r) {
+      var px = parseFloat(getComputedStyle(r.el).fontSize);
+      r.out.textContent = px.toFixed(1) + "px";
+    });
+  }
+  refreshTypeSizes();
+
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(refreshTypeSizes).observe(document.body);
+  }
+
+  /* --- B-03 Espaçamento --------------------------------------------------- */
+  var SPACE = [
+    "--space-1", "--space-2", "--space-3", "--space-4",
+    "--space-6", "--space-8", "--space-12",
+    "--space-section", "--space-container"
+  ];
+
+  var spaceWrap = document.getElementById("space-scale");
+  var spaceRows = [];
+
+  SPACE.forEach(function (name) {
+    var row = document.createElement("div");
+    row.className = "space-row";
+
+    var tk = document.createElement("span");
+    tk.className = "space-row__token";
+    tk.textContent = name;
+    row.appendChild(tk);
+
+    var bar = document.createElement("span");
+    bar.className = "space-row__bar";
+    bar.style.inlineSize = "var(" + name + ")";
+    row.appendChild(bar);
+
+    var val = document.createElement("span");
+    val.className = "space-row__value";
+    row.appendChild(val);
+
+    spaceWrap.appendChild(row);
+    spaceRows.push({ el: bar, out: val });
+  });
+
+  function refreshSpaceSizes() {
+    spaceRows.forEach(function (r) {
+      var px = parseFloat(getComputedStyle(r.el).inlineSize);
+      r.out.textContent = px.toFixed(0) + "px";
+    });
+  }
+  refreshSpaceSizes();
+
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(refreshSpaceSizes).observe(document.body);
+  }
+
+  /* --- B-05 Motion -------------------------------------------------------- */
+  var MOTION = [
+    { token: "--duration-fast", mod: "fast", use: "hover, mudança de estado" },
+    { token: "--duration-base", mod: "base", use: "entrada de elemento" },
+    { token: "--duration-slow", mod: "slow", use: "revelação de seção" }
+  ];
+
+  var motionWrap = document.getElementById("motion-scale");
+
+  MOTION.forEach(function (item) {
+    var row = document.createElement("div");
+    row.className = "motion-row";
+    row.tabIndex = 0;
+
+    var tk = document.createElement("span");
+    tk.className = "motion-row__token";
+    tk.textContent = item.token;
+    row.appendChild(tk);
+
+    var track = document.createElement("span");
+    track.className = "motion-row__track";
+    var dot = document.createElement("span");
+    dot.className = "motion-row__dot motion-row__dot--" + item.mod;
+    track.appendChild(dot);
+    row.appendChild(track);
+
+    var val = document.createElement("span");
+    val.className = "motion-row__value";
+    val.textContent = token(item.token);
+    row.appendChild(val);
+
+    motionWrap.appendChild(row);
+  });
+})();
+</script>
+
+</body>
+</html>

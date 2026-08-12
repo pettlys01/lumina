@@ -1,0 +1,145 @@
+/* ==========================================================================
+   Lumina Odontologia — Tipografia
+   Depende de: tokens.css (carregar antes deste arquivo).
+
+   Duas famílias, três arquivos no total — dentro do orçamento da Seção 7 do
+   Project Bible ("no máximo 2 famílias × 2 pesos"). O monoespaçado usado em
+   rótulos técnicos é a pilha do sistema: zero download.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   @font-face — auto-hospedado (sem CDN externo: menos DNS/TLS, sem terceiro)
+   Subconjunto latino apenas. font-display: swap conforme Seção 7 do Bible.
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/instrumentserif-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+                 U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+                 U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/inter-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+                 U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+                 U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/inter-500.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+                 U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+                 U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-body);
+  color: var(--text-primary);
+  background-color: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --------------------------------------------------------------------------
+   Títulos
+   Peso único (400) em toda a serifada: a hierarquia vem do tamanho e do
+   espaço ao redor, nunca do peso — Seção 4.2 do Project Bible.
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4,
+.t-hero, .t-h1, .t-h2, .t-h3 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-heading);
+  color: var(--text-primary);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.t-hero { font-size: var(--text-hero); }
+h1, .t-h1 { font-size: var(--text-h1); }
+h2, .t-h2 { font-size: var(--text-h2); }
+h3, .t-h3 { font-size: var(--text-h3); }
+h4 { font-size: var(--text-body-lg); }
+
+/* --------------------------------------------------------------------------
+   Texto corrido
+   -------------------------------------------------------------------------- */
+p, li {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.t-lead {
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  max-width: var(--measure);
+}
+
+.t-body   { font-size: var(--text-body);  max-width: var(--measure); }
+.t-small  { font-size: var(--text-small); }
+.t-muted  { color: var(--text-secondary); }
+
+/* Rótulo em caixa alta — usado em eyebrows e legendas de seção.
+   Caixa alta exige tracking positivo para não fechar demais. */
+.t-label {
+  font-family: var(--font-body);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Dado técnico e numérico — pilha monoespaçada do sistema, sem download. */
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Links e foco
+   O anel de foco é global: qualquer elemento focável do projeto herda daqui,
+   atendendo a Seção 9 do Bible sem que cada componente reimplemente o estado.
+   -------------------------------------------------------------------------- */
+a {
+  color: var(--text-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
