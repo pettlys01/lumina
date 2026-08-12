@@ -1,0 +1,126 @@
+/* ==========================================================================
+   Seção: Antes e Depois
+   Depende de: tokens.css, layout.css
+
+   Sem autoplay: a comparação só acontece por ação de quem está lendo. Motion
+   aqui é funcional (responde ao arraste), a camada que nunca se corta.
+   ========================================================================== */
+
+.ba {
+  margin: 0;
+}
+
+.ba__stage {
+  --pos: 50%;
+
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-media);
+  background-color: var(--color-hairline);
+  touch-action: pan-y;   /* arraste horizontal é do slider; rolagem vertical continua da página */
+}
+
+.ba__img {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* A camada "antes" é recortada da esquerda até a posição do controle. À
+   esquerda da linha fica o antes; à direita, o depois. */
+.ba__overlay {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.ba__line {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--pos);
+  inline-size: 2px;
+  margin-inline-start: -1px;
+  background-color: var(--color-white);
+  box-shadow: 0 0 0 1px rgba(32, 32, 32, 0.15);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Rótulos
+   -------------------------------------------------------------------------- */
+.ba__tag {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background-color: var(--surface-page);
+  padding: 0.35em 0.8em;
+  border-radius: var(--radius);
+  pointer-events: none;
+}
+
+.ba__tag--antes  { inset-inline-start: var(--space-2); }
+.ba__tag--depois { inset-inline-end: var(--space-2); }
+
+/* --------------------------------------------------------------------------
+   Controle
+   O input cobre o palco inteiro para que o arraste funcione em qualquer ponto
+   da imagem, não só sobre um alvo pequeno.
+   -------------------------------------------------------------------------- */
+.ba__range {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.ba__range:focus { outline: none; }
+
+/* O anel aparece no palco inteiro, não no input transparente. */
+.ba__stage:focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.ba__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  inline-size: 2.75rem;       /* 44px — Lei de Fitts */
+  block-size: 2.75rem;
+  border-radius: 50%;
+  background-color: var(--surface-page);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-raised);
+  cursor: ew-resize;
+}
+
+.ba__range::-moz-range-thumb {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border-radius: 50%;
+  background-color: var(--surface-page);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-raised);
+  cursor: ew-resize;
+}
+
+.ba__range::-webkit-slider-runnable-track { background: transparent; }
+.ba__range::-moz-range-track { background: transparent; }
+
+.ba__caption {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  max-inline-size: 60ch;
+}

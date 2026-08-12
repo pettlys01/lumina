@@ -48,6 +48,56 @@ img, svg, video {
   padding-block: var(--space-section);
 }
 
+/* Alterna a superfície entre seções vizinhas. A separação vem da mudança de
+   fundo, não de uma borda — filete entre todas as seções deixaria a página com
+   cara de formulário. */
+.section--raised {
+  background-color: var(--surface-raised);
+}
+
+/* --------------------------------------------------------------------------
+   Cabeçalho de seção
+   Mesmo padrão em todas as seções da Home: sobrelinha curta, título, e um
+   parágrafo de apoio opcional. Repetir a estrutura é o que faz a página ler
+   como um documento só.
+   -------------------------------------------------------------------------- */
+.section-head {
+  max-inline-size: 46rem;
+  margin-block-end: var(--space-6);
+}
+
+.section-head__eyebrow {
+  display: block;
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-block-end: var(--space-2);
+}
+
+.section-head__title {
+  font-size: var(--text-h2);
+  margin-block-end: var(--space-2);
+}
+
+.section-head__lead {
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  max-inline-size: 52ch;
+}
+
+/* Centralizado — usado só onde a seção não tem conteúdo lateral (CTA final). */
+.section-head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.section-head--center .section-head__lead {
+  margin-inline: auto;
+}
+
 /* --------------------------------------------------------------------------
    Acessibilidade
    -------------------------------------------------------------------------- */

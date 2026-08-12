@@ -1,0 +1,46 @@
+<section class="section" id="antes-depois">
+  <div class="container">
+
+    <div class="section-head">
+      <span class="section-head__eyebrow">Antes e depois</span>
+      <h2 class="section-head__title">Resultados documentados no mesmo enquadramento</h2>
+      <p class="section-head__lead">
+        Mesma câmera, mesma luz, mesma distância. Sem retoque nas imagens —
+        a comparação só vale se as duas fotos forem tiradas do mesmo jeito.
+      </p>
+    </div>
+
+    <figure class="ba">
+      <div class="ba__stage" data-ba>
+
+        <img class="ba__img" src="assets/img/depois.svg"
+             alt="Sorriso do paciente após o tratamento, com maior uniformidade e brilho"
+             width="1200" height="675" loading="lazy" decoding="async">
+
+        <div class="ba__overlay">
+          <img class="ba__img" src="assets/img/antes.svg"
+               alt="Sorriso do paciente antes do tratamento"
+               width="1200" height="675" loading="lazy" decoding="async">
+        </div>
+
+        <span class="ba__tag ba__tag--antes" aria-hidden="true">Antes</span>
+        <span class="ba__tag ba__tag--depois" aria-hidden="true">Depois</span>
+
+        <span class="ba__line" aria-hidden="true"></span>
+
+        <!-- Um <input type="range"> nativo em vez de um handle improvisado: dá
+             teclado (setas, Home/End), leitor de tela e suporte a toque sem
+             reimplementar nada. O visual é todo do thumb. -->
+        <input class="ba__range" type="range" min="0" max="100" value="50" step="1"
+               data-ba-range
+               aria-label="Comparar antes e depois — arraste, ou use as setas do teclado">
+      </div>
+
+      <figcaption class="ba__caption">
+        Implante unitário em incisivo central, com lente de contato dental nos
+        dois adjacentes. Registro de 6 meses após a instalação.
+      </figcaption>
+    </figure>
+
+  </div>
+</section>

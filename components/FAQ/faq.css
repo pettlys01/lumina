@@ -1,0 +1,96 @@
+/* ==========================================================================
+   Seção: FAQ
+   Depende de: tokens.css, layout.css
+
+   Construída sobre <details>/<summary> nativos. A animação de altura fica para
+   a Fase 6 — animar <details> exige interpolate-size, que é aprimoramento
+   progressivo e não deve bloquear o funcionamento agora.
+   ========================================================================== */
+
+/* A largura restrita fica na lista, não no container: aplicada ao container,
+   ela centralizava a seção inteira e o título do FAQ deixava de alinhar com o
+   das demais seções da página. */
+.faq__list {
+  max-inline-size: 52rem;
+  border-block-start: 1px solid var(--border-default);
+}
+
+.faq__item {
+  border-block-end: 1px solid var(--border-default);
+}
+
+/* --------------------------------------------------------------------------
+   Pergunta
+   -------------------------------------------------------------------------- */
+.faq__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+
+  min-block-size: 3.5rem;    /* acima dos 44px da Lei de Fitts: alvo de leitura longo */
+  padding-block: var(--space-2);
+
+  font-family: var(--font-heading);
+  font-size: var(--text-h3);
+  line-height: var(--leading-snug);
+  cursor: pointer;
+  list-style: none;
+}
+
+/* Remove o triângulo padrão, já que o ícone é desenhado à parte. */
+.faq__q::-webkit-details-marker { display: none; }
+.faq__q::marker { content: ""; }
+
+.faq__q:hover {
+  color: var(--text-accent);
+}
+
+.faq__q:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
+/* --------------------------------------------------------------------------
+   Ícone
+   Um sinal de mais que gira 45 graus e vira um X. O estado real é mantido pelo
+   próprio <details> e anunciado como expandido/recolhido — o ícone é reforço
+   visual, nunca a única indicação.
+   -------------------------------------------------------------------------- */
+.faq__icon {
+  position: relative;
+  flex-shrink: 0;
+  inline-size: 1rem;
+  block-size: 1rem;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.faq__icon::before,
+.faq__icon::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 1px;
+  background-color: var(--decor-accent);
+}
+
+.faq__icon::after {
+  transform: rotate(90deg);
+}
+
+.faq__item[open] .faq__icon {
+  transform: rotate(45deg);
+}
+
+/* --------------------------------------------------------------------------
+   Resposta
+   -------------------------------------------------------------------------- */
+.faq__a {
+  padding-block-end: var(--space-3);
+  padding-inline-end: var(--space-6);
+  font-size: var(--text-body);
+  color: var(--text-secondary);
+  max-inline-size: 60ch;
+}

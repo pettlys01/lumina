@@ -1,0 +1,96 @@
+/* ==========================================================================
+   Seção: Depoimentos
+   Depende de: tokens.css, layout.css
+
+   O bloco do vídeo é uma <figure> não interativa enquanto não houver gravação:
+   um botão de play que não reproduz nada seria uma promessa falsa. A legenda
+   diz o estado real em vez de fingir.
+   ========================================================================== */
+
+.testi__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 56rem) {
+  .testi__layout {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+}
+
+.testi__feature {
+  margin: 0;
+}
+
+.testi__feature img {
+  inline-size: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-media);
+}
+
+.testi__figcaption {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-micro);
+  color: var(--text-secondary);
+}
+
+.testi__quotes {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.testi__quote {
+  margin: 0;
+  padding-inline-start: var(--space-3);
+  border-inline-start: 2px solid var(--decor-accent);
+}
+
+.testi__text {
+  font-family: var(--font-heading);
+  font-size: var(--text-h3);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-heading);
+  text-wrap: pretty;
+}
+
+.testi__author {
+  margin-block-start: var(--space-2);
+  display: flex;
+  flex-direction: column;
+}
+
+.testi__name {
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+}
+
+.testi__meta {
+  font-size: var(--text-micro);
+  color: var(--text-secondary);
+}
+
+/* As estrelas são decorativas; a nota vem escrita ao lado, então a informação
+   não depende de enxergar o símbolo nem a cor. */
+.testi__badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--border-default);
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+.testi__stars {
+  color: var(--decor-accent);
+  letter-spacing: 0.1em;
+}
+
+.testi__badge strong {
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}

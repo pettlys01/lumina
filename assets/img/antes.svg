@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img">
+  <title>Registro antes do tratamento</title>
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#E6E4DE"/>
+      <stop offset="0.6" stop-color="#C7C4BA"/>
+      <stop offset="1" stop-color="#96938A"/>
+    </linearGradient>
+    <radialGradient id="luz" cx="0.3" cy="0.22" r="0.7">
+      <stop offset="0" stop-color="#FFFBF2" stop-opacity="0.9"/>
+      <stop offset="0.5" stop-color="#FFF6E8" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#FFF6E8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="vin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3A3123" stop-opacity="0"/>
+      <stop offset="1" stop-color="#3A3123" stop-opacity="0.18"/>
+    </linearGradient>
+    <filter id="grao">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g1)"/>
+  <ellipse cx="600" cy="337" rx="408" ry="243" fill="#FBF3E6" opacity="0.25"/>
+  <path d="M 336 310 Q 600 486 864 310" fill="none" stroke="#FFFFFF" stroke-width="40" stroke-linecap="round" opacity="0.3"/>
+  <path d="M 336 310 Q 600 486 864 310" fill="none" stroke="#A88E6A" stroke-width="1.5" opacity="0.5"/>
+  <rect width="1200" height="675" fill="url(#luz)"/>
+  <rect width="1200" height="675" fill="url(#vin)"/>
+  <rect width="1200" height="675" filter="url(#grao)" opacity="0.05"/>
+</svg>

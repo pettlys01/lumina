@@ -396,10 +396,42 @@ O que muda é a expectativa: consultar primeiro, e só então concluir que não 
       `tools/overflow-check.html` e `tools/menu-check.html` (verificações automatizadas). Verificado:
       sem overflow de 320px a 1280px, 14/14 checagens de teclado no menu, todos os alvos ≥44px,
       um único `<h1>` e nenhum salto de nível de heading.*
-- [ ] **Fase 4 — Homepage.** Aceite: todas as 11 seções da seção 5 montadas com conteúdo fictício
-      realista, responsivo mobile-first, sem motion ainda (motion é Fase 6).
+- [x] **Fase 4 — Homepage.** Aceite: todas as 11 seções da seção 5 montadas com conteúdo fictício
+      realista, responsivo mobile-first, sem motion ainda (motion é Fase 6). — *Concluída em
+      2026-08-12. `index.html` montado de 12 partials. Novas seções: About, Services, BeforeAfter,
+      Technology, Testimonials, Process, Team, FAQ, CTA. Verificado: 13/13 checagens estruturais,
+      sem overflow de 320px a 1280px, sem link quebrado, um único `<h1>`, todas as imagens com
+      `alt`/dimensões/`lazy`, todos os alvos ≥44px.*
+
+      **Duas decisões de implementação que valem registro:**
+      - **FAQ em `<details name="faq">` nativo**, não acordeão em JavaScript. Entrega teclado,
+        semântica de expansão e abertura exclusiva sem uma linha de script, e continua funcionando
+        com o JS desligado. Custo aceito: a animação de altura especificada na Seção 4.4
+        (`grid-template-rows: 0fr → 1fr`) não se aplica a `<details>` sem `interpolate-size`; fica
+        como aprimoramento progressivo na Fase 6.
+      - **Antes/Depois em `<input type="range">` nativo.** Um handle em `<div>` exigiria
+        reimplementar arraste, teclado, foco e anúncio de valor. O range dá tudo isso de graça; o
+        JavaScript só transporta o valor para uma custom property.
 - [ ] **Fase 5 — Páginas internas.** Aceite: template de Especialidade funcional e reutilizável, ligado à
-      navegação da Home.
+      navegação da Home. **Sai da Fase 4 com estes destinos já linkados e ainda inexistentes** —
+      `python tools/link-check.py` deve terminar sem nenhum PENDENTE de Fase 5 ao final:
+      `especialidades/{implantes,lentes-de-contato-dental,harmonizacao-facial,ortodontia-estetica,clareamento}.html`
+      e `contato.html` (destino do CTA primário).
+
+**Pendências de conteúdo abertas ao fim da Fase 4** (nenhuma delas bloqueia as fases seguintes, mas
+todas precisam ser resolvidas antes de qualquer publicação real):
+- **Fotografia.** As nove imagens são placeholders vetoriais gerados por `tools/placeholders.py`,
+  todos do mesmo sistema visual para que a página não pareça remendada. Precisam virar fotografia
+  real: ambiente, equipamento, três retratos de equipe, e o par antes/depois.
+- **Antes/Depois.** É a imagem mais fraca do conjunto, e deliberadamente abstrata: desenhar dentes
+  fictícios pareceria clipart clínico e derrubaria a leitura de alto padrão que a Seção 1 exige.
+  Só melhora com foto real.
+- **Vídeo de depoimento.** A Seção 5 prevê vídeo. Enquanto não houver gravação, o bloco é uma
+  `<figure>` não interativa com legenda dizendo o estado real — um botão de play que não reproduz
+  nada seria promessa falsa.
+- **Números de prova social** (4,9 / 312 avaliações) e **CRO** são fictícios e devem ser
+  substituídos por dados verificáveis. Em site real, número de avaliação inventado é risco legal,
+  não só de credibilidade.
 - [ ] **Fase 6 — Motion.** Aceite: animações da seção 6 aplicadas, `prefers-reduced-motion` testado,
       nenhuma regressão de performance introduzida (reconferir Lighthouse).
 - [ ] **Fase 7 — SEO.** Aceite: itens da seção 8 implementados e validados (rich results test equivalente,

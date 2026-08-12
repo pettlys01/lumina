@@ -127,14 +127,24 @@ def build(src: Path, dest: Path) -> None:
 
     saida = "\n\n".join(parts)
 
-    # Qualquer referência local sobrevivente quebraria em silêncio ao publicar:
-    # a página sobe, mas sem a imagem ou sem o comportamento. Falhar aqui é
-    # melhor do que descobrir depois de publicada.
-    restantes = re.findall(
-        r'(?:src|href)="(?!https?:|//|data:|#|mailto:|tel:)([^"]+)"', saida
-    )
-    if restantes:
-        raise ValueError(f"referências locais não resolvidas: {sorted(set(restantes))}")
+    # Todo ASSET local sobrevivente quebraria em silêncio ao publicar: a página
+    # sobe, mas sem a imagem ou sem o comportamento. Falhar aqui é melhor do que
+    # descobrir depois de publicada.
+    #
+    # Links de navegação (href para outra página) são caso diferente: nenhuma
+    # navegação entre arquivos funciona dentro de um artifact, e um href para
+    # uma página de fase futura é decisão registrada, não esquecimento. Por isso
+    # a checagem é estrita em src e frouxa em href.
+    assets = re.findall(r'src="(?!https?:|//|data:)([^"]+)"', saida)
+    if assets:
+        raise ValueError(f"assets locais não embutidos: {sorted(set(assets))}")
+
+    navegacao = sorted(set(re.findall(
+        r'href="(?!https?:|//|data:|#|mailto:|tel:)([^"]+)"', saida
+    )))
+    if navegacao:
+        print(f"  nota: {len(navegacao)} link(s) de navegação não abrem na cópia de revisão "
+              f"({', '.join(navegacao[:3])}{'…' if len(navegacao) > 3 else ''})")
 
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(saida, encoding="utf-8")

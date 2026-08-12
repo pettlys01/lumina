@@ -1,0 +1,56 @@
+/* ==========================================================================
+   Seção: Processo
+   Depende de: tokens.css, layout.css
+
+   É uma <ol>. A ordem carrega informação — um leitor de tela anuncia "1 de 4",
+   o que é exatamente o que a seção comunica visualmente.
+   ========================================================================== */
+
+.process__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  counter-reset: etapa;
+}
+
+@media (min-width: 48rem) {
+  .process__list {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+  }
+}
+
+.process__step {
+  position: relative;
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--border-default);
+}
+
+/* A linha do topo é contínua entre as etapas em telas largas, sugerindo
+   progressão sem precisar de setas. */
+.process__num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  margin-block-end: var(--space-2);
+  border: 1px solid var(--decor-accent);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--text-accent);
+}
+
+.process__title {
+  font-size: var(--text-h3);
+  margin-block-end: 0.35em;
+}
+
+.process__text {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}

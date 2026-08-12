@@ -1,0 +1,23 @@
+/* ==========================================================================
+   Seção: CTA final
+   Depende de: tokens.css, layout.css, Button/button.css
+
+   Mesmo destino do CTA do Hero — a regra de navegação do Project Bible (Seção 5)
+   é que todo CTA leva ao agendamento, sem criar caminhos novos no fim da página.
+   O telefone aparece ao lado porque parte deste público resolve por voz e não
+   deveria ter que procurar o número no rodapé.
+   ========================================================================== */
+
+.cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.cta__note {
+  margin-block-start: var(--space-3);
+  text-align: center;
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}

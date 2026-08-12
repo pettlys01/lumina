@@ -50,9 +50,13 @@
 /* --------------------------------------------------------------------------
    Marca
    -------------------------------------------------------------------------- */
+/* A marca é um link para o topo, então é alvo como qualquer outro: as duas
+   linhas somam 39px e precisam do piso de 44px da Lei de Fitts. */
 .navbar__brand {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  min-block-size: 2.75rem;
   line-height: 1;
   text-decoration: none;
   color: var(--text-primary);

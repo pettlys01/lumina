@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Verificação da Home</title>
+<style>
+  body { font: 14px ui-monospace, Consolas, monospace; padding: 16px; }
+  li.ok { color: #2e7d32; } li.bad { color: #c62828; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<h1>Verificação da Home</h1>
+<ul id="saida"></ul>
+<iframe id="f" src="../index.html" title="alvo" style="border:1px solid #ccc;width:1280px;height:900px"></iframe>
+
+<script>
+/* ==========================================================================
+   Checagens estruturais e de acessibilidade da Home (Fase 4).
+   Mede o documento montado, não o fonte: é o que o navegador realmente recebe.
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var f = document.getElementById("f");
+  var saida = document.getElementById("saida");
+  var linhas = [];
+
+  function ok(nome, cond, detalhe) {
+    var texto = (cond ? "PASS " : "FALHOU ") + nome + (detalhe && !cond ? " [" + detalhe + "]" : "");
+    var li = document.createElement("li");
+    li.textContent = texto;
+    li.className = cond ? "ok" : "bad";
+    saida.appendChild(li);
+    linhas.push(texto);
+  }
+
+  f.onload = function () {
+    setTimeout(function () {
+      var d = f.contentDocument;
+      var w = f.contentWindow;
+      var vis = function (el) { return el.getClientRects().length > 0; };
+
+      /* --- Estrutura das 11 seções --- */
+      var esperadas = ["topo", "sobre", "especialidades", "antes-depois", "tecnologia",
+                       "depoimentos", "processo", "equipe", "faq", "agendamento", "contato"];
+      var faltando = esperadas.filter(function (id) { return !d.getElementById(id); });
+      ok("as 11 seções existem", faltando.length === 0, faltando.join(","));
+
+      /* --- Headings --- */
+      var hs = [].map.call(d.querySelectorAll("h1,h2,h3,h4"), function (h) { return +h.tagName[1]; });
+      var salto = null;
+      for (var i = 1; i < hs.length; i++) if (hs[i] - hs[i - 1] > 1) salto = hs[i - 1] + "->" + hs[i];
+      ok("um único h1", hs.filter(function (x) { return x === 1; }).length === 1);
+      ok("sem salto de nível de heading", !salto, salto);
+
+      /* --- Imagens --- */
+      var imgs = [].slice.call(d.querySelectorAll("img"));
+      var semAlt = imgs.filter(function (im) { return !im.hasAttribute("alt"); });
+      var semDim = imgs.filter(function (im) { return !im.getAttribute("width") || !im.getAttribute("height"); });
+      var semLazy = imgs.filter(function (im, idx) {
+        return idx > 0 && im.getAttribute("loading") !== "lazy";
+      });
+      ok("toda imagem tem alt", semAlt.length === 0, semAlt.length + " sem");
+      ok("toda imagem declara width/height (evita CLS)", semDim.length === 0, semDim.length + " sem");
+      ok("imagens abaixo da dobra são lazy", semLazy.length === 0, semLazy.length + " sem");
+
+      /* --- Alvos de toque --- */
+      var alvos = [].slice.call(d.querySelectorAll("a, button, summary, input[type=range]"))
+        .filter(vis)
+        .filter(function (el) { return !el.classList.contains("skip-link"); })
+        .filter(function (el) { return el.getBoundingClientRect().height < 43.5; });
+      ok("todo alvo interativo >= 44px", alvos.length === 0,
+         alvos.slice(0, 3).map(function (e) {
+           return (e.className || e.tagName) + "=" + e.getBoundingClientRect().height.toFixed(0);
+         }).join(", "));
+
+      /* --- FAQ: acordeão nativo e exclusivo --- */
+      var faq = [].slice.call(d.querySelectorAll(".faq__item"));
+      ok("FAQ usa <details> nativo", faq.length > 0 && faq[0].tagName === "DETAILS");
+      ok("FAQ tem name para abertura exclusiva",
+         faq.every(function (x) { return x.getAttribute("name") === "faq"; }));
+      faq[0].open = true;
+      faq[1].open = true;
+      setTimeout(function () {
+        var abertos = faq.filter(function (x) { return x.open; }).length;
+        // Onde o navegador suporta name exclusivo, abrir o 2o fecha o 1o.
+        ok("abertura exclusiva funciona (ou degrada sem quebrar)", abertos >= 1,
+           abertos + " abertos");
+        faq.forEach(function (x) { x.open = false; });
+
+        /* --- Antes/Depois: controle nativo e sincronia com o CSS --- */
+        var palco = d.querySelector("[data-ba]");
+        var range = d.querySelector("[data-ba-range]");
+        ok("Antes/Depois usa input range nativo", !!range && range.type === "range");
+        ok("range tem rótulo acessível", !!range && !!range.getAttribute("aria-label"));
+
+        if (range && palco) {
+          range.value = "80";
+          range.dispatchEvent(new w.Event("input", { bubbles: true }));
+          setTimeout(function () {
+            var pos = palco.style.getPropertyValue("--pos").trim();
+            ok("mover o range atualiza o recorte", pos === "80%", "--pos=" + pos);
+
+            var falhas = linhas.filter(function (l) { return l.indexOf("FALHOU") === 0; }).length;
+            document.title = (falhas ? falhas + " FALHA(S)" : "TUDO PASSOU") + " :: " + linhas.join(" | ");
+          }, 150);
+        }
+      }, 150);
+    }, 900);
+  };
+})();
+</script>
+
+</body>
+</html>

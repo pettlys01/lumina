@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<!-- ARQUIVO GERADO por tools/build.py — não editar aqui.
+     Edite o fonte em src/ ou o partial em components/. -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Lumina Odontologia — Implantes, lentes e harmonização em Pinheiros</title>
+  <meta name="description" content="Clínica odontológica em Pinheiros, São Paulo. Implantes, lentes de contato dental, ortodontia estética e harmonização facial, com planejamento digital antes do tratamento.">
+  <meta name="theme-color" content="#F7F6F3">
+
+  <!-- Open Graph, JSON-LD e canonical completos entram na Fase 7 (SEO). -->
+
+  <link rel="preload" href="assets/fonts/instrumentserif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/typography.css">
+  <link rel="stylesheet" href="styles/layout.css">
+
+  <link rel="stylesheet" href="components/Button/button.css">
+  <link rel="stylesheet" href="components/Card/card.css">
+  <link rel="stylesheet" href="components/Navbar/navbar.css">
+  <link rel="stylesheet" href="components/Hero/hero.css">
+  <link rel="stylesheet" href="components/About/about.css">
+  <link rel="stylesheet" href="components/Services/services.css">
+  <link rel="stylesheet" href="components/BeforeAfter/before-after.css">
+  <link rel="stylesheet" href="components/Technology/technology.css">
+  <link rel="stylesheet" href="components/Testimonials/testimonials.css">
+  <link rel="stylesheet" href="components/Process/process.css">
+  <link rel="stylesheet" href="components/Team/team.css">
+  <link rel="stylesheet" href="components/FAQ/faq.css">
+  <link rel="stylesheet" href="components/CTA/cta.css">
+  <link rel="stylesheet" href="components/Footer/footer.css">
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="navbar" data-navbar>
+  <div class="navbar__inner container">
+
+    <a class="navbar__brand" href="#topo">
+      <span class="navbar__wordmark">Lumina</span>
+      <span class="navbar__sub">Odontologia</span>
+    </a>
+
+    <!-- Quatro itens de topo. Hick's Law: o tempo de decisão cresce com o
+         número de opções, então a navegação principal carrega só as categorias
+         de alto nível — o resto do site é alcançado por dentro delas. -->
+    <nav class="navbar__nav" id="navbar-menu" aria-label="Principal">
+      <ul class="navbar__list">
+        <li><a class="navbar__link" href="#especialidades">Especialidades</a></li>
+        <li><a class="navbar__link" href="#tecnologia">Tecnologia</a></li>
+        <li><a class="navbar__link" href="#equipe">Equipe</a></li>
+        <li><a class="navbar__link" href="#sobre">Sobre</a></li>
+      </ul>
+      <a class="btn btn--primary navbar__cta" href="#agendamento">Agendar avaliação</a>
+    </nav>
+
+    <button class="navbar__toggle" type="button"
+            aria-expanded="false" aria-controls="navbar-menu" data-navbar-toggle>
+      <span class="navbar__toggle-bars" aria-hidden="true"></span>
+      <span class="visually-hidden" data-navbar-toggle-label>Abrir menu</span>
+    </button>
+
+  </div>
+</header>
+
+<main id="conteudo">
+
+  <!-- 1. Hero -->
+  <section class="hero" id="topo">
+
+    <!-- width/height explícitos + aspect-ratio no CSS reservam o espaço antes do
+         carregamento: a imagem não empurra o conteúdo ao chegar (CLS = 0).
+         fetchpriority="high" porque esta é a maior imagem do primeiro viewport. -->
+    <img class="hero__image"
+         src="assets/img/hero-placeholder.svg"
+         alt="Recepção da clínica Lumina, com luz natural entrando por uma janela alta"
+         width="1600" height="1000"
+         fetchpriority="high" decoding="async">
+
+    <div class="hero__container container">
+      <div class="hero__panel">
+
+        <p class="hero__eyebrow">Odontologia estética e reabilitação oral</p>
+
+        <h1 class="hero__title">Confiança para sorrir</h1>
+
+        <p class="hero__lead">
+          Planejamento digital antes de qualquer procedimento. Você vê o resultado
+          projetado — e decide com o quadro completo na frente.
+        </p>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="#agendamento">Agendar avaliação</a>
+          <a class="btn btn--ghost" href="#especialidades">Ver especialidades</a>
+        </div>
+
+        <p class="hero__proof">
+          <span class="hero__stars" aria-hidden="true">★★★★★</span>
+          <span><strong>4,9</strong> de 5 em 312 avaliações no Google</span>
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Sobre -->
+  <section class="section about" id="sobre">
+    <div class="container about__inner">
+
+      <figure class="about__figure">
+        <img src="assets/img/sobre.svg"
+             alt="Sala de espera da Lumina, com luz natural e assentos baixos de madeira"
+             width="1200" height="1500" loading="lazy" decoding="async">
+      </figure>
+
+      <div class="about__content">
+        <div class="section-head">
+          <span class="section-head__eyebrow">A clínica</span>
+          <h2 class="section-head__title">Um lugar onde a decisão vem antes do procedimento</h2>
+          <p class="section-head__lead">
+            A Lumina nasceu de uma inquietação simples: pacientes chegavam ao
+            consultório sem entender o que seria feito na própria boca. Invertemos
+            a ordem. Primeiro o diagnóstico completo e o plano na tela — depois,
+            só depois, o tratamento.
+          </p>
+        </div>
+
+        <ul class="about__values">
+          <li class="about__value">
+            <h3 class="about__value-title">Diagnóstico antes de orçamento</h3>
+            <p class="about__value-text">
+              Nenhum valor é apresentado sem exame de imagem e plano escrito.
+            </p>
+          </li>
+          <li class="about__value">
+            <h3 class="about__value-title">Um responsável por caso</h3>
+            <p class="about__value-text">
+              O especialista que planeja é o mesmo que executa e acompanha.
+            </p>
+          </li>
+          <li class="about__value">
+            <h3 class="about__value-title">Previsibilidade estética</h3>
+            <p class="about__value-text">
+              Você vê a simulação do resultado antes de autorizar qualquer etapa.
+            </p>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. Especialidades -->
+  <section class="section section--raised" id="especialidades">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="section-head__eyebrow">Especialidades</span>
+        <h2 class="section-head__title">Cinco frentes, um plano único</h2>
+        <p class="section-head__lead">
+          Casos que combinam mais de uma especialidade são planejados em conjunto,
+          não em atendimentos separados.
+        </p>
+      </div>
+
+      <ul class="services__grid">
+        <li>
+          <article class="card">
+            <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3.2c-3.3 0-5.6 1.9-5.6 4.7 0 2.1.9 3.5 1.4 5.3.4 1.5.5 3 .7 4.6.1 1.2.6 2.1 1.5 2.1.8 0 1.2-.8 1.4-2.1.2-1.2.3-2.4.6-2.4s.4 1.2.6 2.4c.2 1.3.6 2.1 1.4 2.1.9 0 1.4-.9 1.5-2.1.2-1.6.3-3.1.7-4.6.5-1.8 1.4-3.2 1.4-5.3 0-2.8-2.3-4.7-5.6-4.7Z"/>
+            </svg>
+            <h3 class="card__title">Implantes</h3>
+            <p class="card__text">
+              Reposição unitária ou total, guiada por tomografia e cirurgia planejada
+              em software antes do dia do procedimento.
+            </p>
+            <a class="card__link" href="especialidades/implantes.html">Implantes</a>
+          </article>
+        </li>
+        <li>
+          <article class="card">
+            <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="7" width="18" height="10" rx="2"/>
+              <path d="M8 7v10M12 7v10M16 7v10"/>
+            </svg>
+            <h3 class="card__title">Lentes de contato dental</h3>
+            <p class="card__text">
+              Lâminas de porcelana de 0,3 mm. Simulação em 3D e ensaio no próprio
+              sorriso antes de qualquer desgaste.
+            </p>
+            <a class="card__link" href="especialidades/lentes-de-contato-dental.html">Lentes de contato dental</a>
+          </article>
+        </li>
+        <li>
+          <article class="card">
+            <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 9c2.5-3 5.3-4.5 8-4.5S17.5 6 20 9"/>
+              <path d="M4 15c2.5 3 5.3 4.5 8 4.5s5.5-1.5 8-4.5"/>
+              <circle cx="12" cy="12" r="1.4"/>
+            </svg>
+            <h3 class="card__title">Harmonização facial</h3>
+            <p class="card__text">
+              Proporção e sustentação do terço inferior da face, tratada junto do
+              sorriso e não como procedimento isolado.
+            </p>
+            <a class="card__link" href="especialidades/harmonizacao-facial.html">Harmonização facial</a>
+          </article>
+        </li>
+        <li>
+          <article class="card">
+            <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 8h14"/><path d="M7 8v8a5 5 0 0 0 10 0V8"/>
+              <circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/>
+            </svg>
+            <h3 class="card__title">Ortodontia estética</h3>
+            <p class="card__text">
+              Alinhadores transparentes e aparelhos cerâmicos, com previsão de
+              duração fechada na primeira consulta.
+            </p>
+            <a class="card__link" href="especialidades/ortodontia-estetica.html">Ortodontia estética</a>
+          </article>
+        </li>
+        <li>
+          <article class="card">
+            <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3v2M12 19v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M3 12h2M19 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+              <circle cx="12" cy="12" r="3.6"/>
+            </svg>
+            <h3 class="card__title">Clareamento</h3>
+            <p class="card__text">
+              Protocolo de consultório ou supervisionado em casa, definido pela
+              sensibilidade e pelo tom de partida de cada paciente.
+            </p>
+            <a class="card__link" href="especialidades/clareamento.html">Clareamento</a>
+          </article>
+        </li>
+      </ul>
+
+    </div>
+  </section>
+
+  <!-- 4. Antes e Depois -->
+  <section class="section" id="antes-depois">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="section-head__eyebrow">Antes e depois</span>
+        <h2 class="section-head__title">Resultados documentados no mesmo enquadramento</h2>
+        <p class="section-head__lead">
+          Mesma câmera, mesma luz, mesma distância. Sem retoque nas imagens —
+          a comparação só vale se as duas fotos forem tiradas do mesmo jeito.
+        </p>
+      </div>
+
+      <figure class="ba">
+        <div class="ba__stage" data-ba>
+
+          <img class="ba__img" src="assets/img/depois.svg"
+               alt="Sorriso do paciente após o tratamento, com maior uniformidade e brilho"
+               width="1200" height="675" loading="lazy" decoding="async">
+
+          <div class="ba__overlay">
+            <img class="ba__img" src="assets/img/antes.svg"
+                 alt="Sorriso do paciente antes do tratamento"
+                 width="1200" height="675" loading="lazy" decoding="async">
+          </div>
+
+          <span class="ba__tag ba__tag--antes" aria-hidden="true">Antes</span>
+          <span class="ba__tag ba__tag--depois" aria-hidden="true">Depois</span>
+
+          <span class="ba__line" aria-hidden="true"></span>
+
+          <!-- Um <input type="range"> nativo em vez de um handle improvisado: dá
+               teclado (setas, Home/End), leitor de tela e suporte a toque sem
+               reimplementar nada. O visual é todo do thumb. -->
+          <input class="ba__range" type="range" min="0" max="100" value="50" step="1"
+                 data-ba-range
+                 aria-label="Comparar antes e depois — arraste, ou use as setas do teclado">
+        </div>
+
+        <figcaption class="ba__caption">
+          Implante unitário em incisivo central, com lente de contato dental nos
+          dois adjacentes. Registro de 6 meses após a instalação.
+        </figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <!-- 5. Tecnologia -->
+  <section class="section section--raised" id="tecnologia">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="section-head__eyebrow">Tecnologia</span>
+        <h2 class="section-head__title">Equipamento que existe para reduzir incerteza</h2>
+        <p class="section-head__lead">
+          Nada aqui é novidade pela novidade. Cada aparelho está na clínica porque
+          substitui uma etapa que antes dependia de estimativa.
+        </p>
+      </div>
+
+      <div class="tech__layout">
+        <ul class="tech__list">
+          <li class="tech__item">
+            <h3 class="tech__title">Scanner intraoral</h3>
+            <p class="tech__text">
+              Substitui a moldagem com pasta. O modelo digital sai em cinco minutos
+              e não deforma no transporte até o laboratório.
+            </p>
+          </li>
+          <li class="tech__item">
+            <h3 class="tech__title">Tomografia de feixe cônico</h3>
+            <p class="tech__text">
+              Mostra volume ósseo em três dimensões — é o que permite planejar o
+              implante antes da cirurgia, e não durante.
+            </p>
+          </li>
+          <li class="tech__item">
+            <h3 class="tech__title">Fresadora de laboratório próprio</h3>
+            <p class="tech__text">
+              Peças provisórias no mesmo dia. Você não sai da clínica com espaço
+              vazio depois de uma extração.
+            </p>
+          </li>
+        </ul>
+
+        <figure class="tech__figure">
+          <img src="assets/img/tecnologia.svg"
+               alt="Scanner intraoral apoiado na bancada do consultório"
+               width="1600" height="900" loading="lazy" decoding="async">
+          <figcaption class="tech__caption">
+            Consultório 2 — scanner e estação de planejamento na mesma sala do
+            atendimento.
+          </figcaption>
+        </figure>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 6. Depoimentos -->
+  <section class="section" id="depoimentos">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="section-head__eyebrow">Depoimentos</span>
+        <h2 class="section-head__title">O que dizem quem já passou pelas quatro etapas</h2>
+      </div>
+
+      <div class="testi__layout">
+
+        <figure class="testi__feature">
+          <img src="assets/img/depoimento.svg"
+               alt="Retrato de Helena Vasconcelos, paciente da clínica"
+               width="1200" height="900" loading="lazy" decoding="async">
+          <figcaption class="testi__figcaption">
+            Depoimento em vídeo — publicação prevista para a próxima atualização
+            do site.
+          </figcaption>
+        </figure>
+
+        <div class="testi__quotes">
+          <blockquote class="testi__quote">
+            <p class="testi__text">
+              Eu já tinha desistido de dois orçamentos antes, porque ninguém me
+              explicava o que ia acontecer. Aqui saí da primeira consulta com o
+              plano impresso na mão e o valor fechado.
+            </p>
+            <footer class="testi__author">
+              <span class="testi__name">Helena Vasconcelos</span>
+              <span class="testi__meta">Implante e lentes de contato dental</span>
+            </footer>
+          </blockquote>
+
+          <blockquote class="testi__quote">
+            <p class="testi__text">
+              O que me convenceu foi ver a simulação antes. Não é promessa, é a
+              imagem do que vai ficar — e ficou igual.
+            </p>
+            <footer class="testi__author">
+              <span class="testi__name">Rodrigo Salgado</span>
+              <span class="testi__meta">Harmonização facial</span>
+            </footer>
+          </blockquote>
+
+          <p class="testi__badge">
+            <span class="testi__stars" aria-hidden="true">★★★★★</span>
+            <span><strong>4,9</strong> de 5 em 312 avaliações no Google</span>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Processo -->
+  <section class="section section--raised" id="processo">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="section-head__eyebrow">Como funciona</span>
+        <h2 class="section-head__title">Quatro etapas, nessa ordem</h2>
+        <p class="section-head__lead">
+          Nenhuma etapa começa antes da anterior estar fechada e aprovada por você.
+        </p>
+      </div>
+
+      <!-- Lista ordenada de verdade: a numeração aqui é a sequência real do
+           atendimento, não enfeite. Trocar a ordem mudaria o significado. -->
+      <ol class="process__list">
+        <li class="process__step">
+          <span class="process__num" aria-hidden="true">1</span>
+          <h3 class="process__title">Consulta</h3>
+          <p class="process__text">
+            Exame clínico, fotos e escaneamento. Uma hora, sem compromisso de
+            fechar nada no mesmo dia.
+          </p>
+        </li>
+        <li class="process__step">
+          <span class="process__num" aria-hidden="true">2</span>
+          <h3 class="process__title">Planejamento</h3>
+          <p class="process__text">
+            Você recebe o plano por escrito, com simulação do resultado, prazo por
+            etapa e valor fechado.
+          </p>
+        </li>
+        <li class="process__step">
+          <span class="process__num" aria-hidden="true">3</span>
+          <h3 class="process__title">Tratamento</h3>
+          <p class="process__text">
+            Execução com o mesmo especialista que planejou. Sessões agendadas em
+            bloco, para reduzir o número de visitas.
+          </p>
+        </li>
+        <li class="process__step">
+          <span class="process__num" aria-hidden="true">4</span>
+          <h3 class="process__title">Acompanhamento</h3>
+          <p class="process__text">
+            Retornos em 7 dias, 3 meses e 1 ano, já incluídos no valor do
+            tratamento.
+          </p>
+        </li>
+      </ol>
+
+    </div>
+  </section>
+
+  <!-- 8. Equipe -->
+  <section class="section" id="equipe">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="section-head__eyebrow">Equipe</span>
+        <h2 class="section-head__title">Quem planeja é quem executa</h2>
+        <p class="section-head__lead">
+          Três especialistas, cada um responsável pelo próprio caso do começo ao
+          acompanhamento.
+        </p>
+      </div>
+
+      <ul class="team__grid">
+        <li class="team__member">
+          <img class="team__photo" src="assets/img/equipe-1.svg"
+               alt="Retrato de Dra. Marina Toledo" width="900" height="1200"
+               loading="lazy" decoding="async">
+          <h3 class="team__name">Dra. Marina Toledo</h3>
+          <p class="team__role">Implantodontia e cirurgia guiada</p>
+          <p class="team__cro">CRO-SP 00000 · 14 anos de clínica</p>
+        </li>
+        <li class="team__member">
+          <img class="team__photo" src="assets/img/equipe-2.svg"
+               alt="Retrato de Dr. Otávio Bandeira" width="900" height="1200"
+               loading="lazy" decoding="async">
+          <h3 class="team__name">Dr. Otávio Bandeira</h3>
+          <p class="team__role">Dentística e reabilitação estética</p>
+          <p class="team__cro">CRO-SP 00000 · 11 anos de clínica</p>
+        </li>
+        <li class="team__member">
+          <img class="team__photo" src="assets/img/equipe-3.svg"
+               alt="Retrato de Dra. Clara Nogueira" width="900" height="1200"
+               loading="lazy" decoding="async">
+          <h3 class="team__name">Dra. Clara Nogueira</h3>
+          <p class="team__role">Ortodontia e harmonização facial</p>
+          <p class="team__cro">CRO-SP 00000 · 9 anos de clínica</p>
+        </li>
+      </ul>
+
+    </div>
+  </section>
+
+  <!-- 9. FAQ -->
+  <section class="section section--raised" id="faq">
+    <div class="container faq__inner">
+
+      <div class="section-head">
+        <span class="section-head__eyebrow">Perguntas frequentes</span>
+        <h2 class="section-head__title">O que perguntam antes de marcar</h2>
+      </div>
+
+      <!-- <details> nativo, não acordeão em JavaScript: já vem com teclado,
+           semântica de expansão para leitor de tela e funcionamento com o JS
+           desligado. O atributo name faz a abertura ser exclusiva sem uma linha
+           de script; onde não houver suporte, mais de um item abre — degradação
+           aceitável, nada quebra. -->
+      <div class="faq__list">
+        <details class="faq__item" name="faq">
+          <summary class="faq__q">
+            <span>Quanto tempo dura um implante?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              A taxa de sobrevivência documentada em literatura passa de 95% em
+              dez anos, quando há osso suficiente e acompanhamento regular. O que
+              costuma falhar não é o implante e sim a manutenção — por isso os
+              retornos entram no valor do tratamento.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq__item" name="faq">
+          <summary class="faq__q">
+            <span>Lente de contato dental precisa desgastar o dente?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              Em boa parte dos casos o desgaste é mínimo ou inexistente. Só
+              sabemos depois do escaneamento e do ensaio no seu próprio sorriso —
+              e se o seu caso exigir desgaste maior, você é avisado antes de
+              autorizar, não durante.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq__item" name="faq">
+          <summary class="faq__q">
+            <span>Vocês atendem por convênio?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              Não trabalhamos com convênios. Emitimos nota fiscal e o relatório
+              clínico para reembolso, que a maior parte dos planos de reembolso
+              aceita. Parcelamos em até 12 vezes.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq__item" name="faq">
+          <summary class="faq__q">
+            <span>Como é a primeira consulta?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              Cerca de uma hora: exame clínico, fotografias, escaneamento e, se o
+              caso pedir, tomografia feita na própria clínica. Você sai com
+              diagnóstico. O plano por escrito chega em até três dias úteis.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq__item" name="faq">
+          <summary class="faq__q">
+            <span>Harmonização facial tem contraindicação?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              Tem. Gestação, algumas doenças autoimunes e uso de determinados
+              anticoagulantes entram na avaliação. Casos assim são recusados ou
+              adiados — a avaliação inicial existe justamente para isso.
+            </p>
+          </div>
+        </details>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 10. CTA final -->
+  <section class="section cta" id="agendamento">
+    <div class="container">
+
+      <div class="section-head section-head--center">
+        <span class="section-head__eyebrow">Primeiro passo</span>
+        <h2 class="section-head__title">Agende sua avaliação</h2>
+        <p class="section-head__lead">
+          Uma hora de consulta, diagnóstico completo e nenhum compromisso de
+          fechar tratamento no mesmo dia.
+        </p>
+      </div>
+
+      <div class="cta__actions">
+        <a class="btn btn--primary btn--lg" href="contato.html">Agendar avaliação</a>
+        <a class="btn btn--ghost btn--lg" href="tel:+551130000000">(11) 3000-0000</a>
+      </div>
+
+      <p class="cta__note">
+        Segunda a sexta, 9h às 19h · Sábado, 9h às 13h · Pinheiros, São Paulo
+      </p>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- 11. Footer -->
+<footer class="footer" id="contato">
+  <div class="footer__inner container">
+
+    <div class="footer__grid">
+
+      <div class="footer__brand">
+        <span class="footer__wordmark">Lumina</span>
+        <p class="footer__tagline">
+          Odontologia estética e reabilitação oral em São Paulo.
+        </p>
+        <ul class="footer__social" aria-label="Redes sociais">
+          <li><a class="footer__social-link" href="#instagram">Instagram</a></li>
+          <li><a class="footer__social-link" href="#facebook">Facebook</a></li>
+          <li><a class="footer__social-link" href="#youtube">YouTube</a></li>
+        </ul>
+      </div>
+
+      <nav class="footer__col" aria-labelledby="footer-esp">
+        <h2 class="footer__heading" id="footer-esp">Especialidades</h2>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="especialidades/implantes.html">Implantes</a></li>
+          <li><a class="footer__link" href="especialidades/lentes-de-contato-dental.html">Lentes de contato dental</a></li>
+          <li><a class="footer__link" href="especialidades/harmonizacao-facial.html">Harmonização facial</a></li>
+          <li><a class="footer__link" href="especialidades/ortodontia-estetica.html">Ortodontia estética</a></li>
+          <li><a class="footer__link" href="especialidades/clareamento.html">Clareamento</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer__col" aria-labelledby="footer-inst">
+        <h2 class="footer__heading" id="footer-inst">Institucional</h2>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="#sobre">Sobre a clínica</a></li>
+          <li><a class="footer__link" href="#equipe">Equipe</a></li>
+          <li><a class="footer__link" href="#tecnologia">Tecnologia</a></li>
+          <li><a class="footer__link" href="#faq">Perguntas frequentes</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">Contato</h2>
+        <address class="footer__address">
+          Rua dos Pinheiros, 1400 — conj. 82<br>
+          Pinheiros, São Paulo — SP
+
+          <!-- Telefone e e-mail saem do texto corrido e viram lista: são os
+               alvos mais tocados desta coluna no celular e precisam dos 44px
+               da Lei de Fitts, o que não cabe entre linhas de endereço. -->
+          <ul class="footer__list">
+            <li><a class="footer__link" href="tel:+551130000000">(11) 3000-0000</a></li>
+            <li><a class="footer__link" href="mailto:contato@lumina.exemplo">contato@lumina.exemplo</a></li>
+          </ul>
+        </address>
+        <p class="footer__hours">
+          Segunda a sexta, 9h às 19h<br>
+          Sábado, 9h às 13h
+        </p>
+      </div>
+
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__legal">
+        © 2026 Lumina Odontologia — projeto fictício. CRO-SP 00000.
+      </p>
+      <p class="footer__legal">
+        <a class="footer__link" href="#privacidade">Política de privacidade</a>
+        <span aria-hidden="true"> · </span>
+        <a class="footer__link" href="#termos">Termos de uso</a>
+      </p>
+    </div>
+
+  </div>
+</footer>
+
+<script src="components/Navbar/navbar.js" defer></script>
+<script src="components/BeforeAfter/before-after.js" defer></script>
+
+</body>
+</html>

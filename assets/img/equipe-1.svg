@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" width="900" height="1200" role="img">
+  <title>Retrato de integrante da equipe</title>
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#F1ECE2"/>
+      <stop offset="0.6" stop-color="#DED6C8"/>
+      <stop offset="1" stop-color="#B9AE9B"/>
+    </linearGradient>
+    <radialGradient id="luz" cx="0.3" cy="0.22" r="0.7">
+      <stop offset="0" stop-color="#FFFBF2" stop-opacity="0.9"/>
+      <stop offset="0.5" stop-color="#FFF6E8" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#FFF6E8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="vin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3A3123" stop-opacity="0"/>
+      <stop offset="1" stop-color="#3A3123" stop-opacity="0.3"/>
+    </linearGradient>
+    <filter id="grao">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="900" height="1200" fill="url(#g1)"/>
+  <ellipse cx="450" cy="408" rx="153" ry="180" fill="#9C8F7C" opacity="0.5"/>
+  <path d="M 144 1200 Q 180 720 450 683
+           Q 720 720 756 1200 Z" fill="#8E8271" opacity="0.55"/>
+  <rect x="36" y="72" width="180" height="600" fill="#FCF8EF" opacity="0.45"/>
+  <rect width="900" height="1200" fill="url(#luz)"/>
+  <rect width="900" height="1200" fill="url(#vin)"/>
+  <rect width="900" height="1200" filter="url(#grao)" opacity="0.05"/>
+</svg>

@@ -1,0 +1,27 @@
+/* ==========================================================================
+   Seção: Especialidades
+   Depende de: tokens.css, layout.css, Card/card.css
+
+   É uma <ul>: cinco itens irmãos de mesmo peso são uma lista, e um leitor de
+   tela anuncia "lista de 5 itens" antes de percorrê-los. O marcador é removido
+   visualmente, a semântica permanece.
+   ========================================================================== */
+
+.services__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-3);
+}
+
+/* O card preenche a altura da célula para que a linha fique alinhada mesmo com
+   textos de comprimentos diferentes. */
+.services__grid > li {
+  display: flex;
+}
+
+.services__grid .card {
+  inline-size: 100%;
+}
