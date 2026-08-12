@@ -1,0 +1,144 @@
+/* ==========================================================================
+   Componente: Footer
+   Depende de: tokens.css, layout.css
+
+   Os três blocos de links são <nav> com aria-labelledby apontando para o
+   próprio título da coluna: um leitor de tela lista "Especialidades",
+   "Institucional" como marcos navegáveis distintos, em vez de três grupos
+   anônimos de links.
+   ========================================================================== */
+
+.footer {
+  background-color: var(--surface-page);
+  border-block-start: 1px solid var(--border-subtle);
+}
+
+.footer__inner {
+  padding-block: var(--space-8) var(--space-4);
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6) var(--space-4);
+}
+
+/* A coluna da marca é mais larga que as de links: ela carrega texto corrido,
+   as outras carregam listas curtas. */
+@media (min-width: 40rem) {
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 64rem) {
+  .footer__grid { grid-template-columns: 1.4fr 1fr 1fr 1.2fr; }
+}
+
+/* --------------------------------------------------------------------------
+   Marca
+   -------------------------------------------------------------------------- */
+.footer__wordmark {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.footer__tagline {
+  margin-block-start: var(--space-1);
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  max-inline-size: 28ch;
+}
+
+.footer__social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Colunas de links
+   -------------------------------------------------------------------------- */
+.footer__heading {
+  font-family: var(--font-body);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-block-end: var(--space-2);
+}
+
+.footer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Alvos de link empilhados precisam de altura própria: 44px é o piso da Lei de
+   Fitts, e em rodapé (links próximos entre si) é onde erro de toque acontece. */
+.footer__link,
+.footer__social-link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+  font-size: var(--text-small);
+  color: var(--text-primary);
+  text-decoration: none;
+  border-block-end: 1px solid transparent;
+  transition: border-color var(--duration-fast) var(--ease-out);
+
+  /* Item flex com texto precisa poder encolher abaixo da largura do conteúdo,
+     senão um nome longo de especialidade estica a coluna. */
+  min-inline-size: 0;
+}
+
+.footer__link:hover,
+.footer__link:focus-visible,
+.footer__social-link:hover,
+.footer__social-link:focus-visible {
+  border-block-end-color: var(--decor-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Contato
+   -------------------------------------------------------------------------- */
+.footer__address {
+  font-style: normal;
+  font-size: var(--text-small);
+  line-height: var(--leading-body);
+  color: var(--text-secondary);
+}
+
+.footer__address .footer__list {
+  margin-block-start: var(--space-1);
+}
+
+.footer__hours {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Rodapé do rodapé
+   -------------------------------------------------------------------------- */
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  margin-block-start: var(--space-6);
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--border-subtle);
+}
+
+.footer__legal {
+  font-size: var(--text-micro);
+  color: var(--text-secondary);
+}

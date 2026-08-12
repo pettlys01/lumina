@@ -1,0 +1,29 @@
+<header class="navbar" data-navbar>
+  <div class="navbar__inner container">
+
+    <a class="navbar__brand" href="#topo">
+      <span class="navbar__wordmark">Lumina</span>
+      <span class="navbar__sub">Odontologia</span>
+    </a>
+
+    <!-- Quatro itens de topo. Hick's Law: o tempo de decisão cresce com o
+         número de opções, então a navegação principal carrega só as categorias
+         de alto nível — o resto do site é alcançado por dentro delas. -->
+    <nav class="navbar__nav" id="navbar-menu" aria-label="Principal">
+      <ul class="navbar__list">
+        <li><a class="navbar__link" href="#especialidades">Especialidades</a></li>
+        <li><a class="navbar__link" href="#tecnologia">Tecnologia</a></li>
+        <li><a class="navbar__link" href="#equipe">Equipe</a></li>
+        <li><a class="navbar__link" href="#sobre">Sobre</a></li>
+      </ul>
+      <a class="btn btn--primary navbar__cta" href="#agendamento">Agendar avaliação</a>
+    </nav>
+
+    <button class="navbar__toggle" type="button"
+            aria-expanded="false" aria-controls="navbar-menu" data-navbar-toggle>
+      <span class="navbar__toggle-bars" aria-hidden="true"></span>
+      <span class="visually-hidden" data-navbar-toggle-label>Abrir menu</span>
+    </button>
+
+  </div>
+</header>

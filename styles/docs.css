@@ -1,0 +1,175 @@
+/* ==========================================================================
+   Chrome das folhas técnicas internas (styleguide.html, componentes.html)
+   Depende de: tokens.css, layout.css
+
+   NÃO FAZ PARTE DO SITE. É a moldura de documentação — cabeçalho, numeração de
+   seção, palco de demonstração. Compartilhado pelas duas folhas para que elas
+   não divirjam visualmente uma da outra.
+   ========================================================================== */
+
+.sheet {
+  max-width: var(--width-content);
+  margin-inline: auto;
+  padding-block: var(--space-6) var(--space-12);
+  padding-inline: var(--space-container);
+}
+
+/* --------------------------------------------------------------------------
+   Cabeçalho do documento
+   -------------------------------------------------------------------------- */
+.doc-head {
+  padding-block-end: var(--space-6);
+  border-block-end: 1px solid var(--border-default);
+  margin-block-end: var(--space-8);
+}
+
+.doc-head__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-end: var(--space-3);
+}
+
+.doc-head__title {
+  font-size: var(--text-h1);
+  max-width: 20ch;
+  margin-block-end: var(--space-3);
+}
+
+.doc-head__lead {
+  max-width: 58ch;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.25em 0.85em;
+}
+
+.chip::before {
+  content: "";
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background-color: var(--decor-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Seções da especificação
+   -------------------------------------------------------------------------- */
+.spec {
+  margin-block-end: var(--space-12);
+}
+
+.spec__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-block-end: var(--space-2);
+  border-block-end: 1px solid var(--border-subtle);
+  margin-block-end: var(--space-4);
+}
+
+.spec__code {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--text-accent);
+  letter-spacing: 0.04em;
+}
+
+.spec__title {
+  font-size: var(--text-h3);
+}
+
+.spec__note {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  max-width: 62ch;
+  margin-block-end: var(--space-4);
+}
+
+.spec__note strong {
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
+/* Caminhos e nomes de token são longos e não têm espaço onde quebrar; sem isto
+   eles esticam a página em telas estreitas. */
+.spec__note code,
+.doc-foot code,
+.doc-head code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
+/* Referência a uma ficha da Base de Conhecimento que justifica a decisão. */
+.spec__source {
+  display: block;
+  margin-block-start: var(--space-2);
+  padding-inline-start: var(--space-2);
+  border-inline-start: 2px solid var(--decor-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   Palco de demonstração
+   -------------------------------------------------------------------------- */
+.demo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.demo + .demo {
+  margin-block-start: var(--space-4);
+}
+
+.demo__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--text-secondary);
+}
+
+.demo__stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius);
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-4);
+}
+
+/* --------------------------------------------------------------------------
+   Rodapé do documento
+   -------------------------------------------------------------------------- */
+.doc-foot {
+  margin-block-start: var(--space-8);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--border-default);
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  max-width: 62ch;
+}
+
+.doc-foot strong {
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}

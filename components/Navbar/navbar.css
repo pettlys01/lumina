@@ -1,0 +1,226 @@
+/* ==========================================================================
+   Componente: Navbar
+   Depende de: tokens.css, layout.css, Button/button.css
+
+   A mudança de estado ao rolar é motion COMUNICATIVO, não decorativo
+   (Base: 07-motion/motion-necessity-spectrum.md): sobre o Hero a barra é
+   transparente para não competir com a imagem; assim que a página rola, ela
+   ganha fundo próprio porque passou a existir conteúdo atrás dela. A transição
+   comunica essa passagem — não é enfeite.
+   ========================================================================== */
+
+.navbar {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 50;
+  transition: background-color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+  border-block-end: 1px solid transparent;
+}
+
+/* Em aparelhos com recorte de tela, a barra fixa precisa respeitar a área
+   segura lateral — senão a marca fica sob o entalhe em orientação paisagem. */
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-2);
+  padding-inline-start: max(var(--space-container), env(safe-area-inset-left));
+  padding-inline-end: max(var(--space-container), env(safe-area-inset-right));
+}
+
+/* --------------------------------------------------------------------------
+   Estado rolado
+   -------------------------------------------------------------------------- */
+.navbar--scrolled {
+  background-color: color-mix(in srgb, var(--surface-page) 85%, transparent);
+  border-block-end-color: var(--border-subtle);
+}
+
+/* backdrop-filter é progressive enhancement: onde não houver suporte, o fundo
+   com 85% de opacidade acima já garante legibilidade sozinho. */
+@supports (backdrop-filter: blur(12px)) {
+  .navbar--scrolled {
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Marca
+   -------------------------------------------------------------------------- */
+.navbar__brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.navbar__wordmark {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+}
+
+.navbar__sub {
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-block-start: 0.25em;
+}
+
+/* --------------------------------------------------------------------------
+   Navegação
+   -------------------------------------------------------------------------- */
+.navbar__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.navbar__list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;      /* 44px — Lei de Fitts */
+  font-size: var(--text-small);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+/* O filete sob o link é dourado da marca em uso puramente decorativo — ele
+   nunca é o único indicador do estado, que já está no próprio texto focado. */
+.navbar__link::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 0.5rem;
+  inset-inline: 0;
+  block-size: 1px;
+  background-color: var(--decor-accent);
+  transform: scaleX(0);
+  transform-origin: inline-start;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.navbar__link:hover::after,
+.navbar__link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* --------------------------------------------------------------------------
+   Botão do menu (só existe em telas estreitas)
+   -------------------------------------------------------------------------- */
+.navbar__toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.75rem;         /* 44×44 — Lei de Fitts */
+  block-size: 2.75rem;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+/* Três traços desenhados em CSS: sem ícone externo, sem requisição extra. */
+.navbar__toggle-bars,
+.navbar__toggle-bars::before,
+.navbar__toggle-bars::after {
+  display: block;
+  inline-size: 1.125rem;
+  block-size: 1px;
+  background-color: currentColor;
+  transition: transform var(--duration-fast) var(--ease-out),
+              opacity var(--duration-fast) var(--ease-out);
+}
+
+.navbar__toggle-bars {
+  position: relative;
+}
+
+.navbar__toggle-bars::before,
+.navbar__toggle-bars::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+}
+
+.navbar__toggle-bars::before { inset-block-start: -6px; }
+.navbar__toggle-bars::after  { inset-block-start: 6px; }
+
+/* Aberto: os traços viram um X. O estado também está em aria-expanded — a
+   forma é reforço visual, não o único indicador. */
+.navbar--open .navbar__toggle-bars { background-color: transparent; }
+.navbar--open .navbar__toggle-bars::before { transform: translateY(6px) rotate(45deg); }
+.navbar--open .navbar__toggle-bars::after  { transform: translateY(-6px) rotate(-45deg); }
+
+/* --------------------------------------------------------------------------
+   Telas estreitas — a navegação vira painel
+   -------------------------------------------------------------------------- */
+@media (max-width: 48rem) {
+  .navbar__toggle { display: inline-flex; }
+
+  /* display:none remove do fluxo de tabulação e da árvore de acessibilidade
+     automaticamente — não é preciso gerenciar inert nem tabindex por JS. */
+  .navbar__nav {
+    display: none;
+    position: fixed;
+    inset-block-start: 4.75rem;
+    inset-inline: 0;
+    inset-block-end: 0;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--space-2);
+    padding-block: var(--space-3) calc(var(--space-6) + env(safe-area-inset-bottom));
+    padding-inline: var(--space-container);
+    background-color: var(--surface-page);
+    border-block-start: 1px solid var(--border-subtle);
+    overflow-y: auto;
+
+    /* Sem isto, rolar até o fim do painel continua rolando a página atrás. */
+    overscroll-behavior: contain;
+  }
+
+  .navbar--open .navbar__nav { display: flex; }
+
+  .navbar__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .navbar__link {
+    min-block-size: 3.25rem;
+    font-size: var(--text-body-lg);
+    font-family: var(--font-heading);
+    border-block-end: 1px solid var(--border-subtle);
+  }
+
+  .navbar__link::after { display: none; }
+
+  .navbar__cta {
+    margin-block-start: var(--space-2);
+    inline-size: 100%;
+  }
+
+  /* Com o painel aberto a barra precisa de fundo mesmo no topo da página. */
+  .navbar--open {
+    background-color: var(--surface-page);
+    border-block-end-color: var(--border-subtle);
+  }
+}

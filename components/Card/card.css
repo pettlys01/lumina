@@ -1,0 +1,83 @@
+/* ==========================================================================
+   Componente: Card (especialidade)
+   Depende de: tokens.css
+
+   Regra de conteúdo, não só de estilo: o card NÃO esconde informação atrás do
+   hover. Todo o texto está visível em repouso; o hover apenas eleva o card para
+   sinalizar que ele é clicável. Isso mantém o componente íntegro em touch (onde
+   hover não existe) e evita o WCAG 1.4.13, que exigiria disparo por teclado de
+   qualquer conteúdo revelado por hover
+   (Base: 07-motion/hover-exploratory-states.md).
+   ========================================================================== */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-raised);
+  padding: var(--space-3);
+
+  transition: box-shadow var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.card__icon {
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  color: var(--decor-accent);
+  flex-shrink: 0;
+}
+
+.card__title {
+  font-size: var(--text-h3);
+}
+
+.card__text {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+/* O link cobre o card inteiro: o alvo de clique passa a ser o card, não só o
+   título — alvo maior, Lei de Fitts. O texto do link continua sendo o título,
+   então o leitor de tela anuncia um destino com sentido. */
+.card__link {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  text-indent: -100vw;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Hover e foco produzem o mesmo resultado visual. :focus-within faz o card
+   inteiro reagir quando o link interno recebe foco por teclado. */
+.card:hover,
+.card:focus-within {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-default);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* O anel de foco é desenhado no card, não no link invisível esticado —
+   um outline no link cobriria a área inteira sem indicar o componente. */
+.card:focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.card__link:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover { transform: none; }
+}

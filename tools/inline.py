@@ -78,6 +78,39 @@ def build(src: Path, dest: Path) -> None:
         r'\s*<link\s+rel="preload"[^>]*as="font"[^>]*>', "", html
     )
 
+    # 3b. Scripts locais viram inline: um src relativo não resolve fora do repo.
+    def replace_script(match: re.Match) -> str:
+        src = match.group(1)
+        if src.startswith(("http://", "https://", "//", "data:")):
+            return match.group(0)
+        js_path = (root / src).resolve()
+        if not js_path.is_file():
+            raise FileNotFoundError(f"script não encontrado: {js_path}")
+        return f"<script>\n/* ---- {src} ---- */\n{js_path.read_text(encoding='utf-8')}\n</script>"
+
+    html, n_js = re.subn(
+        r'<script\s+src="([^"]+)"[^>]*>\s*</script>', replace_script, html
+    )
+
+    # 3c. Imagens locais viram data URI, pelo mesmo motivo.
+    def replace_img(match: re.Match) -> str:
+        src = match.group(1)
+        if src.startswith(("http://", "https://", "//", "data:")):
+            return match.group(0)
+        img_path = (root / src).resolve()
+        if not img_path.is_file():
+            raise FileNotFoundError(f"imagem não encontrada: {img_path}")
+        tipos = {".svg": "image/svg+xml", ".png": "image/png",
+                 ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
+                 ".webp": "image/webp", ".avif": "image/avif"}
+        mime = tipos.get(img_path.suffix.lower())
+        if mime is None:
+            raise ValueError(f"tipo de imagem não suportado: {img_path.suffix}")
+        dados = base64.b64encode(img_path.read_bytes()).decode("ascii")
+        return match.group(0).replace(src, f"data:{mime};base64,{dados}")
+
+    html, n_img = re.subn(r'<img[^>]*\ssrc="([^"]+)"[^>]*>', replace_img, html)
+
     # 4. Extrai <title>, <style>, corpo e <script>; descarta os invólucros.
     title = re.search(r"<title>(.*?)</title>", html, re.S)
     styles = re.findall(r"<style>.*?</style>", html, re.S)
@@ -92,13 +125,24 @@ def build(src: Path, dest: Path) -> None:
     parts.extend(styles)
     parts.append(body.group(1).strip())
 
+    saida = "\n\n".join(parts)
+
+    # Qualquer referência local sobrevivente quebraria em silêncio ao publicar:
+    # a página sobe, mas sem a imagem ou sem o comportamento. Falhar aqui é
+    # melhor do que descobrir depois de publicada.
+    restantes = re.findall(
+        r'(?:src|href)="(?!https?:|//|data:|#|mailto:|tel:)([^"]+)"', saida
+    )
+    if restantes:
+        raise ValueError(f"referências locais não resolvidas: {sorted(set(restantes))}")
+
     dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text("\n\n".join(parts), encoding="utf-8")
+    dest.write_text(saida, encoding="utf-8")
 
     size_kb = dest.stat().st_size / 1024
     print(f"{src.name} -> {dest}")
     print(f"  {n_css} folha(s) de estilo embutida(s), {n_preload} preload removido(s)")
-    print(f"  {fonts_inlined} fonte(s) embutida(s)")
+    print(f"  {fonts_inlined} fonte(s), {n_js} script(s), {n_img} imagem(ns) embutida(s)")
     print(f"  {size_kb:.0f} KB")
 
 

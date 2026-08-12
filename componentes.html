@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<!-- ARQUIVO GERADO por tools/build.py — não editar aqui.
+     Edite o fonte em src/ ou o partial em components/. -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Componentes — Lumina Odontologia</title>
+  <meta name="description" content="Folha técnica dos componentes base da Lumina: Navbar, Hero, Botões, Cards e Footer.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#F7F6F3">
+
+  <link rel="preload" href="assets/fonts/instrumentserif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/typography.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="components/Button/button.css">
+  <link rel="stylesheet" href="components/Card/card.css">
+  <link rel="stylesheet" href="components/Navbar/navbar.css">
+  <link rel="stylesheet" href="components/Hero/hero.css">
+  <link rel="stylesheet" href="components/Footer/footer.css">
+  <link rel="stylesheet" href="styles/docs.css">
+  <link rel="stylesheet" href="styles/styleguide.css">
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- ====================================================================
+     Navbar e Hero aparecem AO VIVO, não em moldura de demonstração: o
+     estado rolado da barra e o comportamento do painel só existem em
+     condições reais. Role a página e reduza a janela para vê-los.
+     ==================================================================== -->
+<header class="navbar" data-navbar>
+  <div class="navbar__inner container">
+
+    <a class="navbar__brand" href="#topo">
+      <span class="navbar__wordmark">Lumina</span>
+      <span class="navbar__sub">Odontologia</span>
+    </a>
+
+    <!-- Quatro itens de topo. Hick's Law: o tempo de decisão cresce com o
+         número de opções, então a navegação principal carrega só as categorias
+         de alto nível — o resto do site é alcançado por dentro delas. -->
+    <nav class="navbar__nav" id="navbar-menu" aria-label="Principal">
+      <ul class="navbar__list">
+        <li><a class="navbar__link" href="#especialidades">Especialidades</a></li>
+        <li><a class="navbar__link" href="#tecnologia">Tecnologia</a></li>
+        <li><a class="navbar__link" href="#equipe">Equipe</a></li>
+        <li><a class="navbar__link" href="#sobre">Sobre</a></li>
+      </ul>
+      <a class="btn btn--primary navbar__cta" href="#agendamento">Agendar avaliação</a>
+    </nav>
+
+    <button class="navbar__toggle" type="button"
+            aria-expanded="false" aria-controls="navbar-menu" data-navbar-toggle>
+      <span class="navbar__toggle-bars" aria-hidden="true"></span>
+      <span class="visually-hidden" data-navbar-toggle-label>Abrir menu</span>
+    </button>
+
+  </div>
+</header>
+
+<section class="hero" id="topo">
+
+  <!-- width/height explícitos + aspect-ratio no CSS reservam o espaço antes do
+       carregamento: a imagem não empurra o conteúdo ao chegar (CLS = 0).
+       fetchpriority="high" porque esta é a maior imagem do primeiro viewport. -->
+  <img class="hero__image"
+       src="assets/img/hero-placeholder.svg"
+       alt="Recepção da clínica Lumina, com luz natural entrando por uma janela alta"
+       width="1600" height="1000"
+       fetchpriority="high" decoding="async">
+
+  <div class="hero__container container">
+    <div class="hero__panel">
+
+      <p class="hero__eyebrow">Odontologia estética e reabilitação oral</p>
+
+      <h1 class="hero__title">Confiança para sorrir</h1>
+
+      <p class="hero__lead">
+        Planejamento digital antes de qualquer procedimento. Você vê o resultado
+        projetado — e decide com o quadro completo na frente.
+      </p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary btn--lg" href="#agendamento">Agendar avaliação</a>
+        <a class="btn btn--ghost" href="#especialidades">Ver especialidades</a>
+      </div>
+
+      <p class="hero__proof">
+        <span class="hero__stars" aria-hidden="true">★★★★★</span>
+        <span><strong>4,9</strong> de 5 em 312 avaliações no Google</span>
+      </p>
+
+    </div>
+  </div>
+</section>
+
+<main class="sheet" id="conteudo">
+
+  <header class="doc-head">
+    <div class="doc-head__meta">
+      <span class="t-label">Lumina Odontologia · Documento C</span>
+      <span class="chip">Fase 3 · componentes</span>
+    </div>
+    <h2 class="doc-head__title">Componentes base</h2>
+    <p class="t-lead doc-head__lead">
+      Cinco componentes, cada um em sua própria pasta com CSS e JS próprios.
+      A Navbar e o Hero acima são os componentes reais, montados por
+      <code class="t-mono">tools/build.py</code> a partir dos mesmos partials que
+      a Home vai usar na Fase 4 — não há uma segunda cópia da marcação.
+    </p>
+  </header>
+
+  <!-- ================= C-01 NAVBAR ================= -->
+  <section class="spec" id="navbar">
+    <div class="spec__head">
+      <span class="spec__code">C-01</span>
+      <h3 class="spec__title">Navbar</h3>
+    </div>
+    <p class="spec__note">
+      Quatro itens no topo, não oito. Sobre o Hero a barra é transparente; ao
+      rolar, ganha fundo e filete — a mudança comunica que passou a existir
+      conteúdo atrás dela. O estado é detectado por
+      <code>IntersectionObserver</code> sobre uma sentinela de 1px, não por um
+      handler de <code>scroll</code> que dispararia dezenas de vezes por segundo.
+      Abaixo de 768px a navegação vira painel, com foco preso dentro dele,
+      <kbd class="t-mono">Esc</kbd> para fechar e devolução do foco ao botão.
+      <span class="spec__source">
+        Base de Conhecimento · 01-psicologia-cognitiva/hicks-law.md (Confidence 88%,
+        Adoption 95%): o tempo de decisão cresce com o número de opções, o que
+        sustenta poucas categorias de alto nível. · 07-motion/motion-necessity-spectrum.md:
+        a transição da barra é comunicativa, não decorativa — é a última a ser
+        cortada sob orçamento de performance, não a primeira.
+      </span>
+    </p>
+    <div class="demo">
+      <span class="demo__label">como testar — sem mouse</span>
+      <div class="demo__stage">
+        <p class="t-small">
+          <kbd class="t-mono">Tab</kbd> a partir do topo revela primeiro o link
+          “Pular para o conteúdo”, que só aparece quando focado. Em janela
+          estreita, <kbd class="t-mono">Tab</kbd> dentro do painel aberto circula
+          e não escapa para a página atrás.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= C-02 HERO ================= -->
+  <section class="spec" id="hero">
+    <div class="spec__head">
+      <span class="spec__code">C-02</span>
+      <h3 class="spec__title">Hero</h3>
+    </div>
+    <p class="spec__note">
+      Peso visual em ordem de decisão: imagem → título → CTA. O texto fica em um
+      painel sobre superfície própria em vez de direto sobre a foto, para que o
+      contraste do título seja garantido por token e não dependa da imagem que
+      entrar na Fase 4. A imagem declara <code>width</code>, <code>height</code> e
+      <code>aspect-ratio</code>, então reserva o espaço antes de carregar e não
+      empurra o conteúdo.
+      <span class="spec__source">
+        Base de Conhecimento · 03-ui-visual/visual-hierarchy.md: a ordem de peso
+        visual deve seguir a ordem de decisão de quem lê — com a ressalva, da
+        própria ficha, de que decidir O QUE priorizar é anterior e mais
+        importante que como comunicar essa prioridade.
+      </span>
+    </p>
+    <div class="demo">
+      <span class="demo__label">pendência conhecida</span>
+      <div class="demo__stage">
+        <p class="t-small">
+          A imagem é um <strong>placeholder vetorial</strong> gerado para esta
+          fase, não fotografia. A Fase 4 exige imagem real — o componente já
+          está preparado para recebê-la sem mudança de marcação.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= C-03 BOTÕES ================= -->
+  <section class="spec" id="botoes">
+    <div class="spec__head">
+      <span class="spec__code">C-03</span>
+      <h3 class="spec__title">Botões</h3>
+    </div>
+    <p class="spec__note">
+      Todas as variantes têm no mínimo <strong>44px de altura</strong>. O
+      protótipo da Fase 2 media 42,6px e estava abaixo do piso — corrigido aqui.
+      A ação primária é deliberadamente maior que a secundária, e
+      <code>:hover</code> e <code>:focus-visible</code> recebem o mesmo
+      tratamento: um estado que só existe no mouse deixa teclado e toque sem
+      retorno.
+      <span class="spec__source">
+        Base de Conhecimento · 01-psicologia-cognitiva/fitts-law.md (Confidence 96%,
+        Adoption 97% — o par mais forte da Base junto de Hick's Law): tempo e erro
+        de seleção são função do tamanho e da distância do alvo; referência de
+        44×44px (iOS HIG) / 48×48dp (Material). A mesma ficha sustenta a ação
+        primária maior que a secundária.
+      </span>
+    </p>
+
+    <div class="demo">
+      <span class="demo__label">primário — padrão / grande (CTA de página) / foco / desabilitado</span>
+      <div class="demo__stage">
+        <button type="button" class="btn btn--primary">Agendar avaliação</button>
+        <button type="button" class="btn btn--primary btn--lg">Agendar avaliação</button>
+        <button type="button" class="btn btn--primary btn--focus-demo">Estado de foco</button>
+        <button type="button" class="btn btn--primary" disabled>Desabilitado</button>
+      </div>
+    </div>
+
+    <div class="demo">
+      <span class="demo__label">secundário</span>
+      <div class="demo__stage">
+        <button type="button" class="btn btn--ghost">Ver especialidades</button>
+        <button type="button" class="btn btn--ghost btn--lg">Ver especialidades</button>
+      </div>
+    </div>
+
+    <div class="demo">
+      <span class="demo__label">sobre imagem escura — usado no Hero quando o CTA fica fora do painel</span>
+      <div class="demo__stage" style="background-color: #5B5347; border-style: solid; border-color: transparent">
+        <button type="button" class="btn btn--on-image">Ver o consultório</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= C-04 CARDS ================= -->
+  <section class="spec" id="cards">
+    <div class="spec__head">
+      <span class="spec__code">C-04</span>
+      <h3 class="spec__title">Cards</h3>
+    </div>
+    <p class="spec__note">
+      O card <strong>não esconde informação atrás do hover</strong>: todo o texto
+      está visível em repouso, e o hover apenas eleva para sinalizar que é
+      clicável. Isso mantém o componente íntegro em toque, onde hover não existe.
+      O link cobre o card inteiro — alvo maior — mas seu texto continua sendo o
+      nome da especialidade, então o leitor de tela anuncia um destino com
+      sentido em vez de “leia mais”. O anel de foco é desenhado no card, via
+      <code>:focus-within</code>.
+      <span class="spec__source">
+        Base de Conhecimento · 07-motion/hover-exploratory-states.md: hover não
+        existe em interfaces touch puras e exige alternativa equivalente; WCAG 2.1
+        critério 1.4.13 exige que qualquer conteúdo revelado por hover também seja
+        disparável por foco de teclado. A solução aqui é anterior: não revelar
+        nada por hover.
+      </span>
+    </p>
+    <div class="demo">
+      <span class="demo__label">card de especialidade — passe o mouse e depois alcance por Tab</span>
+      <div class="demo__stage">
+        <div class="demo-grid" style="inline-size: 100%">
+          <article class="card">
+            <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3.2c-3.3 0-5.6 1.9-5.6 4.7 0 2.1.9 3.5 1.4 5.3.4 1.5.5 3 .7 4.6.1 1.2.6 2.1 1.5 2.1.8 0 1.2-.8 1.4-2.1.2-1.2.3-2.4.6-2.4s.4 1.2.6 2.4c.2 1.3.6 2.1 1.4 2.1.9 0 1.4-.9 1.5-2.1.2-1.6.3-3.1.7-4.6.5-1.8 1.4-3.2 1.4-5.3 0-2.8-2.3-4.7-5.6-4.7Z"/>
+            </svg>
+
+            <h3 class="card__title">Implantes</h3>
+
+            <p class="card__text">
+              Reposição unitária ou total, planejada digitalmente antes do procedimento.
+            </p>
+
+            <!-- O link cobre o card inteiro por CSS. O texto continua sendo o nome da
+                 especialidade, então o leitor de tela anuncia um destino com sentido —
+                 nunca "leia mais". -->
+            <a class="card__link" href="#implantes">Implantes</a>
+          </article>
+          <article class="card">
+            <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3.2c-3.3 0-5.6 1.9-5.6 4.7 0 2.1.9 3.5 1.4 5.3.4 1.5.5 3 .7 4.6.1 1.2.6 2.1 1.5 2.1.8 0 1.2-.8 1.4-2.1.2-1.2.3-2.4.6-2.4s.4 1.2.6 2.4c.2 1.3.6 2.1 1.4 2.1.9 0 1.4-.9 1.5-2.1.2-1.6.3-3.1.7-4.6.5-1.8 1.4-3.2 1.4-5.3 0-2.8-2.3-4.7-5.6-4.7Z"/>
+            </svg>
+
+            <h3 class="card__title">Implantes</h3>
+
+            <p class="card__text">
+              Reposição unitária ou total, planejada digitalmente antes do procedimento.
+            </p>
+
+            <!-- O link cobre o card inteiro por CSS. O texto continua sendo o nome da
+                 especialidade, então o leitor de tela anuncia um destino com sentido —
+                 nunca "leia mais". -->
+            <a class="card__link" href="#implantes">Implantes</a>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= C-05 FOOTER ================= -->
+  <section class="spec" id="footer">
+    <div class="spec__head">
+      <span class="spec__code">C-05</span>
+      <h3 class="spec__title">Footer</h3>
+    </div>
+    <p class="spec__note">
+      Cada bloco de links é um <code>&lt;nav&gt;</code> com
+      <code>aria-labelledby</code> apontando para o próprio título da coluna, para
+      que um leitor de tela liste “Especialidades” e “Institucional” como marcos
+      distintos em vez de três grupos anônimos de links. Os links empilhados têm
+      44px de altura: rodapé é justamente onde alvos ficam próximos e o erro de
+      toque acontece. O componente real está no fim desta página.
+    </p>
+  </section>
+
+  <footer class="doc-foot">
+    <p>
+      <strong>Fase 3 concluída.</strong> Entregues:
+      <code class="t-mono">components/{Navbar,Hero,Button,Card,Footer}</code>,
+      <code class="t-mono">styles/layout.css</code>,
+      <code class="t-mono">styles/docs.css</code> e
+      <code class="t-mono">tools/build.py</code>. Próximo passo conforme Seção 12
+      do Project Bible: <strong>Fase 4 — Homepage</strong>, montando as 11 seções
+      a partir destes componentes.
+    </p>
+  </footer>
+
+</main>
+
+<footer class="footer" id="contato">
+  <div class="footer__inner container">
+
+    <div class="footer__grid">
+
+      <div class="footer__brand">
+        <span class="footer__wordmark">Lumina</span>
+        <p class="footer__tagline">
+          Odontologia estética e reabilitação oral em São Paulo.
+        </p>
+        <ul class="footer__social" aria-label="Redes sociais">
+          <li><a class="footer__social-link" href="#instagram">Instagram</a></li>
+          <li><a class="footer__social-link" href="#facebook">Facebook</a></li>
+          <li><a class="footer__social-link" href="#youtube">YouTube</a></li>
+        </ul>
+      </div>
+
+      <nav class="footer__col" aria-labelledby="footer-esp">
+        <h2 class="footer__heading" id="footer-esp">Especialidades</h2>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="#implantes">Implantes</a></li>
+          <li><a class="footer__link" href="#lentes">Lentes de contato dental</a></li>
+          <li><a class="footer__link" href="#harmonizacao">Harmonização facial</a></li>
+          <li><a class="footer__link" href="#ortodontia">Ortodontia estética</a></li>
+          <li><a class="footer__link" href="#clareamento">Clareamento</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer__col" aria-labelledby="footer-inst">
+        <h2 class="footer__heading" id="footer-inst">Institucional</h2>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="#sobre">Sobre a clínica</a></li>
+          <li><a class="footer__link" href="#equipe">Equipe</a></li>
+          <li><a class="footer__link" href="#tecnologia">Tecnologia</a></li>
+          <li><a class="footer__link" href="#faq">Perguntas frequentes</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">Contato</h2>
+        <address class="footer__address">
+          Rua dos Pinheiros, 1400 — conj. 82<br>
+          Pinheiros, São Paulo — SP
+
+          <!-- Telefone e e-mail saem do texto corrido e viram lista: são os
+               alvos mais tocados desta coluna no celular e precisam dos 44px
+               da Lei de Fitts, o que não cabe entre linhas de endereço. -->
+          <ul class="footer__list">
+            <li><a class="footer__link" href="tel:+551130000000">(11) 3000-0000</a></li>
+            <li><a class="footer__link" href="mailto:contato@lumina.exemplo">contato@lumina.exemplo</a></li>
+          </ul>
+        </address>
+        <p class="footer__hours">
+          Segunda a sexta, 9h às 19h<br>
+          Sábado, 9h às 13h
+        </p>
+      </div>
+
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__legal">
+        © 2026 Lumina Odontologia — projeto fictício. CRO-SP 00000.
+      </p>
+      <p class="footer__legal">
+        <a class="footer__link" href="#privacidade">Política de privacidade</a>
+        <span aria-hidden="true"> · </span>
+        <a class="footer__link" href="#termos">Termos de uso</a>
+      </p>
+    </div>
+
+  </div>
+</footer>
+
+<script src="components/Navbar/navbar.js" defer></script>
+
+</body>
+</html>

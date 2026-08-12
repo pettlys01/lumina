@@ -1,0 +1,36 @@
+<section class="hero" id="topo">
+
+  <!-- width/height explícitos + aspect-ratio no CSS reservam o espaço antes do
+       carregamento: a imagem não empurra o conteúdo ao chegar (CLS = 0).
+       fetchpriority="high" porque esta é a maior imagem do primeiro viewport. -->
+  <img class="hero__image"
+       src="assets/img/hero-placeholder.svg"
+       alt="Recepção da clínica Lumina, com luz natural entrando por uma janela alta"
+       width="1600" height="1000"
+       fetchpriority="high" decoding="async">
+
+  <div class="hero__container container">
+    <div class="hero__panel">
+
+      <p class="hero__eyebrow">Odontologia estética e reabilitação oral</p>
+
+      <h1 class="hero__title">Confiança para sorrir</h1>
+
+      <p class="hero__lead">
+        Planejamento digital antes de qualquer procedimento. Você vê o resultado
+        projetado — e decide com o quadro completo na frente.
+      </p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary btn--lg" href="#agendamento">Agendar avaliação</a>
+        <a class="btn btn--ghost" href="#especialidades">Ver especialidades</a>
+      </div>
+
+      <p class="hero__proof">
+        <span class="hero__stars" aria-hidden="true">★★★★★</span>
+        <span><strong>4,9</strong> de 5 em 312 avaliações no Google</span>
+      </p>
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Componentes — Lumina Odontologia</title>
+  <meta name="description" content="Folha técnica dos componentes base da Lumina: Navbar, Hero, Botões, Cards e Footer.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#F7F6F3">
+
+  <link rel="preload" href="assets/fonts/instrumentserif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/typography.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="components/Button/button.css">
+  <link rel="stylesheet" href="components/Card/card.css">
+  <link rel="stylesheet" href="components/Navbar/navbar.css">
+  <link rel="stylesheet" href="components/Hero/hero.css">
+  <link rel="stylesheet" href="components/Footer/footer.css">
+  <link rel="stylesheet" href="styles/docs.css">
+  <link rel="stylesheet" href="styles/styleguide.css">
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- ====================================================================
+     Navbar e Hero aparecem AO VIVO, não em moldura de demonstração: o
+     estado rolado da barra e o comportamento do painel só existem em
+     condições reais. Role a página e reduza a janela para vê-los.
+     ==================================================================== -->
+<!-- include: components/Navbar/navbar.html -->
+
+<!-- include: components/Hero/hero.html -->
+
+<main class="sheet" id="conteudo">
+
+  <header class="doc-head">
+    <div class="doc-head__meta">
+      <span class="t-label">Lumina Odontologia · Documento C</span>
+      <span class="chip">Fase 3 · componentes</span>
+    </div>
+    <h2 class="doc-head__title">Componentes base</h2>
+    <p class="t-lead doc-head__lead">
+      Cinco componentes, cada um em sua própria pasta com CSS e JS próprios.
+      A Navbar e o Hero acima são os componentes reais, montados por
+      <code class="t-mono">tools/build.py</code> a partir dos mesmos partials que
+      a Home vai usar na Fase 4 — não há uma segunda cópia da marcação.
+    </p>
+  </header>
+
+  <!-- ================= C-01 NAVBAR ================= -->
+  <section class="spec" id="navbar">
+    <div class="spec__head">
+      <span class="spec__code">C-01</span>
+      <h3 class="spec__title">Navbar</h3>
+    </div>
+    <p class="spec__note">
+      Quatro itens no topo, não oito. Sobre o Hero a barra é transparente; ao
+      rolar, ganha fundo e filete — a mudança comunica que passou a existir
+      conteúdo atrás dela. O estado é detectado por
+      <code>IntersectionObserver</code> sobre uma sentinela de 1px, não por um
+      handler de <code>scroll</code> que dispararia dezenas de vezes por segundo.
+      Abaixo de 768px a navegação vira painel, com foco preso dentro dele,
+      <kbd class="t-mono">Esc</kbd> para fechar e devolução do foco ao botão.
+      <span class="spec__source">
+        Base de Conhecimento · 01-psicologia-cognitiva/hicks-law.md (Confidence 88%,
+        Adoption 95%): o tempo de decisão cresce com o número de opções, o que
+        sustenta poucas categorias de alto nível. · 07-motion/motion-necessity-spectrum.md:
+        a transição da barra é comunicativa, não decorativa — é a última a ser
+        cortada sob orçamento de performance, não a primeira.
+      </span>
+    </p>
+    <div class="demo">
+      <span class="demo__label">como testar — sem mouse</span>
+      <div class="demo__stage">
+        <p class="t-small">
+          <kbd class="t-mono">Tab</kbd> a partir do topo revela primeiro o link
+          “Pular para o conteúdo”, que só aparece quando focado. Em janela
+          estreita, <kbd class="t-mono">Tab</kbd> dentro do painel aberto circula
+          e não escapa para a página atrás.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= C-02 HERO ================= -->
+  <section class="spec" id="hero">
+    <div class="spec__head">
+      <span class="spec__code">C-02</span>
+      <h3 class="spec__title">Hero</h3>
+    </div>
+    <p class="spec__note">
+      Peso visual em ordem de decisão: imagem → título → CTA. O texto fica em um
+      painel sobre superfície própria em vez de direto sobre a foto, para que o
+      contraste do título seja garantido por token e não dependa da imagem que
+      entrar na Fase 4. A imagem declara <code>width</code>, <code>height</code> e
+      <code>aspect-ratio</code>, então reserva o espaço antes de carregar e não
+      empurra o conteúdo.
+      <span class="spec__source">
+        Base de Conhecimento · 03-ui-visual/visual-hierarchy.md: a ordem de peso
+        visual deve seguir a ordem de decisão de quem lê — com a ressalva, da
+        própria ficha, de que decidir O QUE priorizar é anterior e mais
+        importante que como comunicar essa prioridade.
+      </span>
+    </p>
+    <div class="demo">
+      <span class="demo__label">pendência conhecida</span>
+      <div class="demo__stage">
+        <p class="t-small">
+          A imagem é um <strong>placeholder vetorial</strong> gerado para esta
+          fase, não fotografia. A Fase 4 exige imagem real — o componente já
+          está preparado para recebê-la sem mudança de marcação.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= C-03 BOTÕES ================= -->
+  <section class="spec" id="botoes">
+    <div class="spec__head">
+      <span class="spec__code">C-03</span>
+      <h3 class="spec__title">Botões</h3>
+    </div>
+    <p class="spec__note">
+      Todas as variantes têm no mínimo <strong>44px de altura</strong>. O
+      protótipo da Fase 2 media 42,6px e estava abaixo do piso — corrigido aqui.
+      A ação primária é deliberadamente maior que a secundária, e
+      <code>:hover</code> e <code>:focus-visible</code> recebem o mesmo
+      tratamento: um estado que só existe no mouse deixa teclado e toque sem
+      retorno.
+      <span class="spec__source">
+        Base de Conhecimento · 01-psicologia-cognitiva/fitts-law.md (Confidence 96%,
+        Adoption 97% — o par mais forte da Base junto de Hick's Law): tempo e erro
+        de seleção são função do tamanho e da distância do alvo; referência de
+        44×44px (iOS HIG) / 48×48dp (Material). A mesma ficha sustenta a ação
+        primária maior que a secundária.
+      </span>
+    </p>
+
+    <div class="demo">
+      <span class="demo__label">primário — padrão / grande (CTA de página) / foco / desabilitado</span>
+      <div class="demo__stage">
+        <button type="button" class="btn btn--primary">Agendar avaliação</button>
+        <button type="button" class="btn btn--primary btn--lg">Agendar avaliação</button>
+        <button type="button" class="btn btn--primary btn--focus-demo">Estado de foco</button>
+        <button type="button" class="btn btn--primary" disabled>Desabilitado</button>
+      </div>
+    </div>
+
+    <div class="demo">
+      <span class="demo__label">secundário</span>
+      <div class="demo__stage">
+        <button type="button" class="btn btn--ghost">Ver especialidades</button>
+        <button type="button" class="btn btn--ghost btn--lg">Ver especialidades</button>
+      </div>
+    </div>
+
+    <div class="demo">
+      <span class="demo__label">sobre imagem escura — usado no Hero quando o CTA fica fora do painel</span>
+      <div class="demo__stage" style="background-color: #5B5347; border-style: solid; border-color: transparent">
+        <button type="button" class="btn btn--on-image">Ver o consultório</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= C-04 CARDS ================= -->
+  <section class="spec" id="cards">
+    <div class="spec__head">
+      <span class="spec__code">C-04</span>
+      <h3 class="spec__title">Cards</h3>
+    </div>
+    <p class="spec__note">
+      O card <strong>não esconde informação atrás do hover</strong>: todo o texto
+      está visível em repouso, e o hover apenas eleva para sinalizar que é
+      clicável. Isso mantém o componente íntegro em toque, onde hover não existe.
+      O link cobre o card inteiro — alvo maior — mas seu texto continua sendo o
+      nome da especialidade, então o leitor de tela anuncia um destino com
+      sentido em vez de “leia mais”. O anel de foco é desenhado no card, via
+      <code>:focus-within</code>.
+      <span class="spec__source">
+        Base de Conhecimento · 07-motion/hover-exploratory-states.md: hover não
+        existe em interfaces touch puras e exige alternativa equivalente; WCAG 2.1
+        critério 1.4.13 exige que qualquer conteúdo revelado por hover também seja
+        disparável por foco de teclado. A solução aqui é anterior: não revelar
+        nada por hover.
+      </span>
+    </p>
+    <div class="demo">
+      <span class="demo__label">card de especialidade — passe o mouse e depois alcance por Tab</span>
+      <div class="demo__stage">
+        <div class="demo-grid" style="inline-size: 100%">
+          <!-- include: components/Card/card.html -->
+          <!-- include: components/Card/card.html -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= C-05 FOOTER ================= -->
+  <section class="spec" id="footer">
+    <div class="spec__head">
+      <span class="spec__code">C-05</span>
+      <h3 class="spec__title">Footer</h3>
+    </div>
+    <p class="spec__note">
+      Cada bloco de links é um <code>&lt;nav&gt;</code> com
+      <code>aria-labelledby</code> apontando para o próprio título da coluna, para
+      que um leitor de tela liste “Especialidades” e “Institucional” como marcos
+      distintos em vez de três grupos anônimos de links. Os links empilhados têm
+      44px de altura: rodapé é justamente onde alvos ficam próximos e o erro de
+      toque acontece. O componente real está no fim desta página.
+    </p>
+  </section>
+
+  <footer class="doc-foot">
+    <p>
+      <strong>Fase 3 concluída.</strong> Entregues:
+      <code class="t-mono">components/{Navbar,Hero,Button,Card,Footer}</code>,
+      <code class="t-mono">styles/layout.css</code>,
+      <code class="t-mono">styles/docs.css</code> e
+      <code class="t-mono">tools/build.py</code>. Próximo passo conforme Seção 12
+      do Project Bible: <strong>Fase 4 — Homepage</strong>, montando as 11 seções
+      a partir destes componentes.
+    </p>
+  </footer>
+
+</main>
+
+<!-- include: components/Footer/footer.html -->
+
+<script src="components/Navbar/navbar.js" defer></script>
+
+</body>
+</html>

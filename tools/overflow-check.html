@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Verificação de overflow horizontal</title>
+<style>
+  body { font: 14px ui-monospace, Consolas, monospace; padding: 16px; }
+  #frame { border: 1px solid #ccc; display: block; }
+  li.ok { color: #2e7d32; }
+  li.bad { color: #c62828; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<h1>Overflow horizontal</h1>
+<p>Alvos e larguras vêm da query string, ex.:
+   <code>overflow-check.html?p=../componentes.html,../styleguide.html</code></p>
+<ul id="saida"></ul>
+<iframe id="frame" title="alvo"></iframe>
+
+<script>
+/* ==========================================================================
+   Mede overflow horizontal real, em vez de julgar por captura de tela.
+
+   Por que iframe e não --window-size: o Chrome headless impõe largura mínima
+   de janela de 500px. Pedir 390px renderiza a 500 e recorta a imagem, o que
+   produz uma captura com texto cortado que parece bug e não é. O iframe
+   controla a largura exata do viewport do documento alvo.
+
+   O harness se auto-testa no fim: injeta um elemento largo demais e confirma
+   que o método acusa. Um "ok" de um harness que não sabe detectar nada não
+   vale nada.
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var params = new URLSearchParams(location.search);
+  var paginas = (params.get("p") || "../componentes.html").split(",");
+  var larguras = (params.get("w") || "320,360,390,414,768,1024,1280")
+                   .split(",").map(Number);
+
+  var frame = document.getElementById("frame");
+  var saida = document.getElementById("saida");
+  var linhas = [];
+  var falhas = 0;
+
+  function registra(texto, ruim) {
+    var li = document.createElement("li");
+    li.textContent = texto;
+    li.className = ruim ? "bad" : "ok";
+    saida.appendChild(li);
+    linhas.push(texto);
+    if (ruim) falhas++;
+  }
+
+  function medir(largura, callback) {
+    frame.style.width = largura + "px";
+    frame.style.height = "1400px";
+    setTimeout(function () {
+      var doc = frame.contentDocument;
+      callback(doc.documentElement.scrollWidth, doc.documentElement.clientWidth);
+    }, 350);
+  }
+
+  function testarPagina(indice) {
+    if (indice >= paginas.length) return autoTeste();
+
+    var pagina = paginas[indice].trim();
+    frame.onload = function () {
+      var i = 0;
+      (function proxima() {
+        if (i >= larguras.length) return testarPagina(indice + 1);
+        var largura = larguras[i++];
+        medir(largura, function (scroll, client) {
+          var excesso = scroll - client;
+          registra(pagina + " @ " + largura + "px: " +
+                   (excesso > 0 ? "OVERFLOW +" + excesso : "ok"), excesso > 0);
+          proxima();
+        });
+      })();
+    };
+    frame.src = pagina;
+  }
+
+  /* Prova que o método detecta o que diz detectar. */
+  function autoTeste() {
+    var doc = frame.contentDocument;
+    var largo = doc.createElement("div");
+    largo.style.cssText = "width:3000px;height:4px";
+    doc.body.appendChild(largo);
+
+    medir(390, function (scroll, client) {
+      var detectou = scroll > client;
+      registra("auto-teste (elemento de 3000px injetado): " +
+               (detectou ? "detectou +" + (scroll - client) : "FALHOU — metodo cego"),
+               !detectou);
+      largo.remove();
+
+      var veredito = (falhas === 0) ? "TUDO OK" : falhas + " FALHA(S)";
+      document.title = "RESULTADO " + veredito + " :: " + linhas.join(" | ");
+    });
+  }
+
+  testarPagina(0);
+})();
+</script>
+
+</body>
+</html>

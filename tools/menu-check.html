@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Verificacao do painel de menu</title>
+</head>
+<body style="margin:0">
+<iframe id="f" src="../componentes.html" title="alvo" style="border:0;width:390px;height:900px"></iframe>
+<script>
+const f=document.getElementById('f'), R=[];
+function ok(n,c){R.push((c?'PASS':'FALHOU')+' '+n); return c;}
+f.onload=()=>setTimeout(()=>{
+  const d=f.contentDocument, w=f.contentWindow;
+  const nav=d.querySelector('[data-navbar]');
+  const tog=d.querySelector('[data-navbar-toggle]');
+  const menu=d.getElementById('navbar-menu');
+  const rot=d.querySelector('[data-navbar-toggle-label]');
+  const vis=el=>el.getClientRects().length>0;
+
+  ok('inicia fechado (aria-expanded=false)', tog.getAttribute('aria-expanded')==='false');
+  ok('menu oculto no inicio', !vis(menu));
+  ok('rotulo inicial "Abrir menu"', rot.textContent.trim()==='Abrir menu');
+  ok('toggle visivel em 390px', vis(tog));
+
+  tog.click();
+  setTimeout(()=>{
+    ok('abriu (aria-expanded=true)', tog.getAttribute('aria-expanded')==='true');
+    ok('menu visivel', vis(menu));
+    ok('rotulo virou "Fechar menu"', rot.textContent.trim()==='Fechar menu');
+    ok('scroll do body travado', d.body.style.overflow==='hidden');
+
+    const foc=[...menu.querySelectorAll('a[href],button')].filter(vis);
+    ok('foco foi para o 1o item do painel', d.activeElement===foc[0]);
+
+    // armadilha: Tab no ultimo deve voltar ao primeiro
+    foc[foc.length-1].focus();
+    menu.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Tab',bubbles:true}));
+    ok('Tab no ultimo volta ao primeiro', d.activeElement===foc[0]);
+
+    // shift+Tab no primeiro deve ir ao ultimo
+    foc[0].focus();
+    menu.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Tab',shiftKey:true,bubbles:true}));
+    ok('Shift+Tab no primeiro vai ao ultimo', d.activeElement===foc[foc.length-1]);
+
+    // Esc fecha e devolve foco
+    d.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+    setTimeout(()=>{
+      ok('Esc fechou', tog.getAttribute('aria-expanded')==='false');
+      ok('Esc devolveu foco ao botao', d.activeElement===tog);
+      ok('scroll do body liberado', d.body.style.overflow==='');
+      const falhas=R.filter(r=>r.startsWith('FALHOU')).length;
+      document.title=(falhas?falhas+' FALHA(S)':'TUDO PASSOU')+' :: '+R.join(' | ');
+    },250);
+  },250);
+},900);
+</script></body></html>

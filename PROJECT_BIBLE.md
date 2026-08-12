@@ -339,14 +339,25 @@ relevantes em `knowledge/concepts/` (ex: hierarquia visual, progressive disclosu
 consistência de design, performance, progressive enhancement, graceful degradation) e justificar a
 decisão citando o princípio aplicado — não apenas "porque parece bom".
 
-**Aviso importante sobre cobertura da Base:** conforme auditoria interna da própria Base (Sprint 17,
-Bloco 73), os domínios **UI, Acessibilidade e Conversão/CRO ainda são "ilhas"** — têm baixa densidade de
-conexão com o restante do grafo de conceitos. Isso significa que, para decisões específicas de interface
-visual desta clínica, a Base pode ter menos cobertura direta do que em outros domínios (ex: segurança,
-arquitetura web). Nesses casos, tratar os princípios gerais (hierarquia, carga cognitiva, consistência)
-como aplicáveis por analogia, e não inventar justificativa onde a Base não tem base real — é preferível
-dizer "decisão de design sem princípio formal correspondente na Base, decidida por [critério X]" do que
-forçar uma citação que não existe.
+**Correção do aviso sobre cobertura da Base (revisto na Fase 3, após consulta real).** A v1.0 deste
+documento alertava que UI, Acessibilidade e Conversão/CRO seriam "ilhas" de baixa cobertura. Isso
+confundiu duas coisas diferentes: o achado do Bloco 73 é sobre **baixa conexão desses domínios com os
+conceitos da Fase 2 da Base**, não sobre as fichas serem rasas. Na prática, a consulta da Fase 3
+encontrou fichas densas e diretamente aplicáveis, com evidência e scores — e três delas mudaram
+decisões concretas de implementação:
+
+| Ficha consultada | O que mudou de fato |
+|---|---|
+| `01-psicologia-cognitiva/fitts-law.md` (Conf. 96%, Adopt. 97%) | Piso de 44px em todo alvo. O botão da Fase 2 media 42,6px; links de rodapé mediam 36px. Ambos corrigidos. |
+| `01-psicologia-cognitiva/hicks-law.md` (Conf. 88%, Adopt. 95%) | Navegação principal limitada a 4 categorias de topo. |
+| `05-acessibilidade/skip-links.md` (Adopt. **55% — "subaplicado"**) | Skip link implementado; a própria ficha o classifica como oportunidade de baixo custo frequentemente ausente. |
+| `07-motion/hover-exploratory-states.md` | Card não esconde nada atrás do hover, e todo `:hover` ganhou par `:focus-visible`. |
+| `07-motion/motion-necessity-spectrum.md` | Motion classificado por camada: a transição da Navbar é comunicativa (preservar), o `scale` do botão é decorativo (primeiro a cair sob `prefers-reduced-motion`). |
+| `03-ui-visual/visual-hierarchy.md` | Ordem de peso visual do Hero: imagem → título → CTA. |
+
+**Regra que permanece válida:** onde a Base não tiver princípio correspondente, dizer "decisão de design
+sem princípio formal na Base, decidida por [critério X]" — nunca forçar uma citação que não existe.
+O que muda é a expectativa: consultar primeiro, e só então concluir que não há cobertura.
 
 **Skills a invocar durante o projeto:**
 - `frontend-design` — antes de desenhar qualquer componente visual novo (Fases 2–4), para calibrar
@@ -378,8 +389,13 @@ forçar uma citação que não existe.
       `styles/styleguide.css`, fontes auto-hospedadas em `assets/fonts/`, e `tools/inline.py` para gerar
       cópias de revisão em arquivo único. Verificado: sem overflow horizontal de 320px a 1280px
       (harness com auto-teste), contrastes calculados ao vivo na própria folha.*
-- [ ] **Fase 3 — Componentes.** Aceite: Hero, Botões, Cards, Navbar, Footer implementados isoladamente,
-      responsivos, acessíveis por teclado, revisados com `web-design-guidelines`.
+- [x] **Fase 3 — Componentes.** Aceite: Hero, Botões, Cards, Navbar, Footer implementados isoladamente,
+      responsivos, acessíveis por teclado, revisados com `web-design-guidelines`. — *Concluída em
+      2026-08-12. Entregues: `components/{Navbar,Hero,Button,Card,Footer}` (cada um com CSS próprio, JS
+      onde precisa), `styles/layout.css`, `styles/docs.css`, `tools/build.py` (montagem por partials),
+      `tools/overflow-check.html` e `tools/menu-check.html` (verificações automatizadas). Verificado:
+      sem overflow de 320px a 1280px, 14/14 checagens de teclado no menu, todos os alvos ≥44px,
+      um único `<h1>` e nenhum salto de nível de heading.*
 - [ ] **Fase 4 — Homepage.** Aceite: todas as 11 seções da seção 5 montadas com conteúdo fictício
       realista, responsivo mobile-first, sem motion ainda (motion é Fase 6).
 - [ ] **Fase 5 — Páginas internas.** Aceite: template de Especialidade funcional e reutilizável, ligado à

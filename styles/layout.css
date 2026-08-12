@@ -1,0 +1,90 @@
+/* ==========================================================================
+   Lumina Odontologia — Layout compartilhado
+   Depende de: tokens.css
+
+   Contém APENAS o que é genuinamente compartilhado entre componentes
+   (container, ritmo de seção, utilitários de acessibilidade). Estilo de
+   componente mora na pasta do componente — este arquivo não é depósito geral.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* A marca é um mundo claro e deliberadamente único — declarar o esquema faz
+   controles nativos e barras de rolagem seguirem a página em vez do sistema. */
+:root { color-scheme: light; }
+
+body { margin: 0; }
+
+/* A Navbar é fixa: sem isto, todo salto por âncora deixaria o título do destino
+   escondido atrás dela. */
+[id] { scroll-margin-block-start: 6rem; }
+
+/* touch-action remove o atraso de ~300ms que o navegador impõe em toque,
+   esperando para saber se é duplo toque de zoom. O realce de toque é definido
+   explicitamente porque o padrão do Android é um retângulo azul que não existe
+   em nenhum outro lugar deste projeto. */
+a, button, [role="button"], summary {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(32, 32, 32, 0.08);
+}
+
+img, svg, video {
+  display: block;
+  max-inline-size: 100%;
+  height: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Container e ritmo vertical
+   -------------------------------------------------------------------------- */
+.container {
+  inline-size: 100%;
+  max-inline-size: var(--width-content);
+  margin-inline: auto;
+  padding-inline: var(--space-container);
+}
+
+.section {
+  padding-block: var(--space-section);
+}
+
+/* --------------------------------------------------------------------------
+   Acessibilidade
+   -------------------------------------------------------------------------- */
+
+/* Visível só para leitor de tela. Mantém o elemento no fluxo de acessibilidade
+   sem ocupar espaço visual — não usar display:none, que o remove da árvore. */
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link — WCAG 2.4.1 (Bypass Blocks).
+   Sem ele, quem navega por teclado paga um custo que cresce com o tamanho do
+   menu, em toda página — um custo assimétrico que usuários de mouse não pagam.
+   Fica fora da tela até receber foco. */
+.skip-link {
+  position: absolute;
+  inset-block-start: var(--space-1);
+  inset-inline-start: var(--space-1);
+  z-index: 100;
+  transform: translateY(-200%);
+  background-color: var(--surface-inverse);
+  color: var(--text-on-inverse);
+  font-size: var(--text-small);
+  text-decoration: none;
+  padding: 0.75em 1.25em;
+  border-radius: var(--radius);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}

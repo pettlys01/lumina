@@ -1,0 +1,140 @@
+/* ==========================================================================
+   Componente: Hero
+   Depende de: tokens.css, layout.css, Button/button.css
+
+   Ordem de peso visual: imagem → título → CTA. É a ordem de decisão de quem
+   chega (primeiro "que lugar é este?", depois "o que fazem?", depois "como
+   começo?") — Base: 03-ui-visual/visual-hierarchy.md, cuja ressalva é que
+   decidir O QUE priorizar é anterior a como comunicar.
+
+   O texto fica em um painel sobre superfície própria, não direto sobre a foto:
+   assim o contraste do título é garantido por token e não depende da imagem que
+   entrar na Fase 4. Estrutura aprovada na folha A-01 da Fase 1.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-block-size: min(88svh, 46rem);
+  overflow: hidden;
+  background-color: var(--color-hairline);  /* cor de espera enquanto a imagem carrega */
+}
+
+.hero__image {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  aspect-ratio: 16 / 10;
+}
+
+.hero__container {
+  position: relative;   /* acima da imagem */
+  z-index: 1;
+  inline-size: 100%;
+  padding-block: var(--space-4);
+}
+
+.hero__panel {
+  max-inline-size: 34rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  background-color: var(--surface-page);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+}
+
+.hero__eyebrow {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.hero__title {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-hero);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-heading);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.hero__lead {
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  max-inline-size: 38ch;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   Prova social
+   As estrelas são decorativas (aria-hidden); a nota vem escrita ao lado, então
+   a informação não depende de reconhecer o símbolo nem de enxergar a cor.
+   -------------------------------------------------------------------------- */
+.hero__proof {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-block-start: var(--space-1);
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+.hero__stars {
+  color: var(--decor-accent);
+  letter-spacing: 0.1em;
+}
+
+.hero__proof strong {
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
+/* --------------------------------------------------------------------------
+   Telas estreitas
+   O painel passa a ocupar a largura toda e o Hero encurta: em pé, 88svh de
+   imagem empurraria todo o conteúdo para fora da primeira tela.
+   -------------------------------------------------------------------------- */
+@media (max-width: 48rem) {
+  /* A imagem deixa de ser absoluta e volta ao fluxo — vira item flex. Sem
+     direção de coluna, ela e o painel se dividiriam em duas colunas e o texto
+     sairia da tela. */
+  .hero {
+    flex-direction: column;
+    min-block-size: 0;
+    align-items: stretch;
+  }
+
+  .hero__image {
+    position: relative;
+    block-size: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  .hero__container {
+    padding-block: 0;
+    padding-inline: 0;
+  }
+
+  /* O painel sobe sobre a imagem, ancorando o texto na dobra. */
+  .hero__panel {
+    max-inline-size: none;
+    margin-block-start: -3rem;
+    margin-inline: var(--space-2);
+    padding: var(--space-3);
+  }
+}
