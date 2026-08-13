@@ -60,14 +60,15 @@
   font-family: var(--font-heading);
   font-weight: var(--weight-regular);
   font-size: var(--text-hero);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-heading);
+  line-height: var(--leading-hero);
+  letter-spacing: var(--tracking-hero);
   margin: 0;
   text-wrap: balance;
 }
 
 .hero__lead {
   font-size: var(--text-body-lg);
+  font-weight: var(--weight-light);
   line-height: var(--leading-snug);
   color: var(--text-secondary);
   max-inline-size: 38ch;

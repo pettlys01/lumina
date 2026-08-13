@@ -7,7 +7,7 @@
   <meta name="description" content="Folha técnica do sistema de design da Lumina Odontologia: cor, tipografia, espaçamento, componentes e motion.">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#F7F6F3">
-  <link rel="preload" href="assets/fonts/instrumentserif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/cormorant-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles/tokens.css">
   <link rel="stylesheet" href="styles/typography.css">
@@ -58,11 +58,12 @@
       <h2 class="spec__title">Tipografia</h2>
     </div>
     <p class="spec__note">
-      Instrument Serif nos títulos, em <strong>peso único 400</strong> — a
-      hierarquia vem do tamanho e do espaço, nunca do negrito. Inter no texto.
-      A coluna da esquerda mostra o tamanho <strong>computado neste viewport</strong>:
-      redimensione a janela e os números mudam, porque a escala é fluida
-      (<code class="t-mono">clamp()</code>), não fixa por breakpoint.
+      <strong>A serifada só existe acima de 32px.</strong> Cormorant Garamond é
+      uma Garamond de alto contraste: elegante grande, achatada pequena. Abaixo
+      do corte quem trabalha é a Inter, e o contraste passa a vir do peso —
+      Light 300 contra Medium 500. A coluna da esquerda mostra o tamanho
+      <strong>computado neste viewport</strong>: redimensione a janela e os
+      números mudam, porque a escala é fluida (<code class="t-mono">clamp()</code>).
     </p>
     <div id="type-scale"><!-- preenchido por script --></div>
   </section>
@@ -265,9 +266,10 @@
   /* --- B-02 Tipografia --------------------------------------------------- */
   var TYPE = [
     { token: "--text-hero",    sample: "Confiança para sorrir", cls: "t-hero" },
+    { token: "--text-display-sm", sample: "Citação de paciente, o único uso intermediário", cls: "t-quote" },
     { token: "--text-h1",      sample: "Especialidades",        cls: "t-h1"   },
     { token: "--text-h2",      sample: "Nossa equipe",          cls: "t-h2"   },
-    { token: "--text-h3",      sample: "Implantes",             cls: "t-h3"   },
+    { token: "--text-h3",      sample: "Implantes (Inter Medium)", cls: "t-h3"   },
     { token: "--text-body-lg", sample: "Texto de destaque, usado em parágrafos de abertura.", cls: "t-lead" },
     { token: "--text-body",    sample: "Texto corrido padrão do site, em Inter regular.",     cls: "t-body" },
     { token: "--text-small",   sample: "Legenda, metadado e texto de apoio.",                 cls: "t-small t-muted" },

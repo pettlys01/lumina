@@ -51,9 +51,9 @@
 
 .testi__text {
   font-family: var(--font-heading);
-  font-size: var(--text-h3);
-  line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-heading);
+  font-size: var(--text-display-sm);
+  line-height: var(--leading-quote);
+  letter-spacing: var(--tracking-quote);
   text-wrap: pretty;
 }
 

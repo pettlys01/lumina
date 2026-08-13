@@ -12,7 +12,7 @@
 
   <!-- Open Graph, JSON-LD e canonical completos entram na Fase 7 (SEO). -->
 
-  <link rel="preload" href="assets/fonts/instrumentserif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/cormorant-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
 
   <link rel="stylesheet" href="styles/tokens.css">
@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="components/Navbar/navbar.css">
   <link rel="stylesheet" href="components/Hero/hero.css">
   <link rel="stylesheet" href="components/About/about.css">
+  <link rel="stylesheet" href="components/Stats/stats.css">
   <link rel="stylesheet" href="components/Services/services.css">
   <link rel="stylesheet" href="components/BeforeAfter/before-after.css">
   <link rel="stylesheet" href="components/Technology/technology.css">
@@ -155,7 +156,35 @@
     </div>
   </section>
 
-  <!-- 3. Especialidades -->
+  <!-- 3. Números — quebra de composição, logo após as afirmações do Sobre -->
+  <section class="stats" aria-labelledby="stats-titulo">
+    <div class="container">
+
+      <h2 class="visually-hidden" id="stats-titulo">A clínica em números</h2>
+
+      <dl class="stats__grid">
+        <div class="stats__item">
+          <dt class="stats__label">Anos de clínica</dt>
+          <dd class="stats__value">18</dd>
+        </div>
+        <div class="stats__item">
+          <dt class="stats__label">Tratamentos concluídos</dt>
+          <dd class="stats__value">3.412</dd>
+        </div>
+        <div class="stats__item">
+          <dt class="stats__label">Especialistas com título de mestrado</dt>
+          <dd class="stats__value">3</dd>
+        </div>
+        <div class="stats__item">
+          <dt class="stats__label">Responsável por caso</dt>
+          <dd class="stats__value">1</dd>
+        </div>
+      </dl>
+
+    </div>
+  </section>
+
+  <!-- 4. Especialidades -->
   <section class="section section--raised" id="especialidades">
     <div class="container">
 
@@ -244,7 +273,7 @@
     </div>
   </section>
 
-  <!-- 4. Antes e Depois -->
+  <!-- 5. Antes e Depois -->
   <section class="section" id="antes-depois">
     <div class="container">
 
@@ -292,7 +321,7 @@
     </div>
   </section>
 
-  <!-- 5. Tecnologia -->
+  <!-- 6. Tecnologia -->
   <section class="section section--raised" id="tecnologia">
     <div class="container">
 
@@ -344,7 +373,7 @@
     </div>
   </section>
 
-  <!-- 6. Depoimentos -->
+  <!-- 7. Depoimentos -->
   <section class="section" id="depoimentos">
     <div class="container">
 
@@ -399,7 +428,7 @@
     </div>
   </section>
 
-  <!-- 7. Processo -->
+  <!-- 8. Processo -->
   <section class="section section--raised" id="processo">
     <div class="container">
 
@@ -451,7 +480,7 @@
     </div>
   </section>
 
-  <!-- 8. Equipe -->
+  <!-- 9. Equipe -->
   <section class="section" id="equipe">
     <div class="container">
 
@@ -494,7 +523,7 @@
     </div>
   </section>
 
-  <!-- 9. FAQ -->
+  <!-- 10. FAQ -->
   <section class="section section--raised" id="faq">
     <div class="container faq__inner">
 
@@ -585,7 +614,7 @@
     </div>
   </section>
 
-  <!-- 10. CTA final -->
+  <!-- 11. CTA final -->
   <section class="section cta" id="agendamento">
     <div class="container">
 
@@ -612,7 +641,7 @@
 
 </main>
 
-<!-- 11. Footer -->
+<!-- 12. Footer -->
 <footer class="footer" id="contato">
   <div class="footer__inner container">
 

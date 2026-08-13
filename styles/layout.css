@@ -83,6 +83,7 @@ img, svg, video {
 
 .section-head__lead {
   font-size: var(--text-body-lg);
+  font-weight: var(--weight-light);
   line-height: var(--leading-snug);
   color: var(--text-secondary);
   max-inline-size: 52ch;

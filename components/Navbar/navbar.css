@@ -64,8 +64,9 @@
 
 .navbar__wordmark {
   font-family: var(--font-heading);
-  font-size: 1.5rem;
-  letter-spacing: 0.02em;
+  font-size: 1.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .navbar__sub {
@@ -211,7 +212,7 @@
   .navbar__link {
     min-block-size: 3.25rem;
     font-size: var(--text-body-lg);
-    font-family: var(--font-heading);
+    font-weight: var(--weight-light);
     border-block-end: 1px solid var(--border-subtle);
   }
 

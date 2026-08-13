@@ -35,6 +35,11 @@
   --color-accent-ink:  #8A6636;  /* 4.82:1 sobre primary — texto/ícone dourado */
   --color-success-ink: #56745A;  /* 4.81:1 sobre primary — texto de sucesso    */
 
+  /* Sobre fundo escuro a relação se inverte: o dourado da marca, que reprova
+     sobre o creme, mede 5.33:1 sobre #202020 e passa em AA. É por isso que a
+     faixa de números é o único lugar onde a cor da marca carrega texto. */
+  --color-gray-on-dark: #A8A49B;  /* 6.55:1 sobre --color-text */
+
   /* --- Neutros derivados ---
      Cinzas com viés quente puxado do fundo (não cinza puro), para que as
      bordas pareçam parte do papel e não linhas coladas por cima. */
@@ -67,28 +72,53 @@
      3. TIPOGRAFIA
      Escala fluida via clamp() — sem breakpoints de font-size.
      ====================================================================== */
-  --font-heading: "Instrument Serif", "Cormorant Garamond", Georgia, serif;
+  --font-heading: "Cormorant Garamond", Georgia, serif;
   --font-body:    "Inter", "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono:    ui-monospace, SFMono-Regular, "SF Mono", Consolas, monospace;
 
-  --text-hero:    clamp(2.5rem,   4vw    + 1rem,    5.5rem);
-  --text-h1:      clamp(2rem,     2.5vw  + 1rem,    3.5rem);
-  --text-h2:      clamp(1.5rem,   1.5vw  + 1rem,    2.5rem);
-  --text-h3:      clamp(1.25rem,  1vw    + 0.75rem, 1.75rem);
-  --text-body-lg: clamp(1.125rem, 0.5vw  + 1rem,    1.25rem);
-  --text-body:    1rem;
-  --text-small:   0.875rem;
-  --text-micro:   0.75rem;
+  /* ---- A escala e o corte ----
+     Diagnóstico da Fase 4: a escala anterior (67 / 35 / 25 / 20px) era quase
+     linear na metade de baixo, e a serifada de display aparecia a 25px em
+     quatro papéis diferentes. Fonte de display fora da faixa ótica dela lê
+     achatada, e sem salto de tamanho não existe hierarquia.
 
-  --leading-tight: 1.1;   /* headings */
-  --leading-snug:  1.35;  /* subtítulos, texto grande */
-  --leading-body:  1.6;   /* parágrafos */
+     Os dois sites de referência resolvem isso com contraste violento, por
+     caminhos opostos: Digital Smile Design usa só sans (Gotham Medium contra
+     Black, escala 22/28/40/75); a Dentate usa Cormorant Garamond contra Avenir
+     Light. Ambos têm contraste extremo de PESO e saltos reais de TAMANHO.
 
-  --tracking-heading: -0.01em;
-  --tracking-label:    0.08em;  /* rótulos em caixa alta */
+     Aqui: a serifada existe só acima de 32px. Abaixo disso, sans. */
+  --text-hero:    clamp(3rem,     5vw    + 1rem,   6.5rem);   /* até 104px */
+  --text-h1:      clamp(2.5rem,   3.5vw  + 1rem,   4.5rem);   /* até  72px */
+  --text-h2:      clamp(2rem,     2.5vw  + 0.75rem, 3.5rem);  /* até  56px */
+  --text-display-sm: clamp(1.5rem, 1vw   + 1rem,    2rem);    /* até  32px — citação */
+  /* ---- fim da serifada; daqui para baixo é Inter ---- */
+  --text-h3:      1.25rem;    /* 20px */
+  --text-body-lg: 1.25rem;    /* 20px, em peso Light */
+  --text-body:    1rem;       /* 16px */
+  --text-small:   0.875rem;   /* 14px */
+  --text-micro:   0.75rem;    /* 12px */
 
+  /* Entrelinha por papel, não uma só para tudo: 1.1 é certo a 104px e aperta
+     demais a 20px. */
+  --leading-hero:  1.02;
+  --leading-title: 1.08;
+  --leading-quote: 1.28;
+  --leading-snug:  1.45;
+  --leading-body:  1.65;
+
+  /* Tracking também acompanha o tamanho. Negativo só faz sentido no display;
+     aplicado a 20px, ele só espreme. */
+  --tracking-hero:  -0.02em;
+  --tracking-title: -0.015em;
+  --tracking-quote: -0.005em;
+  --tracking-h3:    -0.01em;
+  --tracking-body:   0;
+  --tracking-label:  0.1em;    /* caixa alta precisa de tracking positivo */
+
+  --weight-light:   300;   /* leads e texto grande — metade do contraste de peso */
   --weight-regular: 400;
-  --weight-medium:  500;
+  --weight-medium:  500;   /* a outra metade */
 
   --measure: 65ch;  /* largura máxima confortável de leitura */
 

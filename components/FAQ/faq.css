@@ -31,8 +31,10 @@
   min-block-size: 3.5rem;    /* acima dos 44px da Lei de Fitts: alvo de leitura longo */
   padding-block: var(--space-2);
 
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: var(--text-h3);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-h3);
   line-height: var(--leading-snug);
   cursor: pointer;
   list-style: none;

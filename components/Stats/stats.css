@@ -1,0 +1,73 @@
+/* ==========================================================================
+   Seção: Números
+   Depende de: tokens.css, layout.css
+
+   Esta é a única faixa escura da página, e existe por dois motivos.
+
+   1. Composição. As nove seções da Home seguiam todas o mesmo desenho
+      (sobrelinha → título → lead → grade, alinhado à esquerda, mesma largura).
+      Nove repetições viram monotonia, e monotonia é boa parte do que faz uma
+      página parecer gerada. Aqui o padrão quebra por completo: sem sobrelinha,
+      sem lead, fundo invertido, número antes do rótulo.
+
+   2. Cor. O dourado da marca mede 2,83:1 sobre o creme — reprova até no piso
+      de 3:1, e por isso em toda a página ele é apenas decorativo. Sobre o
+      #202020 ele mede 5,33:1 e passa em AA. É o único lugar do site onde a
+      cor da marca pode carregar texto, e é justamente onde ela aparece maior.
+
+   Marcação em <dl>: cada número é o valor de um rótulo, que é literalmente a
+   relação que uma lista de descrição expressa.
+   ========================================================================== */
+
+.stats {
+  background-color: var(--surface-inverse);
+  color: var(--text-on-inverse);
+  padding-block: var(--space-8);
+}
+
+.stats__grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6) var(--space-4);
+}
+
+@media (min-width: 56rem) {
+  .stats__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+  }
+}
+
+/* O número vem antes do rótulo na leitura visual, mas o <dt> precisa vir antes
+   do <dd> na marcação. A inversão é feita pela ordem do flex, sem mexer no DOM
+   — a ordem lida por leitor de tela continua rótulo → valor, que é a correta. */
+.stats__item {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding-block-start: var(--space-2);
+  border-block-start: 1px solid rgba(247, 246, 243, 0.2);
+}
+
+.stats__value {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 4vw + 1rem, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: var(--tracking-title);
+  color: var(--color-accent);       /* 5,33:1 sobre o fundo escuro */
+
+  /* Cormorant usa algarismos de texto por padrão — o 1 fica na altura-x e o 3
+     e o 4 descem. Bonito dentro de parágrafo, desalinhado em número grande. */
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.stats__label {
+  font-size: var(--text-small);
+  font-weight: var(--weight-light);
+  line-height: var(--leading-snug);
+  color: var(--color-gray-on-dark);
+  max-inline-size: 18ch;
+}

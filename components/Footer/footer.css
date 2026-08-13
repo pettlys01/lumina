@@ -39,8 +39,10 @@
 .footer__wordmark {
   display: block;
   font-family: var(--font-heading);
-  font-size: 1.75rem;
+  font-size: 2rem;
   line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--text-primary);
 }
 
