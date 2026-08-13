@@ -15,12 +15,34 @@
   gap: var(--space-4);
 }
 
+/* Os três retratos vêm de sessões diferentes — fundos, luz e temperatura de
+   cor distintos. Lado a lado, essa mistura lê como recorte de banco de imagem.
+   O duotone quente resolve pela raiz: o cinza remove a divergência de cor, e a
+   multiplicação com o dourado da marca traz os três para a mesma temperatura.
+   É tratamento editorial, não filtro decorativo. */
+.team__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-media);
+  margin-block-end: var(--space-2);
+  background-color: var(--color-hairline);
+}
+
 .team__photo {
   inline-size: 100%;
   aspect-ratio: 3 / 4;
   object-fit: cover;
-  border-radius: var(--radius-media);
-  margin-block-end: var(--space-2);
+  filter: grayscale(1) contrast(1.05) brightness(1.02);
+}
+
+.team__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-accent);
+  mix-blend-mode: multiply;
+  opacity: 0.22;
+  pointer-events: none;
 }
 
 .team__name {

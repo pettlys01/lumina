@@ -14,10 +14,13 @@
   align-items: start;
 }
 
+/* A citação domina, o retrato apoia — invertido em relação ao padrão de card
+   com foto grande e texto pequeno. Numa clínica, o que convence é a frase. */
 @media (min-width: 56rem) {
   .testi__layout {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.75fr 1.25fr;
     gap: var(--space-6);
+    align-items: center;
   }
 }
 
@@ -27,7 +30,7 @@
 
 .testi__feature img {
   inline-size: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: var(--radius-media);
 }
@@ -51,7 +54,7 @@
 
 .testi__text {
   font-family: var(--font-heading);
-  font-size: var(--text-display-sm);
+  font-size: clamp(1.75rem, 1.5vw + 1.25rem, 2.75rem);
   line-height: var(--leading-quote);
   letter-spacing: var(--tracking-quote);
   text-wrap: pretty;

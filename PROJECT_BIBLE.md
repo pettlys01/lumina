@@ -418,20 +418,55 @@ O que muda é a expectativa: consultar primeiro, e só então concluir que não 
       `especialidades/{implantes,lentes-de-contato-dental,harmonizacao-facial,ortodontia-estetica,clareamento}.html`
       e `contato.html` (destino do CTA primário).
 
-**Pendências de conteúdo abertas ao fim da Fase 4** (nenhuma delas bloqueia as fases seguintes, mas
-todas precisam ser resolvidas antes de qualquer publicação real):
-- **Fotografia.** As nove imagens são placeholders vetoriais gerados por `tools/placeholders.py`,
-  todos do mesmo sistema visual para que a página não pareça remendada. Precisam virar fotografia
-  real: ambiente, equipamento, três retratos de equipe, e o par antes/depois.
-- **Antes/Depois.** É a imagem mais fraca do conjunto, e deliberadamente abstrata: desenhar dentes
-  fictícios pareceria clipart clínico e derrubaria a leitura de alto padrão que a Seção 1 exige.
-  Só melhora com foto real.
+## 12.1 Fotografia (resolvido na revisão de design) e regra de seleção
+
+Sete das nove imagens passaram a ser fotografia real (Pexels, licença livre, sem exigência de
+atribuição). Duas regras saíram desse trabalho e valem para qualquer substituição futura:
+
+**Regra 1 — nenhuma imagem com marca de terceiro.** Duas candidatas foram descartadas depois de
+ampliadas: uma tinha `Dr. César Rampinelli — ORTODONTIA` bordado no jaleco, outra tinha o logotipo
+de uma clínica real ocupando um terço do enquadramento. Atribuir um nome fictício ao jaleco de um
+profissional real, ou exibir a marca de outra clínica como se fosse a nossa, é misrepresentação —
+não é questão de estética. **Toda foto entra ampliada em 100% antes de ser aprovada.**
+
+**Regra 2 — retratos de origens diferentes recebem tratamento unificador.** Os três retratos da
+equipe vêm de sessões distintas, com fundos, luz e temperatura de cor incompatíveis. Lado a lado,
+isso lê imediatamente como recorte de banco de imagem. O duotone (`grayscale` + multiplicação com
+`--color-accent` a 22%) traz os três para a mesma temperatura. É tratamento editorial, não filtro.
+
+**Pendências de conteúdo que continuam abertas:**
 - **Vídeo de depoimento.** A Seção 5 prevê vídeo. Enquanto não houver gravação, o bloco é uma
   `<figure>` não interativa com legenda dizendo o estado real — um botão de play que não reproduz
   nada seria promessa falsa.
 - **Números de prova social** (4,9 / 312 avaliações) e **CRO** são fictícios e devem ser
   substituídos por dados verificáveis. Em site real, número de avaliação inventado é risco legal,
   não só de credibilidade.
+
+## 12.2 Restrição regulatória sobre a seção Antes e Depois — DECISÃO PENDENTE
+
+A Seção 5 deste documento especifica uma seção de Antes e Depois com slider. Ela está implementada e
+funcional, mas **provavelmente não pode ir ao ar como está numa clínica real no Brasil**:
+
+- A **Resolução CFO 196/2019** liberou imagens de antes e depois, que antes eram proibidas.
+- Porém a liberação vale para o **cirurgião-dentista pessoa física**. O CROSP é explícito ao dizer
+  que **não se estende a clínicas / pessoa jurídica**, onde a divulgação continua vedada por ser
+  caracterizada como publicidade comercial.
+- Lumina é uma clínica. Logo, a seção como especificada é o caso vedado.
+- Mesmo no caso permitido, exige-se **termo de consentimento livre e esclarecido** do paciente, e
+  imagens do "durante" o procedimento seguem proibidas em qualquer hipótese.
+
+Por isso as duas imagens dessa seção **continuam abstratas de propósito**, e não foram substituídas
+por fotografia junto com as outras: montar um antes/depois convincente a partir de duas fotos de
+pessoas diferentes seria fabricar evidência clínica falsa usando o rosto de gente real — que é
+exatamente o que a norma existe para impedir.
+
+Três saídas possíveis, a decidir antes da Fase 5:
+1. **Mover a seção** para a página individual de um especialista (pessoa física), onde a Resolução
+   196/2019 a autoriza, com termo de consentimento.
+2. **Reaproveitar o slider** para uma comparação que não é resultado de paciente — por exemplo
+   moldagem convencional × escaneamento digital, que reforça o posicionamento de "planejamento
+   digital" sem entrar na regra.
+3. **Remover a seção** da Home e manter só depoimentos como prova social.
 - [ ] **Fase 6 — Motion.** Aceite: animações da seção 6 aplicadas, `prefers-reduced-motion` testado,
       nenhuma regressão de performance introduzida (reconferir Lighthouse).
 - [ ] **Fase 7 — SEO.** Aceite: itens da seção 8 implementados e validados (rich results test equivalente,

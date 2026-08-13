@@ -1,6 +1,12 @@
 /* ==========================================================================
    Seção: Sobre
    Depende de: tokens.css, layout.css
+
+   Ordem do arquivo: primeiro as regras base (mobile), depois as variações por
+   largura. Escrito ao contrário, a regra base sobrescreve a da media query —
+   as duas têm a mesma especificidade, e a última do arquivo vence. Foi
+   exatamente o que aconteceu na primeira versão desta seção: a composição
+   assimétrica estava escrita e não aparecia.
    ========================================================================== */
 
 .about__inner {
@@ -8,16 +14,6 @@
   grid-template-columns: 1fr;
   gap: var(--space-4);
   align-items: center;
-}
-
-/* A imagem entra depois do texto no fluxo em telas estreitas, mas antes dele
-   em telas largas: a ordem visual muda, a ordem do DOM (e da leitura por
-   teclado e leitor de tela) permanece a mesma. */
-@media (min-width: 56rem) {
-  .about__inner {
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: var(--space-8);
-  }
 }
 
 .about__figure {
@@ -62,4 +58,38 @@
 .about__value-text {
   font-size: var(--text-small);
   color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Telas largas — composição assimétrica
+
+   Segunda quebra de ritmo da página, depois da faixa escura de números. A
+   imagem desce em relação ao texto e o bloco de valores avança sobre ela, em
+   vez das duas colunas alinhadas que todas as outras seções usam.
+   -------------------------------------------------------------------------- */
+@media (min-width: 56rem) {
+  .about__inner {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  .about__figure {
+    margin-block-start: var(--space-8);
+  }
+
+  .about__values {
+    margin-inline-start: calc(var(--space-8) * -1.5);
+    padding: var(--space-4);
+    background-color: var(--surface-page);
+    border-radius: var(--radius);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Sobre fundo elevado, o bloco precisa da cor da própria seção para se
+     destacar da imagem — senão some contra ela. */
+  .section--raised .about__values {
+    background-color: var(--surface-raised);
+  }
 }

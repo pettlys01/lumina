@@ -30,9 +30,29 @@
   aspect-ratio: 16 / 10;
 }
 
-.hero__container {
-  position: relative;   /* acima da imagem */
+/* Véu claro no topo. A Navbar é transparente sobre o Hero e seu texto é escuro:
+   sobre uma fotografia qualquer, a legibilidade passaria a depender de quão
+   clara é aquela imagem naquele ponto. O véu garante o contraste por
+   construção, independente da foto que entrar aqui depois. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 10rem;
   z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--surface-page) 92%, transparent),
+    color-mix(in srgb, var(--surface-page) 55%, transparent) 45%,
+    transparent
+  );
+}
+
+.hero__container {
+  position: relative;   /* acima da imagem e do véu */
+  z-index: 2;
   inline-size: 100%;
   padding-block: var(--space-4);
 }

@@ -112,15 +112,12 @@ def sorriso(w, h, tom, titulo, brilho):
     return base(w, h, tom, titulo, corpo, vinheta=0.18)
 
 
+# Ambiente, equipamento, equipe e depoimento passaram a usar fotografia real.
+# Sobrou apenas o par antes/depois, que continua abstrato de propósito — ver a
+# nota sobre a Resolução CFO 196/2019 no Project Bible.
 ARQUIVOS = [
-    ("sobre.svg",        lambda: ambiente(1200, 1500, "claro",  "Ambiente de espera da clínica")),
-    ("tecnologia.svg",   lambda: detalhe(1600,  900,  "frio",   "Scanner intraoral em uso")),
-    ("depoimento.svg",   lambda: retrato(1200,  900,  "quente", "Paciente em depoimento")),
-    ("antes.svg",        lambda: sorriso(1200,  675,  "frio",   "Registro antes do tratamento", 0.0)),
-    ("depois.svg",       lambda: sorriso(1200,  675,  "quente", "Registro após o tratamento", 1.0)),
-    ("equipe-1.svg",     lambda: retrato(900,  1200,  "claro",  "Retrato de integrante da equipe")),
-    ("equipe-2.svg",     lambda: retrato(900,  1200,  "quente", "Retrato de integrante da equipe")),
-    ("equipe-3.svg",     lambda: retrato(900,  1200,  "medio",  "Retrato de integrante da equipe")),
+    ("antes.svg",  lambda: sorriso(1200, 675, "frio",   "Registro antes do tratamento", 0.0)),
+    ("depois.svg", lambda: sorriso(1200, 675, "quente", "Registro após o tratamento", 1.0)),
 ]
 
 
