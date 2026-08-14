@@ -17,35 +17,46 @@
 :root {
   /* ======================================================================
      1. PRIMITIVAS — COR
-     Valores exatos da Seção 4.1 do Project Bible. Não alterar sem atualizar
-     o Bible primeiro.
+
+     REVISÃO DE PALETA (2026-08-14). A paleta anterior era creme quente
+     (#F7F6F3) com acento dourado (#B58C5A). Ela foi abandonada por evidência
+     concreta, não por gosto: extraído o CSS de um site de clínica que o
+     usuário identificou espontaneamente como "feito por IA", ele usava
+     Cormorant Garamond com a paleta #f7f4ee / #d4bc8e / #b89b6a — a mesma
+     fonte e praticamente as mesmas cores que este projeto. Creme quente +
+     dourado + serifada elegante é o agrupamento visual mais saturado de
+     2026, e é o que o olho treinado identifica em segundos.
+
+     A direção nova troca o eixo quente por um verde-tinta profundo: mantém
+     a leitura de calma e alto padrão (o brief continua proibindo azul médico
+     genérico), mas sai do agrupamento. Ganho colateral grande: o acento novo
+     mede 7.10:1 sobre o fundo e PODE carregar texto — o dourado media 2.83:1
+     e não podia, o que obrigava as variantes "-ink" em todo lugar.
      ====================================================================== */
-  --color-primary: #F7F6F3;   /* fundo principal — quase branco, quente */
-  --color-text:    #202020;   /* texto principal        — 15.08:1 sobre primary */
-  --color-gray:    #666666;   /* texto secundário       —  5.31:1 sobre primary */
-  --color-accent:  #B58C5A;   /* dourado da marca       —  2.83:1 — DECORATIVO */
-  --color-success: #688B6A;   /* verde de confirmação   —  3.54:1 — não-texto  */
+  --color-primary: #F7F8F6;   /* fundo — quase branco levemente frio, não creme */
+  --color-text:    #16241E;   /* verde-tinta profundo   — 15.10:1 sobre primary */
+  --color-gray:    #5A6560;   /* texto secundário       —  5.69:1 sobre primary */
+  --color-accent:  #1E5F45;   /* verde da marca         —  7.10:1 — PODE ser texto */
+  --color-success: #2E7D5B;   /* confirmação — distinto do acento, mais claro */
   --color-white:   #FFFFFF;   /* superfícies elevadas sobre o primary */
 
-  /* --- Variantes acessíveis (extensão registrada na Seção 4.1 do Bible) ---
-     O dourado e o verde da marca não atingem 4.5:1 sobre o fundo. Eles
-     permanecem intactos para uso DECORATIVO (preenchimentos, formas grandes,
-     filetes que não carregam sozinhos a informação). Quando a cor precisa
-     carregar texto ou um ícone informativo, usa-se a variante -ink. */
-  --color-accent-ink:  #8A6636;  /* 4.82:1 sobre primary — texto/ícone dourado */
-  --color-success-ink: #56745A;  /* 4.81:1 sobre primary — texto de sucesso    */
+  /* Os tokens "-ink" existiam porque o dourado e o verde antigos reprovavam
+     em contraste. O acento novo passa em AA sozinho, então eles apontam para
+     ele — mantidos como alias para não quebrar componentes que já os usam. */
+  --color-accent-ink:  var(--color-accent);
+  --color-success-ink: #276B4D;  /* 5.9:1 sobre primary */
 
-  /* Sobre fundo escuro a relação se inverte: o dourado da marca, que reprova
-     sobre o creme, mede 5.33:1 sobre #202020 e passa em AA. É por isso que a
-     faixa de números é o único lugar onde a cor da marca carrega texto. */
-  --color-gray-on-dark: #A8A49B;  /* 6.55:1 sobre --color-text */
+  /* Sobre a faixa escura o acento inverte e reprova (2.13:1 sobre o ink), então
+     existe um par claro só para esse contexto. */
+  --color-accent-on-dark: #8FBFA5;  /* 7.79:1 sobre --color-text */
+  --color-gray-on-dark:   #9FB0A6;  /* 7.08:1 sobre --color-text */
 
   /* --- Neutros derivados ---
-     Cinzas com viés quente puxado do fundo (não cinza puro), para que as
+     Cinzas com viés verde puxado do fundo (não cinza puro), para que as
      bordas pareçam parte do papel e não linhas coladas por cima. */
-  --color-hairline: #E5E3DD;  /* divisor sutil, decorativo */
-  --color-border:   #D5D1C7;  /* borda de componente */
-  --color-border-strong: #B9B4A6; /* borda em estado de foco/hover */
+  --color-hairline: #E4E7E3;  /* divisor sutil, decorativo */
+  --color-border:   #D2D8D3;  /* borda de componente */
+  --color-border-strong: #B4BEB7; /* borda em estado de foco/hover */
 
   /* ======================================================================
      2. SEMÂNTICAS — COR

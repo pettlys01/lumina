@@ -90,21 +90,62 @@ apesar da clínica ser cara — Lumina não pode cair nesse padrão).
 
 ### 4.1 Cores
 
+> **Revisão de 2026-08-14 — a paleta creme + dourado da v1.0 foi substituída.** A justificativa
+> completa está na Seção 4.1-bis, logo abaixo. A tabela de contrastes medidos na Fase 2, que vem
+> em seguida, descreve a **paleta antiga** e é mantida como registro histórico do método.
+
 ```css
 :root {
-  --color-primary: #F7F6F3;   /* fundo principal — quase branco, quente */
-  --color-text: #202020;      /* texto principal */
-  --color-gray: #666666;      /* texto secundário, legendas, metadados */
-  --color-accent: #B58C5A;    /* dourado acinzentado — CTAs, detalhes, hover, linha decorativa */
-  --color-success: #688B6A;   /* confirmações, estados positivos (ex: "consulta confirmada") */
-  --color-white: #FFFFFF;     /* superfícies elevadas sobre o primary (cards, modais) */
+  --color-primary: #F7F8F6;   /* fundo — quase branco levemente frio, NÃO creme */
+  --color-text:    #16241E;   /* verde-tinta profundo — texto e superfície invertida */
+  --color-gray:    #5A6560;   /* texto secundário, legendas, metadados */
+  --color-accent:  #1E5F45;   /* verde da marca — CTA, filetes, marcadores */
+  --color-success: #2E7D5B;   /* confirmações, estados positivos */
+  --color-white:   #FFFFFF;   /* superfícies elevadas sobre o primary */
+
+  --color-accent-on-dark: #8FBFA5;  /* par claro do acento, só sobre a faixa escura */
+  --color-gray-on-dark:   #9FB0A6;
 }
 ```
 
 Regras de uso:
-- `--color-accent` é usado com moderação — CTA principal, sublinhados decorativos, ícones ativos,
-  indicadores de progresso. Nunca como cor de fundo de seção inteira.
-- Nunca usar azul em nenhum contexto médico (nem em ícones de "check", nem em links).
+- `--color-accent` é usado com moderação — CTA principal, filetes decorativos, marcadores.
+  Nunca como cor de fundo de seção inteira.
+- Nunca usar **azul médico genérico** (o azul-clínica saturado). O verde-tinta cumpre o papel de
+  cor institucional sem cair nesse lugar-comum.
+- Sobre a faixa escura, o acento **inverte e reprova** (2,13:1). Ali usa-se `--color-accent-on-dark`.
+
+### 4.1-bis Por que a paleta mudou
+
+A v1.0 especificava creme quente `#F7F6F3` com acento dourado `#B58C5A`, e o projeto foi executado
+assim até a Fase 6. O usuário apontou, sem ver o código, que o site "ainda parecia feito por IA".
+A investigação deu razão a ele, com evidência medível:
+
+| Site | Fontes | Paleta |
+|---|---|---|
+| `drgabriellembo.com` — apontado pelo usuário como "parece IA" | **Cormorant Garamond** + Outfit | `#f7f4ee` `#e8e0d0` `#d4bc8e` **`#b89b6a`** |
+| **Lumina, antes desta revisão** | **Cormorant Garamond** + Inter | `#F7F6F3` **`#B58C5A`** |
+| `benattiodontologia.com.br` — apontado como bonito | Gabarito / League Spartan | `#ffffff` **`#013a65`** **`#5eb2f2`** |
+
+O site que o olho do usuário identificou como gerado usava **a mesma fonte e praticamente a mesma
+paleta** deste projeto. Creme quente + dourado + serifada elegante é o agrupamento visual mais
+saturado de 2026 — e nenhum ajuste de escala tipográfica resolve isso, porque o problema é a
+combinação de cor e família, não o refinamento da execução.
+
+**Contagem de imagens, outro sinal medido:** Benatti tem **65 imagens e 6 vídeos**; o site que parece
+IA tem 8; a Lumina tinha 9. Volume de conteúdo real é, por si só, sinal de autenticidade — uma
+clínica de verdade tem dezenas de fotos porque alguém foi lá fotografar. **Aumentar densidade de
+fotografia própria continua sendo a pendência de maior impacto do projeto.**
+
+**Ganho colateral da troca:** o acento novo mede **7,10:1** sobre o fundo e pode carregar texto. O
+dourado media 2,83:1 e não podia — era essa a razão de existirem as variantes `-ink` espalhadas pelo
+sistema, que agora viraram alias do próprio acento.
+
+**Ícones substituídos na mesma revisão:** a grade de ícones de traço fino (1,5px, estilo
+Lucide/Feather, um por card) é outro sinal forte de interface gerada. Foram trocados pela **inicial
+da especialidade na serifada** — identifica o item, reaproveita a tipografia da marca e cria textura.
+Numerar 01/02/03 foi descartado: especialidades não são uma sequência, e numeração decorativa é
+justamente mais um item da mesma lista de sinais.
 
 **Contrastes reais, medidos na Fase 2** (cálculo WCAG 2.1 contra `--color-primary`; os valores
 estimados na v1.0 deste documento estavam otimistas e foram corrigidos aqui):

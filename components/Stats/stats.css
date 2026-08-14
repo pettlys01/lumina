@@ -54,6 +54,17 @@
   display: flex;
   flex-direction: column-reverse;
   align-items: flex-start;
+
+  /* Com column-reverse o eixo principal corre de BAIXO para cima, então
+     justify-content:flex-start (o padrão) empacota o conteúdo no rodapé da
+     célula. Como a grade estica todas as células à mesma altura, um rótulo de
+     duas linhas ("Tratamentos concluídos") empurrava o número 21px acima do
+     número vizinho, de rótulo curto ("Anos de clínica") — medido, não
+     estimado. Números grandes desalinhados entre si é o tipo de detalhe que
+     faz uma página inteira parecer descuidada.
+     flex-end aqui significa "topo", e alinha todos os números na mesma linha. */
+  justify-content: flex-end;
+
   gap: var(--space-2);
   padding-block-start: var(--space-2);
   border-block-start: 1px solid rgba(247, 246, 243, 0.2);
@@ -65,7 +76,11 @@
   font-size: clamp(3rem, 4vw + 1rem, 4.5rem);
   line-height: 0.95;
   letter-spacing: var(--tracking-title);
-  color: var(--color-accent);       /* 5,33:1 sobre o fundo escuro */
+  /* Sobre a faixa escura o acento reprova (2,13:1). O par claro existe só
+     para este contexto e mede 7,79:1 — a relação entre as duas cores se
+     inverte quando o fundo inverte, e isso é decidido por medição, não por
+     aparência. */
+  color: var(--color-accent-on-dark);
 
   /* Cormorant usa algarismos de texto por padrão — o 1 fica na altura-x e o 3
      e o 4 descem. Bonito dentro de parágrafo, desalinhado em número grande. */

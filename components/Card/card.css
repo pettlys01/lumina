@@ -27,9 +27,22 @@
               border-color var(--duration-fast) var(--ease-out);
 }
 
-.card__icon {
-  inline-size: 2.25rem;
-  block-size: 2.25rem;
+/* Marcador tipográfico no lugar de ícone.
+
+   Uma grade de ícones de traço fino (estilo Lucide/Feather, 1,5px, um por
+   card) é um dos sinais visuais mais reconhecíveis de interface gerada — foi
+   exatamente o que o usuário apontou. A inicial da especialidade na serifada
+   resolve por outro caminho: identifica o item (ao contrário de numerar
+   01/02/03, que sugeriria uma sequência que não existe entre especialidades),
+   reaproveita a família tipográfica que já é da marca, e cria textura em vez
+   de repetir um sistema de ícones de terceiros.
+
+   aria-hidden porque a letra é redundante — o título do card logo abaixo já
+   diz o nome inteiro. */
+.card__mark {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  line-height: 1;
   color: var(--decor-accent);
   flex-shrink: 0;
 }
