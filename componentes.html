@@ -36,22 +36,29 @@
 <header class="navbar" data-navbar>
   <div class="navbar__inner container">
 
-    <a class="navbar__brand" href="#topo">
+    <a class="navbar__brand" href="index.html">
       <span class="navbar__wordmark">Lumina</span>
       <span class="navbar__sub">Odontologia</span>
     </a>
 
     <!-- Quatro itens de topo. Hick's Law: o tempo de decisão cresce com o
          número de opções, então a navegação principal carrega só as categorias
-         de alto nível — o resto do site é alcançado por dentro delas. -->
+         de alto nível — o resto do site é alcançado por dentro delas.
+
+         Âncoras sempre prefixadas com "index.html": este partial é incluído
+         também em páginas que não são a Home (especialidades, contato), onde
+         um "#especialidades" sozinho não aponta para lugar nenhum — a seção
+         só existe na Home. Com o prefixo, o link funciona em qualquer página;
+         na própria Home, o navegador resolve para o mesmo documento e apenas
+         rola, sem recarregar. -->
     <nav class="navbar__nav" id="navbar-menu" aria-label="Principal">
       <ul class="navbar__list">
-        <li><a class="navbar__link" href="#especialidades">Especialidades</a></li>
-        <li><a class="navbar__link" href="#tecnologia">Tecnologia</a></li>
-        <li><a class="navbar__link" href="#equipe">Equipe</a></li>
-        <li><a class="navbar__link" href="#sobre">Sobre</a></li>
+        <li><a class="navbar__link" href="index.html#especialidades">Especialidades</a></li>
+        <li><a class="navbar__link" href="index.html#tecnologia">Tecnologia</a></li>
+        <li><a class="navbar__link" href="index.html#equipe">Equipe</a></li>
+        <li><a class="navbar__link" href="index.html#sobre">Sobre</a></li>
       </ul>
-      <a class="btn btn--primary navbar__cta" href="#agendamento">Agendar avaliação</a>
+      <a class="btn btn--primary navbar__cta" href="index.html#agendamento">Agendar avaliação</a>
     </nav>
 
     <button class="navbar__toggle" type="button"
@@ -354,13 +361,16 @@
         </ul>
       </nav>
 
+      <!-- Mesma regra da Navbar: âncora de seção prefixada com "index.html",
+           porque este partial também é incluído em páginas que não têm essas
+           seções (especialidades, contato). -->
       <nav class="footer__col" aria-labelledby="footer-inst">
         <h2 class="footer__heading" id="footer-inst">Institucional</h2>
         <ul class="footer__list">
-          <li><a class="footer__link" href="#sobre">Sobre a clínica</a></li>
-          <li><a class="footer__link" href="#equipe">Equipe</a></li>
-          <li><a class="footer__link" href="#tecnologia">Tecnologia</a></li>
-          <li><a class="footer__link" href="#faq">Perguntas frequentes</a></li>
+          <li><a class="footer__link" href="index.html#sobre">Sobre a clínica</a></li>
+          <li><a class="footer__link" href="index.html#equipe">Equipe</a></li>
+          <li><a class="footer__link" href="index.html#tecnologia">Tecnologia</a></li>
+          <li><a class="footer__link" href="index.html#faq">Perguntas frequentes</a></li>
         </ul>
       </nav>
 
@@ -391,9 +401,9 @@
         © 2026 Lumina Odontologia — projeto fictício. CRO-SP 00000.
       </p>
       <p class="footer__legal">
-        <a class="footer__link" href="#privacidade">Política de privacidade</a>
+        <a class="footer__link" href="privacidade.html">Política de privacidade</a>
         <span aria-hidden="true"> · </span>
-        <a class="footer__link" href="#termos">Termos de uso</a>
+        <a class="footer__link" href="termos.html">Termos de uso</a>
       </p>
     </div>
 

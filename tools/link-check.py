@@ -22,29 +22,35 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 
 # Destinos que ainda não existem por decisão de faseamento, não por engano.
+# Os 5 templates de especialidade e contato.html saíram daqui na Fase 5 — as
+# páginas passaram a existir de verdade.
 PENDENTES = {
-    "contato.html": "Fase 5",
-    "especialidades/implantes.html": "Fase 5",
-    "especialidades/lentes-de-contato-dental.html": "Fase 5",
-    "especialidades/harmonizacao-facial.html": "Fase 5",
-    "especialidades/ortodontia-estetica.html": "Fase 5",
-    "especialidades/clareamento.html": "Fase 5",
     "#instagram": "perfil externo",
     "#facebook": "perfil externo",
     "#youtube": "perfil externo",
-    "#privacidade": "página legal",
-    "#termos": "página legal",
+    "privacidade.html": "página legal — fora do escopo do Bible",
+    "termos.html": "página legal — fora do escopo do Bible",
 }
 
 PAGINA_PRINCIPAL = "index.html"
 
 # Folhas técnicas internas. Elas demonstram Navbar e Footer fora da Home, então
-# âncoras como #especialidades naturalmente não resolvem ali — o componente está
-# correto, o contexto é que é outro. Isso é informação, não defeito; o que seria
-# defeito é a âncora não existir nem na Home.
+# uma âncora de seção que não tenha sido corrigida para "index.html#..." não
+# resolveria ali — o componente está correto, o contexto é que é outro. Isso é
+# informação, não defeito; o que seria defeito é a âncora não existir nem na Home.
 PAGINAS_DEMO = {"componentes.html", "styleguide.html"}
 
-PAGINAS = [PAGINA_PRINCIPAL, "componentes.html", "styleguide.html"]
+PAGINAS = [
+    PAGINA_PRINCIPAL,
+    "componentes.html",
+    "styleguide.html",
+    "contato.html",
+    "especialidades/implantes.html",
+    "especialidades/lentes-de-contato-dental.html",
+    "especialidades/harmonizacao-facial.html",
+    "especialidades/ortodontia-estetica.html",
+    "especialidades/clareamento.html",
+]
 
 
 def ids_de(nome: str) -> set:
@@ -65,7 +71,12 @@ def conferir(pagina: Path, ids_home: set):
     for href in dict.fromkeys(hrefs):
         if href.startswith(("http://", "https://", "mailto:", "tel:", "data:")):
             continue
-        if href in PENDENTES:
+        # PENDENTES é declarado com caminhos relativos à raiz; em página
+        # aninhada o href já foi reescrito com "../" na frente pelo build.py.
+        # Normaliza antes de comparar, senão "../privacidade.html" não bate
+        # com a chave "privacidade.html" e vira falso QUEBRADO.
+        href_normalizado = re.sub(r"^(\.\./)+", "", href)
+        if href_normalizado in PENDENTES:
             pendentes.append(href)
         elif href.startswith("#"):
             if href[1:] in ids:
@@ -75,7 +86,12 @@ def conferir(pagina: Path, ids_home: set):
             else:
                 quebrados.append(href)
         else:
-            alvo = (RAIZ / href.split("#")[0]).resolve()
+            # Relativo à PASTA da página, não à raiz do projeto — necessário
+            # desde a Fase 5, quando páginas passaram a existir fora da raiz
+            # (especialidades/*.html) e seus links vêm prefixados com "../".
+            # Resolver sempre contra RAIZ fazia "../index.html" apontar para
+            # fora do projeto em vez de para o índice real.
+            alvo = (pagina.parent / href.split("#")[0]).resolve()
             (ok if alvo.is_file() else quebrados).append(href)
 
     return ok, pendentes, demo, quebrados
@@ -96,7 +112,8 @@ if __name__ == "__main__":
               + (f", {len(demo)} fora de contexto (resolvem na Home)" if demo else ""))
 
         for href in pendentes:
-            print(f"  PENDENTE  {href}  ({PENDENTES[href]})")
+            chave = re.sub(r"^(\.\./)+", "", href)
+            print(f"  PENDENTE  {href}  ({PENDENTES[chave]})")
         for href in quebrados:
             print(f"  QUEBRADO  {href}")
 

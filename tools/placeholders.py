@@ -98,26 +98,51 @@ def retrato(w, h, tom, titulo):
     return base(w, h, tom, titulo, corpo, vinheta=0.3)
 
 
-def sorriso(w, h, tom, titulo, brilho):
+def plano_digital(w, h, titulo):
     """
-    Antes/Depois. Abstrato de propósito: desenhar dentes de mentira pareceria
-    clipart clínico e derrubaria a leitura de alto padrão. O que muda entre as
-    duas versões é luz e nitidez — o suficiente para o controle deslizante
-    mostrar diferença real ao ser arrastado.
+    Metade "digital" da comparação de método na seção que antes se chamava
+    Antes e Depois (ver Project Bible, Seção 12.2: para clínica — pessoa
+    jurídica —, antes/depois de resultado de paciente é vedado pelo CROSP; a
+    seção virou comparação de MÉTODO, moldagem física × plano digital, e o
+    lado físico já é fotografia real).
+
+    Deliberadamente estilizada, não fotorrealista: uma grade fina e
+    marcadores ao longo do arco leem como plano/visualização, nunca como
+    screenshot de um software real. Uma foto de tela de verdade exigiria ou
+    inventar dado de paciente, ou usar uma captura real — a primeira tentativa
+    de fonte encontrou exatamente isso, nome e ID de paciente real visíveis
+    numa foto de banco de imagem. A saída é não fingir a captura.
     """
-    arco = f'M {int(w*0.28)} {int(h*0.46)} Q {int(w*0.5)} {int(h*0.72)} {int(w*0.72)} {int(h*0.46)}'
-    corpo = f'''  <ellipse cx="{int(w*0.5)}" cy="{int(h*0.5)}" rx="{int(w*0.34)}" ry="{int(h*0.36)}" fill="#FBF3E6" opacity="{0.25 + brilho*0.4}"/>
-  <path d="{arco}" fill="none" stroke="#FFFFFF" stroke-width="{int(h*0.06)}" stroke-linecap="round" opacity="{0.3 + brilho*0.55}"/>
-  <path d="{arco}" fill="none" stroke="#A88E6A" stroke-width="1.5" opacity="{0.5 - brilho*0.3}"/>'''
-    return base(w, h, tom, titulo, corpo, vinheta=0.18)
+    arco = f'M {int(w*0.26)} {int(h*0.48)} Q {int(w*0.5)} {int(h*0.74)} {int(w*0.74)} {int(h*0.48)}'
+    marcadores = "\n".join(
+        f'  <rect x="{x-5}" y="{y-5}" width="10" height="10" fill="none" '
+        f'stroke="#A88E6A" stroke-width="1.2" transform="rotate(45 {x} {y})"/>'
+        for x, y in [
+            (int(w*0.34), int(h*0.565)), (int(w*0.42), int(h*0.615)),
+            (int(w*0.50), int(h*0.635)), (int(w*0.58), int(h*0.615)),
+            (int(w*0.66), int(h*0.565)),
+        ]
+    )
+    grade = "\n".join(
+        f'  <line x1="0" y1="{int(h*f)}" x2="{w}" y2="{int(h*f)}" stroke="#96938A" stroke-width="1" opacity="0.14"/>'
+        for f in (0.28, 0.5, 0.72)
+    ) + "\n" + "\n".join(
+        f'  <line x1="{int(w*f)}" y1="0" x2="{int(w*f)}" y2="{h}" stroke="#96938A" stroke-width="1" opacity="0.14"/>'
+        for f in (0.3, 0.5, 0.7)
+    )
+    corpo = f'''{grade}
+  <ellipse cx="{int(w*0.5)}" cy="{int(h*0.5)}" rx="{int(w*0.32)}" ry="{int(h*0.34)}" fill="#EEF1F0" opacity="0.5"/>
+  <path d="{arco}" fill="none" stroke="#FFFFFF" stroke-width="{int(h*0.055)}" stroke-linecap="round" opacity="0.65"/>
+  <path d="{arco}" fill="none" stroke="#7E7364" stroke-width="1.5" opacity="0.35"/>
+{marcadores}'''
+    return base(w, h, "frio", titulo, corpo, vinheta=0.16)
 
 
 # Ambiente, equipamento, equipe e depoimento passaram a usar fotografia real.
-# Sobrou apenas o par antes/depois, que continua abstrato de propósito — ver a
-# nota sobre a Resolução CFO 196/2019 no Project Bible.
+# A metade física da comparação de método também (assets/img/moldagem.jpg).
+# Só a metade digital continua gerada — ver a nota da função acima.
 ARQUIVOS = [
-    ("antes.svg",  lambda: sorriso(1200, 675, "frio",   "Registro antes do tratamento", 0.0)),
-    ("depois.svg", lambda: sorriso(1200, 675, "quente", "Registro após o tratamento", 1.0)),
+    ("plano-digital.svg", lambda: plano_digital(1200, 675, "Ilustração esquemática do plano digital do sorriso")),
 ]
 
 

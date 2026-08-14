@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!-- ARQUIVO GERADO por tools/build.py — não editar aqui.
+     Edite o fonte em src/ ou o partial em components/. -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Agende sua avaliação — Lumina Odontologia</title>
+  <meta name="description" content="Fale com a Lumina Odontologia por WhatsApp ou telefone, ou preencha o formulário para agendar sua avaliação em Pinheiros, São Paulo.">
+  <meta name="theme-color" content="#F7F6F3">
+
+  <link rel="preload" href="assets/fonts/cormorant-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/typography.css">
+  <link rel="stylesheet" href="styles/layout.css">
+
+  <link rel="stylesheet" href="components/Button/button.css">
+  <link rel="stylesheet" href="components/Navbar/navbar.css">
+  <link rel="stylesheet" href="components/PageHeader/page-header.css">
+  <link rel="stylesheet" href="components/ContactForm/contact-form.css">
+  <link rel="stylesheet" href="components/ContactForm/contact-page.css">
+  <link rel="stylesheet" href="components/Footer/footer.css">
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="navbar" data-navbar>
+  <div class="navbar__inner container">
+
+    <a class="navbar__brand" href="index.html">
+      <span class="navbar__wordmark">Lumina</span>
+      <span class="navbar__sub">Odontologia</span>
+    </a>
+
+    <!-- Quatro itens de topo. Hick's Law: o tempo de decisão cresce com o
+         número de opções, então a navegação principal carrega só as categorias
+         de alto nível — o resto do site é alcançado por dentro delas.
+
+         Âncoras sempre prefixadas com "index.html": este partial é incluído
+         também em páginas que não são a Home (especialidades, contato), onde
+         um "#especialidades" sozinho não aponta para lugar nenhum — a seção
+         só existe na Home. Com o prefixo, o link funciona em qualquer página;
+         na própria Home, o navegador resolve para o mesmo documento e apenas
+         rola, sem recarregar. -->
+    <nav class="navbar__nav" id="navbar-menu" aria-label="Principal">
+      <ul class="navbar__list">
+        <li><a class="navbar__link" href="index.html#especialidades">Especialidades</a></li>
+        <li><a class="navbar__link" href="index.html#tecnologia">Tecnologia</a></li>
+        <li><a class="navbar__link" href="index.html#equipe">Equipe</a></li>
+        <li><a class="navbar__link" href="index.html#sobre">Sobre</a></li>
+      </ul>
+      <a class="btn btn--primary navbar__cta" href="index.html#agendamento">Agendar avaliação</a>
+    </nav>
+
+    <button class="navbar__toggle" type="button"
+            aria-expanded="false" aria-controls="navbar-menu" data-navbar-toggle>
+      <span class="navbar__toggle-bars" aria-hidden="true"></span>
+      <span class="visually-hidden" data-navbar-toggle-label>Abrir menu</span>
+    </button>
+
+  </div>
+</header>
+
+<main id="conteudo">
+
+  <header class="page-header">
+    <div class="container">
+      <nav class="page-header__crumbs" aria-label="Trilha de navegação">
+        <a href="index.html">Home</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Contato</span>
+      </nav>
+      <span class="page-header__eyebrow">Agendamento</span>
+      <h1 class="page-header__title">Vamos marcar sua avaliação</h1>
+      <p class="page-header__lead">
+        Uma hora de consulta, diagnóstico completo e nenhum compromisso de
+        fechar tratamento no mesmo dia. Responda pelo WhatsApp, telefone ou
+        pelo formulário abaixo.
+      </p>
+    </div>
+  </header>
+
+  <section class="section contact">
+    <div class="container contact__grid">
+
+      <div class="contact__form-col">
+        <h2 class="contact__col-title">Prefere escrever?</h2>
+        <form class="contact-form" data-contact-form novalidate>
+
+          <div class="contact-form__field">
+            <label class="contact-form__label" for="cf-nome">Nome completo</label>
+            <input class="contact-form__input" type="text" id="cf-nome" name="nome"
+                   autocomplete="name" required>
+            <p class="contact-form__error" data-error-for="cf-nome" role="alert" hidden></p>
+          </div>
+
+          <div class="contact-form__field">
+            <label class="contact-form__label" for="cf-telefone">WhatsApp</label>
+            <input class="contact-form__input" type="tel" id="cf-telefone" name="telefone"
+                   autocomplete="tel" inputmode="tel" spellcheck="false"
+                   placeholder="(11) 90000-0000" required>
+            <p class="contact-form__error" data-error-for="cf-telefone" role="alert" hidden></p>
+          </div>
+
+          <div class="contact-form__field">
+            <label class="contact-form__label" for="cf-especialidade">Especialidade de interesse</label>
+            <select class="contact-form__input" id="cf-especialidade" name="especialidade">
+              <option value="Ainda não sei">Ainda não sei</option>
+              <option value="Implantes">Implantes</option>
+              <option value="Lentes de contato dental">Lentes de contato dental</option>
+              <option value="Harmonização facial">Harmonização facial</option>
+              <option value="Ortodontia estética">Ortodontia estética</option>
+              <option value="Clareamento">Clareamento</option>
+            </select>
+          </div>
+
+          <div class="contact-form__field">
+            <label class="contact-form__label" for="cf-mensagem">Mensagem (opcional)</label>
+            <textarea class="contact-form__input contact-form__input--area" id="cf-mensagem"
+                      name="mensagem" rows="3" autocomplete="off"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--lg contact-form__submit">
+            Continuar no WhatsApp
+          </button>
+
+          <p class="contact-form__note">
+            Ao continuar, você abre uma conversa no WhatsApp com os dados preenchidos
+            — nada é enviado por este site.
+          </p>
+
+        </form>
+      </div>
+
+      <div class="contact__info-col">
+        <h2 class="contact__col-title">Prefere falar direto?</h2>
+
+        <a class="contact__channel" href="https://wa.me/5511300000000" target="_blank" rel="noopener">
+          <span class="contact__channel-label">WhatsApp</span>
+          <span class="contact__channel-value">(11) 3000-0000</span>
+        </a>
+
+        <a class="contact__channel" href="tel:+551130000000">
+          <span class="contact__channel-label">Telefone</span>
+          <span class="contact__channel-value">(11) 3000-0000</span>
+        </a>
+
+        <a class="contact__channel" href="mailto:contato@lumina.exemplo">
+          <span class="contact__channel-label">E-mail</span>
+          <span class="contact__channel-value">contato@lumina.exemplo</span>
+        </a>
+
+        <div class="contact__address">
+          <h3 class="contact__col-title">Endereço</h3>
+          <address class="contact__address-text">
+            Rua dos Pinheiros, 1400 — conj. 82<br>
+            Pinheiros, São Paulo — SP<br>
+            CEP 05422-000
+          </address>
+        </div>
+
+        <div class="contact__hours">
+          <h3 class="contact__col-title">Horário</h3>
+          <p class="contact__hours-text">
+            Segunda a sexta, 9h às 19h<br>
+            Sábado, 9h às 13h
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" id="contato">
+  <div class="footer__inner container">
+
+    <div class="footer__grid">
+
+      <div class="footer__brand">
+        <span class="footer__wordmark">Lumina</span>
+        <p class="footer__tagline">
+          Odontologia estética e reabilitação oral em São Paulo.
+        </p>
+        <ul class="footer__social" aria-label="Redes sociais">
+          <li><a class="footer__social-link" href="#instagram">Instagram</a></li>
+          <li><a class="footer__social-link" href="#facebook">Facebook</a></li>
+          <li><a class="footer__social-link" href="#youtube">YouTube</a></li>
+        </ul>
+      </div>
+
+      <nav class="footer__col" aria-labelledby="footer-esp">
+        <h2 class="footer__heading" id="footer-esp">Especialidades</h2>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="especialidades/implantes.html">Implantes</a></li>
+          <li><a class="footer__link" href="especialidades/lentes-de-contato-dental.html">Lentes de contato dental</a></li>
+          <li><a class="footer__link" href="especialidades/harmonizacao-facial.html">Harmonização facial</a></li>
+          <li><a class="footer__link" href="especialidades/ortodontia-estetica.html">Ortodontia estética</a></li>
+          <li><a class="footer__link" href="especialidades/clareamento.html">Clareamento</a></li>
+        </ul>
+      </nav>
+
+      <!-- Mesma regra da Navbar: âncora de seção prefixada com "index.html",
+           porque este partial também é incluído em páginas que não têm essas
+           seções (especialidades, contato). -->
+      <nav class="footer__col" aria-labelledby="footer-inst">
+        <h2 class="footer__heading" id="footer-inst">Institucional</h2>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="index.html#sobre">Sobre a clínica</a></li>
+          <li><a class="footer__link" href="index.html#equipe">Equipe</a></li>
+          <li><a class="footer__link" href="index.html#tecnologia">Tecnologia</a></li>
+          <li><a class="footer__link" href="index.html#faq">Perguntas frequentes</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">Contato</h2>
+        <address class="footer__address">
+          Rua dos Pinheiros, 1400 — conj. 82<br>
+          Pinheiros, São Paulo — SP
+
+          <!-- Telefone e e-mail saem do texto corrido e viram lista: são os
+               alvos mais tocados desta coluna no celular e precisam dos 44px
+               da Lei de Fitts, o que não cabe entre linhas de endereço. -->
+          <ul class="footer__list">
+            <li><a class="footer__link" href="tel:+551130000000">(11) 3000-0000</a></li>
+            <li><a class="footer__link" href="mailto:contato@lumina.exemplo">contato@lumina.exemplo</a></li>
+          </ul>
+        </address>
+        <p class="footer__hours">
+          Segunda a sexta, 9h às 19h<br>
+          Sábado, 9h às 13h
+        </p>
+      </div>
+
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__legal">
+        © 2026 Lumina Odontologia — projeto fictício. CRO-SP 00000.
+      </p>
+      <p class="footer__legal">
+        <a class="footer__link" href="privacidade.html">Política de privacidade</a>
+        <span aria-hidden="true"> · </span>
+        <a class="footer__link" href="termos.html">Termos de uso</a>
+      </p>
+    </div>
+
+  </div>
+</footer>
+
+<script src="components/Navbar/navbar.js" defer></script>
+<script src="components/ContactForm/contact-form.js" defer></script>
+
+</body>
+</html>

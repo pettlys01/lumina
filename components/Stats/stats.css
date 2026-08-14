@@ -25,6 +25,14 @@
   padding-block: var(--space-8);
 }
 
+/* O container padrão do site (72rem) deixa ~480px de vazio de cada lado em
+   monitor largo (1920px). Sobre fundo claro isso passa despercebido; sobre
+   a única faixa escura da página, o vazio dos dois lados lê como layout
+   quebrado, não como respiro. Só aqui o container é mais largo. */
+.stats .container {
+  max-inline-size: 84rem;
+}
+
 .stats__grid {
   margin: 0;
   display: grid;

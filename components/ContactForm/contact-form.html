@@ -1,0 +1,45 @@
+<form class="contact-form" data-contact-form novalidate>
+
+  <div class="contact-form__field">
+    <label class="contact-form__label" for="cf-nome">Nome completo</label>
+    <input class="contact-form__input" type="text" id="cf-nome" name="nome"
+           autocomplete="name" required>
+    <p class="contact-form__error" data-error-for="cf-nome" role="alert" hidden></p>
+  </div>
+
+  <div class="contact-form__field">
+    <label class="contact-form__label" for="cf-telefone">WhatsApp</label>
+    <input class="contact-form__input" type="tel" id="cf-telefone" name="telefone"
+           autocomplete="tel" inputmode="tel" spellcheck="false"
+           placeholder="(11) 90000-0000" required>
+    <p class="contact-form__error" data-error-for="cf-telefone" role="alert" hidden></p>
+  </div>
+
+  <div class="contact-form__field">
+    <label class="contact-form__label" for="cf-especialidade">Especialidade de interesse</label>
+    <select class="contact-form__input" id="cf-especialidade" name="especialidade">
+      <option value="Ainda não sei">Ainda não sei</option>
+      <option value="Implantes">Implantes</option>
+      <option value="Lentes de contato dental">Lentes de contato dental</option>
+      <option value="Harmonização facial">Harmonização facial</option>
+      <option value="Ortodontia estética">Ortodontia estética</option>
+      <option value="Clareamento">Clareamento</option>
+    </select>
+  </div>
+
+  <div class="contact-form__field">
+    <label class="contact-form__label" for="cf-mensagem">Mensagem (opcional)</label>
+    <textarea class="contact-form__input contact-form__input--area" id="cf-mensagem"
+              name="mensagem" rows="3" autocomplete="off"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn--primary btn--lg contact-form__submit">
+    Continuar no WhatsApp
+  </button>
+
+  <p class="contact-form__note">
+    Ao continuar, você abre uma conversa no WhatsApp com os dados preenchidos
+    — nada é enviado por este site.
+  </p>
+
+</form>

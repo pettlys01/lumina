@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<!-- ARQUIVO GERADO por tools/build.py — não editar aqui.
+     Edite o fonte em src/ ou o partial em components/. -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Clareamento Dental em Pinheiros — Lumina Odontologia</title>
+  <meta name="description" content="Clareamento em consultório ou supervisionado em casa, com protocolo definido pela sensibilidade e pelo tom de partida de cada paciente.">
+  <meta name="theme-color" content="#F7F6F3">
+
+  <!-- Open Graph, JSON-LD (Dentist/BreadcrumbList) entram na Fase 7 (SEO). -->
+
+  <link rel="preload" href="../assets/fonts/cormorant-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/typography.css">
+  <link rel="stylesheet" href="../styles/layout.css">
+
+  <link rel="stylesheet" href="../components/Button/button.css">
+  <link rel="stylesheet" href="../components/Card/card.css">
+  <link rel="stylesheet" href="../components/Navbar/navbar.css">
+  <link rel="stylesheet" href="../components/PageHeader/page-header.css">
+  <link rel="stylesheet" href="../components/SpecialtyPage/specialty.css">
+  <link rel="stylesheet" href="../components/FAQ/faq.css">
+  <link rel="stylesheet" href="../components/CTA/cta.css">
+  <link rel="stylesheet" href="../components/Footer/footer.css">
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="navbar" data-navbar>
+  <div class="navbar__inner container">
+
+    <a class="navbar__brand" href="../index.html">
+      <span class="navbar__wordmark">Lumina</span>
+      <span class="navbar__sub">Odontologia</span>
+    </a>
+
+    <!-- Quatro itens de topo. Hick's Law: o tempo de decisão cresce com o
+         número de opções, então a navegação principal carrega só as categorias
+         de alto nível — o resto do site é alcançado por dentro delas.
+
+         Âncoras sempre prefixadas com "index.html": este partial é incluído
+         também em páginas que não são a Home (especialidades, contato), onde
+         um "#especialidades" sozinho não aponta para lugar nenhum — a seção
+         só existe na Home. Com o prefixo, o link funciona em qualquer página;
+         na própria Home, o navegador resolve para o mesmo documento e apenas
+         rola, sem recarregar. -->
+    <nav class="navbar__nav" id="navbar-menu" aria-label="Principal">
+      <ul class="navbar__list">
+        <li><a class="navbar__link" href="../index.html#especialidades">Especialidades</a></li>
+        <li><a class="navbar__link" href="../index.html#tecnologia">Tecnologia</a></li>
+        <li><a class="navbar__link" href="../index.html#equipe">Equipe</a></li>
+        <li><a class="navbar__link" href="../index.html#sobre">Sobre</a></li>
+      </ul>
+      <a class="btn btn--primary navbar__cta" href="../index.html#agendamento">Agendar avaliação</a>
+    </nav>
+
+    <button class="navbar__toggle" type="button"
+            aria-expanded="false" aria-controls="navbar-menu" data-navbar-toggle>
+      <span class="navbar__toggle-bars" aria-hidden="true"></span>
+      <span class="visually-hidden" data-navbar-toggle-label>Abrir menu</span>
+    </button>
+
+  </div>
+</header>
+
+<main id="conteudo">
+
+  <header class="page-header">
+    <div class="container">
+      <nav class="page-header__crumbs" aria-label="Trilha de navegação">
+        <a href="../index.html">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="../index.html#especialidades">Especialidades</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Clareamento</span>
+      </nav>
+      <span class="page-header__eyebrow">Estética do sorriso</span>
+      <h1 class="page-header__title">Clareamento</h1>
+      <p class="page-header__lead">Protocolo em consultório ou supervisionado em casa, ajustado pela sensibilidade e pelo tom de partida de cada paciente — não um produto padrão para todos.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="specialty__overview">
+        <p>O clareamento usa peróxido de hidrogênio ou de carbamida para oxidar pigmentos dentro do esmalte e da dentina, clareando o dente de dentro para fora. O protocolo — concentração, tempo de aplicação e número de sessões — muda de pessoa para pessoa.</p>
+        <p>Restaurações, coroas e facetas existentes não clareiam junto com o dente natural: se você tem trabalhos visíveis na região que vai clarear, isso entra na avaliação antes de começar, para não terminar com tom desigual.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--raised">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-head__eyebrow">Indicação</span>
+        <h2 class="section-head__title">Para quem é indicado</h2>
+      </div>
+      <ul class="specialty__list">
+        <li>Escurecimento por pigmentação alimentar, tabaco ou envelhecimento natural do esmalte</li>
+        <li>Ausência de cáries ou restaurações com infiltração na região a clarear</li>
+        <li>Sensibilidade dentária controlável com dessensibilizante durante o protocolo</li>
+        <li>Expectativa de resultado compatível com a cor de partida — não todo escurecimento clareia igual</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-head__eyebrow">Como funciona</span>
+        <h2 class="section-head__title">Etapas do tratamento</h2>
+      </div>
+      <ol class="specialty__steps">
+        <li class="specialty__step">
+          <span class="specialty__step-num" aria-hidden="true">1</span>
+          <h3 class="specialty__step-title">Avaliação e cor de partida</h3>
+          <p class="specialty__step-text">Registro fotográfico da cor atual e checagem de sensibilidade e restaurações existentes.</p>
+        </li>
+        <li class="specialty__step">
+          <span class="specialty__step-num" aria-hidden="true">2</span>
+          <h3 class="specialty__step-title">Escolha do protocolo</h3>
+          <p class="specialty__step-text">Sessão em consultório, moldeira personalizada para uso em casa, ou combinação dos dois.</p>
+        </li>
+        <li class="specialty__step">
+          <span class="specialty__step-num" aria-hidden="true">3</span>
+          <h3 class="specialty__step-title">Execução</h3>
+          <p class="specialty__step-text">Aplicação em consultório ou uso supervisionado da moldeira, conforme o protocolo definido.</p>
+        </li>
+        <li class="specialty__step">
+          <span class="specialty__step-num" aria-hidden="true">4</span>
+          <h3 class="specialty__step-title">Acompanhamento</h3>
+          <p class="specialty__step-text">Comparação com a foto inicial e ajuste de sensibilidade, se necessário.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--raised">
+    <div class="container" style="max-inline-size: 52rem">
+      <div class="section-head">
+        <span class="section-head__eyebrow">Dúvidas comuns</span>
+        <h2 class="section-head__title">Perguntas sobre clareamento</h2>
+      </div>
+      <div class="faq__list">
+        <details class="faq__item" name="faq-clareamento">
+          <summary class="faq__q">
+            <span>Clareamento estraga o esmalte?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a"><p>Feito com acompanhamento profissional e concentração adequada ao caso, não há evidência de dano permanente ao esmalte. O risco aumenta com produtos de venda livre sem supervisão, que não ajustam a concentração à sua sensibilidade.</p></div>
+        </details>
+        <details class="faq__item" name="faq-clareamento">
+          <summary class="faq__q">
+            <span>O clareamento é permanente?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a"><p>Não — o tom volta a escurecer gradualmente, em geral entre 1 e 3 anos, dependendo de hábitos como café, vinho tinto e cigarro. Um retoque periódico mantém o resultado.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-head__eyebrow">Continue explorando</span>
+        <h2 class="section-head__title">Outras especialidades</h2>
+      </div>
+      <ul class="specialty__related-list">
+        <li>
+          <a class="specialty__related-link" href="../especialidades/implantes.html">Implantes</a>
+        </li>
+        <li>
+          <a class="specialty__related-link" href="../especialidades/lentes-de-contato-dental.html">Lentes de Contato Dental</a>
+        </li>
+        <li>
+          <a class="specialty__related-link" href="../especialidades/harmonizacao-facial.html">Harmonização Facial</a>
+        </li>
+        <li>
+          <a class="specialty__related-link" href="../especialidades/ortodontia-estetica.html">Ortodontia Estética</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section cta" id="agendamento">
+    <div class="container">
+
+      <div class="section-head section-head--center">
+        <span class="section-head__eyebrow">Primeiro passo</span>
+        <h2 class="section-head__title">Agende sua avaliação</h2>
+        <p class="section-head__lead">
+          Uma hora de consulta, diagnóstico completo e nenhum compromisso de
+          fechar tratamento no mesmo dia.
+        </p>
+      </div>
+
+      <div class="cta__actions">
+        <a class="btn btn--primary btn--lg" href="../contato.html">Agendar avaliação</a>
+        <a class="btn btn--ghost btn--lg" href="tel:+551130000000">(11) 3000-0000</a>
+      </div>
+
+      <p class="cta__note">
+        Segunda a sexta, 9h às 19h · Sábado, 9h às 13h · Pinheiros, São Paulo
+      </p>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" id="contato">
+  <div class="footer__inner container">
+
+    <div class="footer__grid">
+
+      <div class="footer__brand">
+        <span class="footer__wordmark">Lumina</span>
+        <p class="footer__tagline">
+          Odontologia estética e reabilitação oral em São Paulo.
+        </p>
+        <ul class="footer__social" aria-label="Redes sociais">
+          <li><a class="footer__social-link" href="#instagram">Instagram</a></li>
+          <li><a class="footer__social-link" href="#facebook">Facebook</a></li>
+          <li><a class="footer__social-link" href="#youtube">YouTube</a></li>
+        </ul>
+      </div>
+
+      <nav class="footer__col" aria-labelledby="footer-esp">
+        <h2 class="footer__heading" id="footer-esp">Especialidades</h2>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="../especialidades/implantes.html">Implantes</a></li>
+          <li><a class="footer__link" href="../especialidades/lentes-de-contato-dental.html">Lentes de contato dental</a></li>
+          <li><a class="footer__link" href="../especialidades/harmonizacao-facial.html">Harmonização facial</a></li>
+          <li><a class="footer__link" href="../especialidades/ortodontia-estetica.html">Ortodontia estética</a></li>
+          <li><a class="footer__link" href="../especialidades/clareamento.html">Clareamento</a></li>
+        </ul>
+      </nav>
+
+      <!-- Mesma regra da Navbar: âncora de seção prefixada com "index.html",
+           porque este partial também é incluído em páginas que não têm essas
+           seções (especialidades, contato). -->
+      <nav class="footer__col" aria-labelledby="footer-inst">
+        <h2 class="footer__heading" id="footer-inst">Institucional</h2>
+        <ul class="footer__list">
+          <li><a class="footer__link" href="../index.html#sobre">Sobre a clínica</a></li>
+          <li><a class="footer__link" href="../index.html#equipe">Equipe</a></li>
+          <li><a class="footer__link" href="../index.html#tecnologia">Tecnologia</a></li>
+          <li><a class="footer__link" href="../index.html#faq">Perguntas frequentes</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">Contato</h2>
+        <address class="footer__address">
+          Rua dos Pinheiros, 1400 — conj. 82<br>
+          Pinheiros, São Paulo — SP
+
+          <!-- Telefone e e-mail saem do texto corrido e viram lista: são os
+               alvos mais tocados desta coluna no celular e precisam dos 44px
+               da Lei de Fitts, o que não cabe entre linhas de endereço. -->
+          <ul class="footer__list">
+            <li><a class="footer__link" href="tel:+551130000000">(11) 3000-0000</a></li>
+            <li><a class="footer__link" href="mailto:contato@lumina.exemplo">contato@lumina.exemplo</a></li>
+          </ul>
+        </address>
+        <p class="footer__hours">
+          Segunda a sexta, 9h às 19h<br>
+          Sábado, 9h às 13h
+        </p>
+      </div>
+
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__legal">
+        © 2026 Lumina Odontologia — projeto fictício. CRO-SP 00000.
+      </p>
+      <p class="footer__legal">
+        <a class="footer__link" href="../privacidade.html">Política de privacidade</a>
+        <span aria-hidden="true"> · </span>
+        <a class="footer__link" href="../termos.html">Termos de uso</a>
+      </p>
+    </div>
+
+  </div>
+</footer>
+
+<script src="../components/Navbar/navbar.js" defer></script>
+
+</body>
+</html>

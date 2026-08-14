@@ -42,22 +42,29 @@
 <header class="navbar" data-navbar>
   <div class="navbar__inner container">
 
-    <a class="navbar__brand" href="#topo">
+    <a class="navbar__brand" href="index.html">
       <span class="navbar__wordmark">Lumina</span>
       <span class="navbar__sub">Odontologia</span>
     </a>
 
     <!-- Quatro itens de topo. Hick's Law: o tempo de decisão cresce com o
          número de opções, então a navegação principal carrega só as categorias
-         de alto nível — o resto do site é alcançado por dentro delas. -->
+         de alto nível — o resto do site é alcançado por dentro delas.
+
+         Âncoras sempre prefixadas com "index.html": este partial é incluído
+         também em páginas que não são a Home (especialidades, contato), onde
+         um "#especialidades" sozinho não aponta para lugar nenhum — a seção
+         só existe na Home. Com o prefixo, o link funciona em qualquer página;
+         na própria Home, o navegador resolve para o mesmo documento e apenas
+         rola, sem recarregar. -->
     <nav class="navbar__nav" id="navbar-menu" aria-label="Principal">
       <ul class="navbar__list">
-        <li><a class="navbar__link" href="#especialidades">Especialidades</a></li>
-        <li><a class="navbar__link" href="#tecnologia">Tecnologia</a></li>
-        <li><a class="navbar__link" href="#equipe">Equipe</a></li>
-        <li><a class="navbar__link" href="#sobre">Sobre</a></li>
+        <li><a class="navbar__link" href="index.html#especialidades">Especialidades</a></li>
+        <li><a class="navbar__link" href="index.html#tecnologia">Tecnologia</a></li>
+        <li><a class="navbar__link" href="index.html#equipe">Equipe</a></li>
+        <li><a class="navbar__link" href="index.html#sobre">Sobre</a></li>
       </ul>
-      <a class="btn btn--primary navbar__cta" href="#agendamento">Agendar avaliação</a>
+      <a class="btn btn--primary navbar__cta" href="index.html#agendamento">Agendar avaliação</a>
     </nav>
 
     <button class="navbar__toggle" type="button"
@@ -278,29 +285,39 @@
     <div class="container">
 
       <div class="section-head">
-        <span class="section-head__eyebrow">Antes e depois</span>
-        <h2 class="section-head__title">Resultados documentados no mesmo enquadramento</h2>
+        <span class="section-head__eyebrow">Como registramos seu caso</span>
+        <h2 class="section-head__title">Do molde físico ao plano digital</h2>
         <p class="section-head__lead">
-          Mesma câmera, mesma luz, mesma distância. Sem retoque nas imagens —
-          a comparação só vale se as duas fotos forem tiradas do mesmo jeito.
+          Isto não é o resultado de um paciente — é o método. Arraste para
+          comparar a moldagem física tradicional com a visualização do plano
+          gerado a partir do escaneamento digital.
         </p>
       </div>
 
+      <!-- Esta seção já foi "Antes e Depois" de resultado de tratamento. Mudou
+           de conteúdo por uma razão regulatória real: a Resolução CFO 196/2019
+           libera antes/depois para o cirurgião-dentista pessoa física, mas o
+           CROSP é explícito que isso NÃO se estende a clínicas — para pessoa
+           jurídica, publicar antes/depois de paciente segue vedado como
+           publicidade comercial. Lumina é clínica. A comparação de método
+           (moldagem × plano digital) entrega a mesma mecânica de slider sem
+           entrar na parte vedada, e ainda reforça o posicionamento real da
+           marca (Seção 3 do Bible: confiança por transparência de processo). -->
       <figure class="ba">
         <div class="ba__stage" data-ba>
 
-          <img class="ba__img" src="assets/img/depois.svg"
-               alt="Sorriso do paciente após o tratamento, com maior uniformidade e brilho"
+          <img class="ba__img" src="assets/img/plano-digital.svg"
+               alt="Ilustração esquemática do plano digital do sorriso, com marcadores ao longo do arco dentário"
                width="1200" height="675" loading="lazy" decoding="async">
 
           <div class="ba__overlay">
-            <img class="ba__img" src="assets/img/antes.svg"
-                 alt="Sorriso do paciente antes do tratamento"
-                 width="1200" height="675" loading="lazy" decoding="async">
+            <img class="ba__img" src="assets/img/moldagem.jpg"
+                 alt="Modelo de gesso obtido por moldagem convencional, fotografado sobre fundo neutro"
+                 width="1400" height="933" loading="lazy" decoding="async">
           </div>
 
-          <span class="ba__tag ba__tag--antes" aria-hidden="true">Antes</span>
-          <span class="ba__tag ba__tag--depois" aria-hidden="true">Depois</span>
+          <span class="ba__tag ba__tag--fisico" aria-hidden="true">Moldagem</span>
+          <span class="ba__tag ba__tag--digital" aria-hidden="true">Plano digital</span>
 
           <span class="ba__line" aria-hidden="true"></span>
 
@@ -309,12 +326,13 @@
                reimplementar nada. O visual é todo do thumb. -->
           <input class="ba__range" type="range" min="0" max="100" value="50" step="1"
                  data-ba-range
-                 aria-label="Comparar antes e depois — arraste, ou use as setas do teclado">
+                 aria-label="Comparar moldagem física e plano digital — arraste, ou use as setas do teclado">
         </div>
 
         <figcaption class="ba__caption">
-          Implante unitário em incisivo central, com lente de contato dental nos
-          dois adjacentes. Registro de 6 meses após a instalação.
+          Mesmo caso, dois registros: o molde de gesso enviado ao laboratório e a
+          prévia gerada a partir do escaneamento intraoral, usada para planejar o
+          tratamento antes do primeiro procedimento.
         </figcaption>
       </figure>
 
@@ -676,13 +694,16 @@
         </ul>
       </nav>
 
+      <!-- Mesma regra da Navbar: âncora de seção prefixada com "index.html",
+           porque este partial também é incluído em páginas que não têm essas
+           seções (especialidades, contato). -->
       <nav class="footer__col" aria-labelledby="footer-inst">
         <h2 class="footer__heading" id="footer-inst">Institucional</h2>
         <ul class="footer__list">
-          <li><a class="footer__link" href="#sobre">Sobre a clínica</a></li>
-          <li><a class="footer__link" href="#equipe">Equipe</a></li>
-          <li><a class="footer__link" href="#tecnologia">Tecnologia</a></li>
-          <li><a class="footer__link" href="#faq">Perguntas frequentes</a></li>
+          <li><a class="footer__link" href="index.html#sobre">Sobre a clínica</a></li>
+          <li><a class="footer__link" href="index.html#equipe">Equipe</a></li>
+          <li><a class="footer__link" href="index.html#tecnologia">Tecnologia</a></li>
+          <li><a class="footer__link" href="index.html#faq">Perguntas frequentes</a></li>
         </ul>
       </nav>
 
@@ -713,9 +734,9 @@
         © 2026 Lumina Odontologia — projeto fictício. CRO-SP 00000.
       </p>
       <p class="footer__legal">
-        <a class="footer__link" href="#privacidade">Política de privacidade</a>
+        <a class="footer__link" href="privacidade.html">Política de privacidade</a>
         <span aria-hidden="true"> · </span>
-        <a class="footer__link" href="#termos">Termos de uso</a>
+        <a class="footer__link" href="termos.html">Termos de uso</a>
       </p>
     </div>
 

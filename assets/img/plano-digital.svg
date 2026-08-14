@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img">
+  <title>Ilustração esquemática do plano digital do sorriso</title>
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#E6E4DE"/>
+      <stop offset="0.6" stop-color="#C7C4BA"/>
+      <stop offset="1" stop-color="#96938A"/>
+    </linearGradient>
+    <radialGradient id="luz" cx="0.3" cy="0.22" r="0.7">
+      <stop offset="0" stop-color="#FFFBF2" stop-opacity="0.9"/>
+      <stop offset="0.5" stop-color="#FFF6E8" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#FFF6E8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="vin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3A3123" stop-opacity="0"/>
+      <stop offset="1" stop-color="#3A3123" stop-opacity="0.16"/>
+    </linearGradient>
+    <filter id="grao">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g1)"/>
+  <line x1="0" y1="189" x2="1200" y2="189" stroke="#96938A" stroke-width="1" opacity="0.14"/>
+  <line x1="0" y1="337" x2="1200" y2="337" stroke="#96938A" stroke-width="1" opacity="0.14"/>
+  <line x1="0" y1="486" x2="1200" y2="486" stroke="#96938A" stroke-width="1" opacity="0.14"/>
+  <line x1="360" y1="0" x2="360" y2="675" stroke="#96938A" stroke-width="1" opacity="0.14"/>
+  <line x1="600" y1="0" x2="600" y2="675" stroke="#96938A" stroke-width="1" opacity="0.14"/>
+  <line x1="840" y1="0" x2="840" y2="675" stroke="#96938A" stroke-width="1" opacity="0.14"/>
+  <ellipse cx="600" cy="337" rx="384" ry="229" fill="#EEF1F0" opacity="0.5"/>
+  <path d="M 312 324 Q 600 499 888 324" fill="none" stroke="#FFFFFF" stroke-width="37" stroke-linecap="round" opacity="0.65"/>
+  <path d="M 312 324 Q 600 499 888 324" fill="none" stroke="#7E7364" stroke-width="1.5" opacity="0.35"/>
+  <rect x="403" y="376" width="10" height="10" fill="none" stroke="#A88E6A" stroke-width="1.2" transform="rotate(45 408 381)"/>
+  <rect x="499" y="410" width="10" height="10" fill="none" stroke="#A88E6A" stroke-width="1.2" transform="rotate(45 504 415)"/>
+  <rect x="595" y="423" width="10" height="10" fill="none" stroke="#A88E6A" stroke-width="1.2" transform="rotate(45 600 428)"/>
+  <rect x="691" y="410" width="10" height="10" fill="none" stroke="#A88E6A" stroke-width="1.2" transform="rotate(45 696 415)"/>
+  <rect x="787" y="376" width="10" height="10" fill="none" stroke="#A88E6A" stroke-width="1.2" transform="rotate(45 792 381)"/>
+  <rect width="1200" height="675" fill="url(#luz)"/>
+  <rect width="1200" height="675" fill="url(#vin)"/>
+  <rect width="1200" height="675" filter="url(#grao)" opacity="0.05"/>
+</svg>

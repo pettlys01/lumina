@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{{META_TITLE}}</title>
+  <meta name="description" content="{{META_DESC}}">
+  <meta name="theme-color" content="#F7F6F3">
+
+  <!-- Open Graph, JSON-LD (Dentist/BreadcrumbList) entram na Fase 7 (SEO). -->
+
+  <link rel="preload" href="assets/fonts/cormorant-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/typography.css">
+  <link rel="stylesheet" href="styles/layout.css">
+
+  <link rel="stylesheet" href="components/Button/button.css">
+  <link rel="stylesheet" href="components/Card/card.css">
+  <link rel="stylesheet" href="components/Navbar/navbar.css">
+  <link rel="stylesheet" href="components/PageHeader/page-header.css">
+  <link rel="stylesheet" href="components/SpecialtyPage/specialty.css">
+  <link rel="stylesheet" href="components/FAQ/faq.css">
+  <link rel="stylesheet" href="components/CTA/cta.css">
+  <link rel="stylesheet" href="components/Footer/footer.css">
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- include: components/Navbar/navbar.html -->
+
+<main id="conteudo">
+
+  <header class="page-header">
+    <div class="container">
+      <nav class="page-header__crumbs" aria-label="Trilha de navegação">
+        <a href="index.html">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="index.html#especialidades">Especialidades</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{{TITLE}}</span>
+      </nav>
+      <span class="page-header__eyebrow">{{EYEBROW}}</span>
+      <h1 class="page-header__title">{{TITLE}}</h1>
+      <p class="page-header__lead">{{LEAD}}</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="specialty__overview">
+{{OVERVIEW_HTML}}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--raised">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-head__eyebrow">Indicação</span>
+        <h2 class="section-head__title">Para quem é indicado</h2>
+      </div>
+      <ul class="specialty__list">
+{{INDICADO_HTML}}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-head__eyebrow">Como funciona</span>
+        <h2 class="section-head__title">Etapas do tratamento</h2>
+      </div>
+      <ol class="specialty__steps">
+{{STEPS_HTML}}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--raised">
+    <div class="container" style="max-inline-size: 52rem">
+      <div class="section-head">
+        <span class="section-head__eyebrow">Dúvidas comuns</span>
+        <h2 class="section-head__title">Perguntas sobre {{TITLE_LOWER}}</h2>
+      </div>
+      <div class="faq__list">
+{{FAQ_HTML}}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-head__eyebrow">Continue explorando</span>
+        <h2 class="section-head__title">Outras especialidades</h2>
+      </div>
+      <ul class="specialty__related-list">
+{{RELATED_HTML}}
+      </ul>
+    </div>
+  </section>
+
+  <!-- include: components/CTA/cta.html -->
+
+</main>
+
+<!-- include: components/Footer/footer.html -->
+
+<script src="components/Navbar/navbar.js" defer></script>
+
+</body>
+</html>

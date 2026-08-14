@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Verificação estrutural de todas as páginas</title>
+<style>
+  body { font: 13px ui-monospace, Consolas, monospace; padding: 16px; }
+  h2 { font-size: 14px; margin: 18px 0 4px; }
+  li.ok { color: #2e7d32; } li.bad { color: #c62828; font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>Verificação estrutural</h1>
+<div id="saida"></div>
+<iframe id="f" title="alvo" style="border:1px solid #ccc;width:1280px;height:900px"></iframe>
+
+<script>
+/* ==========================================================================
+   Roda, em sequência, a mesma bateria de checagens estruturais (headings,
+   alvos de toque, imagens) em todas as páginas passadas por ?p=. Generaliza
+   o que home-check.html fazia só para index.html — necessário a partir da
+   Fase 5, com nove páginas em vez de uma.
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var params = new URLSearchParams(location.search);
+  var paginas = (params.get("p") || "../index.html").split(",");
+  var f = document.getElementById("f");
+  var saidaEl = document.getElementById("saida");
+  var falhasTotais = 0;
+  var resumo = [];
+
+  function checar(doc, w) {
+    var linhas = [];
+    function ok(nome, cond, detalhe) {
+      linhas.push({ nome: nome, cond: cond, detalhe: detalhe });
+      if (!cond) falhasTotais++;
+    }
+
+    var hs = [].map.call(doc.querySelectorAll("h1,h2,h3,h4"), function (h) { return +h.tagName[1]; });
+    var salto = null;
+    for (var i = 1; i < hs.length; i++) if (hs[i] - hs[i - 1] > 1) salto = hs[i - 1] + "->" + hs[i];
+    ok("exatamente um h1", hs.filter(function (x) { return x === 1; }).length === 1);
+    ok("sem salto de nível de heading", !salto, salto);
+
+    var imgs = [].slice.call(doc.querySelectorAll("img"));
+    var semAlt = imgs.filter(function (im) { return !im.hasAttribute("alt"); });
+    var semDim = imgs.filter(function (im) { return !im.getAttribute("width") || !im.getAttribute("height"); });
+    ok("toda imagem tem alt (" + imgs.length + " imagens)", semAlt.length === 0, semAlt.length + " sem alt");
+    ok("toda imagem declara width/height", semDim.length === 0, semDim.length + " sem dimensão");
+
+    var alvos = [].slice.call(doc.querySelectorAll("a, button, summary, input, select, textarea"))
+      .filter(function (el) { return el.getClientRects().length > 0; })
+      .filter(function (el) { return !el.classList.contains("skip-link"); })
+      .filter(function (el) { return el.getBoundingClientRect().height < 43.5; });
+    ok("todo alvo interativo >= 44px", alvos.length === 0,
+       alvos.slice(0, 4).map(function (e) {
+         return (e.id || e.className || e.tagName) + "=" + e.getBoundingClientRect().height.toFixed(0);
+       }).join(", "));
+
+    // Nome acessível válido: <label for>, label envolvente, aria-label ou
+    // aria-labelledby — as quatro formas contam, não só a primeira.
+    var labels = [].slice.call(doc.querySelectorAll("input, select, textarea"))
+      .filter(function (el) {
+        var temLabelFor = el.id && doc.querySelector('label[for="' + el.id + '"]');
+        var temLabelEnvolvente = el.closest("label");
+        var temAria = el.hasAttribute("aria-label") || el.hasAttribute("aria-labelledby");
+        return !temLabelFor && !temLabelEnvolvente && !temAria;
+      });
+    ok("todo campo de formulário tem label", labels.length === 0,
+       labels.map(function (e) { return e.id || e.name; }).join(", "));
+
+    var landmarks = doc.querySelectorAll("header, main, footer").length;
+    ok("landmarks header/main/footer presentes", landmarks >= 3);
+
+    return linhas;
+  }
+
+  function proxima(i) {
+    if (i >= paginas.length) {
+      document.title = (falhasTotais ? falhasTotais + " FALHA(S)" : "TUDO PASSOU") + " :: " + resumo.join(" | ");
+      return;
+    }
+    var pagina = paginas[i].trim();
+    f.onload = function () {
+      setTimeout(function () {
+        var linhas = checar(f.contentDocument, f.contentWindow);
+        var h2 = document.createElement("h2");
+        h2.textContent = pagina;
+        saidaEl.appendChild(h2);
+        var ul = document.createElement("ul");
+        linhas.forEach(function (l) {
+          var li = document.createElement("li");
+          li.className = l.cond ? "ok" : "bad";
+          li.textContent = (l.cond ? "PASS " : "FALHOU ") + l.nome + (l.detalhe && !l.cond ? " [" + l.detalhe + "]" : "");
+          ul.appendChild(li);
+        });
+        saidaEl.appendChild(ul);
+        var falhasPagina = linhas.filter(function (l) { return !l.cond; }).length;
+        resumo.push(pagina + ":" + (falhasPagina ? falhasPagina + "falha" : "ok"));
+        proxima(i + 1);
+      }, 500);
+    };
+    f.src = pagina;
+  }
+
+  proxima(0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><title>Verificacao do formulario de contato</title></head>
+<body style="margin:0">
+<iframe id="f" src="../contato.html" style="border:0;width:1000px;height:900px"></iframe>
+<script>
+const f=document.getElementById('f'), R=[];
+const ok=(n,c)=>{R.push((c?'PASS ':'FALHOU ')+n)};
+f.onload=()=>setTimeout(()=>{
+  const d=f.contentDocument, w=f.contentWindow;
+  const form=d.querySelector('[data-contact-form]');
+  const nome=d.getElementById('cf-nome'), tel=d.getElementById('cf-telefone');
+  const btn=form.querySelector('.contact-form__submit');
+
+  // intercepta window.open para nao abrir aba de verdade
+  let aberto=null;
+  w.open=(url)=>{ aberto=url; return {}; };
+
+  // 1: submit vazio -> deve mostrar erro e focar nome, NAO deve chamar open
+  btn.click();
+  setTimeout(()=>{
+    ok('erro exibido para nome vazio', nome.getAttribute('aria-invalid')==='true');
+    ok('erro exibido para telefone vazio', tel.getAttribute('aria-invalid')==='true');
+    ok('foco foi para nome (primeiro invalido)', d.activeElement===nome);
+    ok('nao abriu WhatsApp com campos vazios', aberto===null);
+
+    // 2: telefone invalido (poucos digitos)
+    nome.value='Ana Souza'; tel.value='123';
+    btn.click();
+    setTimeout(()=>{
+      ok('telefone com poucos digitos continua invalido', tel.getAttribute('aria-invalid')==='true');
+      ok('nome valido nao mostra mais erro', nome.getAttribute('aria-invalid')!=='true');
+      ok('ainda nao abriu (telefone invalido)', aberto===null);
+
+      // 3: preenchimento completo e valido
+      tel.value='(11) 91234-5678';
+      d.getElementById('cf-especialidade').value='Implantes';
+      d.getElementById('cf-mensagem').value='Gostaria de mais informacoes';
+      btn.click();
+      setTimeout(()=>{
+        ok('abriu link apos preenchimento valido', aberto!==null);
+        ok('link aponta para wa.me com o numero certo', aberto && aberto.indexOf('https://wa.me/5511300000000?text=')===0);
+        const texto = aberto ? decodeURIComponent(aberto.split('text=')[1]) : '';
+        ok('mensagem contem o nome', texto.indexOf('Ana Souza')>=0);
+        ok('mensagem contem a especialidade escolhida', texto.indexOf('Implantes')>=0);
+        ok('mensagem contem o texto livre', texto.indexOf('mais informacoes')>=0);
+
+        const falhas=R.filter(r=>r.startsWith('FALHOU')).length;
+        document.title=(falhas?falhas+' FALHA(S)':'TUDO PASSOU')+' :: '+R.join(' | ');
+      },150);
+    },150);
+  },150);
+},900);
+</script></body></html>

@@ -1,0 +1,78 @@
+/* ==========================================================================
+   Componente: ContactForm
+   Depende de: tokens.css, layout.css, Button/button.css
+
+   Este projeto é estático, sem backend (Fase 8 do Bible cobre performance,
+   não infraestrutura de servidor). Um formulário que parece enviar para
+   algum lugar e não envia é pior que não ter formulário — por isso ele monta
+   um link do WhatsApp com os dados preenchidos, em vez de simular um POST
+   que não existe. O rótulo do botão diz exatamente isso ("Continuar no
+   WhatsApp"), não "Enviar".
+   ========================================================================== */
+
+.contact-form {
+  display: grid;
+  gap: var(--space-3);
+  max-inline-size: 32rem;
+}
+
+.contact-form__field {
+  display: grid;
+  gap: 0.5em;
+}
+
+.contact-form__label {
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+}
+
+.contact-form__input {
+  min-block-size: 2.75rem;   /* 44px — Lei de Fitts, vale para campo de formulário também */
+  padding-inline: 0.9em;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--text-primary);
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.contact-form__input--area {
+  padding-block: 0.7em;
+  min-block-size: 5.5rem;
+  resize: vertical;
+}
+
+.contact-form__input:hover {
+  border-color: var(--border-strong);
+}
+
+.contact-form__input:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+  border-color: var(--focus-ring);
+}
+
+/* Estado de erro: borda + mensagem de texto, nunca só a cor — o mesmo
+   princípio de "forma além de cor" da Seção 9 do Bible, aplicado a formulário. */
+.contact-form__input[aria-invalid="true"] {
+  border-color: var(--color-accent-ink);
+}
+
+.contact-form__error {
+  font-size: var(--text-small);
+  color: var(--color-accent-ink);
+}
+
+.contact-form__submit {
+  margin-block-start: var(--space-1);
+  inline-size: 100%;
+}
+
+.contact-form__note {
+  font-size: var(--text-micro);
+  color: var(--text-secondary);
+  text-align: center;
+}

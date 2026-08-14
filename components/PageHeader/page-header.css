@@ -1,0 +1,67 @@
+/* ==========================================================================
+   Cabeçalho de página interna
+   Depende de: tokens.css, layout.css
+
+   Usado por toda página que não é a Home (especialidades, contato). Sem foto
+   grande de propósito: são páginas informativas, não a vitrine — o brief só
+   exige hero gigante na Home, e a Seção "artifact-design" do próprio processo
+   deste projeto adverte contra herói grande onde a página não pede. Aqui o
+   peso vem da tipografia, acima do corte de 32px como em toda a Seção 1.
+   ========================================================================== */
+
+.page-header {
+  padding-block: calc(var(--space-8) + 4.5rem) var(--space-8);
+  border-block-end: 1px solid var(--border-subtle);
+}
+
+.page-header__crumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-block-end: var(--space-3);
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+/* Texto pequeno, mas ainda é alvo de toque — a Lei de Fitts não abre exceção
+   para trilha de navegação. A altura vem de padding, não de esticar a fonte. */
+.page-header__crumbs a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.page-header__crumbs a:hover,
+.page-header__crumbs a:focus-visible {
+  color: var(--text-accent);
+}
+
+.page-header__crumbs [aria-current="page"] {
+  color: var(--text-primary);
+}
+
+.page-header__eyebrow {
+  display: block;
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-block-end: var(--space-2);
+}
+
+.page-header__title {
+  font-size: var(--text-h1);
+  max-inline-size: 18ch;
+  margin-block-end: var(--space-2);
+}
+
+.page-header__lead {
+  font-size: var(--text-body-lg);
+  font-weight: var(--weight-light);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  max-inline-size: 52ch;
+}

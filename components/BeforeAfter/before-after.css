@@ -65,8 +65,8 @@
   pointer-events: none;
 }
 
-.ba__tag--antes  { inset-inline-start: var(--space-2); }
-.ba__tag--depois { inset-inline-end: var(--space-2); }
+.ba__tag--fisico  { inset-inline-start: var(--space-2); }
+.ba__tag--digital { inset-inline-end: var(--space-2); }
 
 /* --------------------------------------------------------------------------
    Controle

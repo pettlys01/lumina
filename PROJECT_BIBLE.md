@@ -412,11 +412,37 @@ O que muda é a expectativa: consultar primeiro, e só então concluir que não 
       - **Antes/Depois em `<input type="range">` nativo.** Um handle em `<div>` exigiria
         reimplementar arraste, teclado, foco e anúncio de valor. O range dá tudo isso de graça; o
         JavaScript só transporta o valor para uma custom property.
-- [ ] **Fase 5 — Páginas internas.** Aceite: template de Especialidade funcional e reutilizável, ligado à
-      navegação da Home. **Sai da Fase 4 com estes destinos já linkados e ainda inexistentes** —
-      `python tools/link-check.py` deve terminar sem nenhum PENDENTE de Fase 5 ao final:
-      `especialidades/{implantes,lentes-de-contato-dental,harmonizacao-facial,ortodontia-estetica,clareamento}.html`
-      e `contato.html` (destino do CTA primário).
+- [x] **Fase 5 — Páginas internas.** Aceite: template de Especialidade funcional e reutilizável, ligado à
+      navegação da Home; `python tools/link-check.py` sem nenhum PENDENTE de Fase 5. — *Concluída em
+      2026-08-13.* Entregues:
+      - `components/SpecialtyPage/template.html` + `tools/build-especialidades.py`: gerador de duas
+        etapas (conteúdo → include) que produz as 5 páginas a partir de um template único com
+        conteúdo real e distinto por especialidade (visão geral, indicação, etapas do tratamento,
+        FAQ específico, especialidades relacionadas).
+      - `contato.html` com `components/ContactForm`: sem backend nesta fase, o formulário compõe um
+        link de WhatsApp com os dados preenchidos em vez de simular um envio que não existe — o botão
+        diz "Continuar no WhatsApp", não "Enviar". Validação inline com foco no primeiro campo
+        inválido.
+      - `tools/build.py` estendido para páginas fora da raiz: toda página/componente escreve
+        caminhos relativos à RAIZ do projeto (`styles/tokens.css`, não `../styles/tokens.css`), e o
+        build reescreve o prefixo `../` certo pela profundidade de saída. Um único jeito de escrever
+        caminho, correto em qualquer página que inclua o componente.
+      - **Bug real encontrado nessa extensão**: Navbar e Footer usavam âncoras soltas (`#especialidades`,
+        `#sobre`...) que só existem na Home. Incluídas numa página de especialidade, viravam links
+        mortos — clique não fazia nada, sem erro nenhum. Corrigido para `index.html#especialidades`
+        em ambos os componentes; funciona em qualquer página, e na própria Home o navegador resolve
+        para o mesmo documento e apenas rola, sem recarregar.
+      - `tools/structure-check.html` e `tools/form-check.html`: novas ferramentas de verificação,
+        generalizando o padrão de `home-check.html`/`menu-check.html` para nove páginas.
+      - **Bug real no próprio `link-check.py`**: resolvia todo caminho relativo à RAIZ, ignorando a
+        pasta real da página — `especialidades/x.html` com link `../index.html` checava contra
+        `RAIZ/../index.html` (fora do projeto) em vez de `RAIZ/index.html`. Corrigido para resolver
+        relativo à pasta da própria página.
+
+**Correção de alinhamento na faixa de números (Stats), fora do escopo original da Fase 5 mas resolvida
+na mesma sessão:** em monitor largo (1920px), o container padrão do site (72rem) deixa ~480px vazios
+de cada lado — matematicamente centralizado, mas sobre a única faixa escura da página o vazio simétrico
+lia como layout quebrado. `.stats .container` ganhou `max-inline-size: 84rem`, só nesta seção.
 
 ## 12.1 Fotografia (resolvido na revisão de design) e regra de seleção
 
@@ -442,31 +468,33 @@ isso lê imediatamente como recorte de banco de imagem. O duotone (`grayscale` +
   substituídos por dados verificáveis. Em site real, número de avaliação inventado é risco legal,
   não só de credibilidade.
 
-## 12.2 Restrição regulatória sobre a seção Antes e Depois — DECISÃO PENDENTE
+## 12.2 Restrição regulatória sobre a seção Antes e Depois — RESOLVIDO
 
-A Seção 5 deste documento especifica uma seção de Antes e Depois com slider. Ela está implementada e
-funcional, mas **provavelmente não pode ir ao ar como está numa clínica real no Brasil**:
+A Seção 5 deste documento especificava uma seção de Antes e Depois de resultado de paciente. Ela não
+podia ir ao ar como especificada numa clínica real no Brasil: a Resolução CFO 196/2019 libera
+antes/depois, mas só para o **cirurgião-dentista pessoa física** — o CROSP é explícito ao dizer que
+**não se estende a clínicas**, onde a divulgação continua vedada como publicidade comercial. Lumina é
+clínica; a seção original era exatamente o caso vedado.
 
-- A **Resolução CFO 196/2019** liberou imagens de antes e depois, que antes eram proibidas.
-- Porém a liberação vale para o **cirurgião-dentista pessoa física**. O CROSP é explícito ao dizer
-  que **não se estende a clínicas / pessoa jurídica**, onde a divulgação continua vedada por ser
-  caracterizada como publicidade comercial.
-- Lumina é uma clínica. Logo, a seção como especificada é o caso vedado.
-- Mesmo no caso permitido, exige-se **termo de consentimento livre e esclarecido** do paciente, e
-  imagens do "durante" o procedimento seguem proibidas em qualquer hipótese.
+**Decisão tomada: opção 2 do registro anterior.** A seção virou comparação de **método**, não de
+resultado — `assets/img/moldagem.jpg` (fotografia real de um modelo de gesso, sem paciente, sem
+marca) de um lado, `assets/img/plano-digital.svg` (ilustração esquemática gerada, deliberadamente não
+fotorrealista) do outro. Reforça o posicionamento de "planejamento digital" (Seção 3) sem tocar na
+regra do CROSP.
 
-Por isso as duas imagens dessa seção **continuam abstratas de propósito**, e não foram substituídas
-por fotografia junto com as outras: montar um antes/depois convincente a partir de duas fotos de
-pessoas diferentes seria fabricar evidência clínica falsa usando o rosto de gente real — que é
-exatamente o que a norma existe para impedir.
+**Por que o lado digital é ilustração e não uma foto de tela real:** a primeira tentativa de fonte
+para esse lado encontrou uma foto de banco de imagem mostrando software real de planejamento
+(Invisalign) com **nome e número de identificação de um paciente real, legíveis na tela**. Usar essa
+imagem seria pior do que o problema que a mudança de conteúdo tentava evitar — exporia dado real de
+uma pessoa real. A solução foi não fingir a captura: a ilustração deixa claro, pela própria estética
+(grade fina, marcadores geométricos, sem fotorrealismo), que é esquemática — nunca a apresenta como
+screenshot de sistema real.
 
-Três saídas possíveis, a decidir antes da Fase 5:
-1. **Mover a seção** para a página individual de um especialista (pessoa física), onde a Resolução
-   196/2019 a autoriza, com termo de consentimento.
-2. **Reaproveitar o slider** para uma comparação que não é resultado de paciente — por exemplo
-   moldagem convencional × escaneamento digital, que reforça o posicionamento de "planejamento
-   digital" sem entrar na regra.
-3. **Remover a seção** da Home e manter só depoimentos como prova social.
+**Regra 3, que nasce dessa descoberta e vale para qualquer imagem futura de tela de software:**
+telas de software odontológico em uso real frequentemente têm dado de paciente visível — nome,
+número de prontuário, radiografia identificável. Ampliar antes de aprovar (Regra 1) não é suficiente
+sozinho aqui: é preciso especificamente checar a área da tela por texto legível, não só procurar
+logotipo. Quando a checagem não for possível com confiança, o padrão é ilustrar, não fotografar.
 - [ ] **Fase 6 — Motion.** Aceite: animações da seção 6 aplicadas, `prefers-reduced-motion` testado,
       nenhuma regressão de performance introduzida (reconferir Lighthouse).
 - [ ] **Fase 7 — SEO.** Aceite: itens da seção 8 implementados e validados (rich results test equivalente,

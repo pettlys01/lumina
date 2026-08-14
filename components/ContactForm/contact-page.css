@@ -1,0 +1,76 @@
+/* ==========================================================================
+   Layout da página de Contato
+   Depende de: tokens.css, layout.css
+
+   Estilos que só existem em contato.html — não é um componente reutilizável
+   como Card ou Button, é a composição específica desta página.
+   ========================================================================== */
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+@media (min-width: 56rem) {
+  .contact__grid {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
+
+.contact__col-title {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-block-end: var(--space-3);
+}
+
+/* --------------------------------------------------------------------------
+   Canais diretos
+   -------------------------------------------------------------------------- */
+.contact__info-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact__channel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-block-size: 3.5rem;
+  padding-block: var(--space-1);
+  border-block-end: 1px solid var(--border-subtle);
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.contact__channel:hover,
+.contact__channel:focus-visible {
+  color: var(--text-accent);
+}
+
+.contact__channel-label {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+.contact__channel-value {
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+}
+
+.contact__address,
+.contact__hours {
+  margin-block-start: var(--space-4);
+}
+
+.contact__address-text,
+.contact__hours-text {
+  font-style: normal;
+  font-size: var(--text-small);
+  line-height: var(--leading-body);
+  color: var(--text-secondary);
+}
