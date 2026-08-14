@@ -27,25 +27,17 @@
               border-color var(--duration-fast) var(--ease-out);
 }
 
-/* Marcador tipográfico no lugar de ícone.
+/* Sem ícone e sem marcador, por decisão.
 
-   Uma grade de ícones de traço fino (estilo Lucide/Feather, 1,5px, um por
-   card) é um dos sinais visuais mais reconhecíveis de interface gerada — foi
-   exatamente o que o usuário apontou. A inicial da especialidade na serifada
-   resolve por outro caminho: identifica o item (ao contrário de numerar
-   01/02/03, que sugeriria uma sequência que não existe entre especialidades),
-   reaproveita a família tipográfica que já é da marca, e cria textura em vez
-   de repetir um sistema de ícones de terceiros.
+   Passou por duas versões antes desta: primeiro ícones de traço fino
+   (estilo Lucide/Feather, um por card), que são um dos sinais visuais mais
+   reconhecíveis de interface gerada; depois a inicial da especialidade na
+   serifada, que ficou arbitrária — uma letra solta não diz nada que o
+   título logo abaixo já não diga.
 
-   aria-hidden porque a letra é redundante — o título do card logo abaixo já
-   diz o nome inteiro. */
-.card__mark {
-  font-family: var(--font-heading);
-  font-size: 2.5rem;
-  line-height: 1;
-  color: var(--decor-accent);
-  flex-shrink: 0;
-}
+   O card agora é só título e texto. Quando o único conteúdo verdadeiro é o
+   nome do procedimento e a explicação dele, acrescentar um enfeite gráfico
+   para "preencher" é exatamente o reflexo que produz a estética genérica. */
 
 .card__title {
   font-size: var(--text-h3);
