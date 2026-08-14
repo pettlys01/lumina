@@ -56,8 +56,9 @@
 /* Hover e foco recebem o MESMO tratamento visual: hover não existe em touch
    nem em teclado, e um estado que só aparece no mouse deixa duas modalidades
    sem retorno (Base: 07-motion/hover-exploratory-states.md).
-   O fundo é --color-accent-ink, não o dourado da marca: texto claro sobre
-   #B58C5A daria 2,83:1 e reprovaria em AA. */
+   O fundo do hover é o verde da marca: branco sobre #285C4D dá 7,70:1. O
+   cobre (#9C7653) nunca entra aqui — 3,92:1 serve a detalhe decorativo, não
+   a botão, e essa é a regra de uso registrada no tokens.css. */
 .btn--primary:hover,
 .btn--primary:focus-visible {
   background-color: var(--color-accent-ink);

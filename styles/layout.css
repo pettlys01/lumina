@@ -25,7 +25,7 @@ body { margin: 0; }
    em nenhum outro lugar deste projeto. */
 a, button, [role="button"], summary {
   touch-action: manipulation;
-  -webkit-tap-highlight-color: rgba(32, 32, 32, 0.08);
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--color-text) 8%, transparent);
 }
 
 img, svg, video {

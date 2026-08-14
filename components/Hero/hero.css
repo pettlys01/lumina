@@ -32,30 +32,15 @@
   inline-size: 100%;
   block-size: 100%;
   object-fit: cover;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
 
-  /* Dessaturação parcial, primeira metade da graduação de cor (a segunda é o
-     ::after abaixo). Fotografia de banco vem com a temperatura que o
-     fotógrafo escolheu — aqui, um bege alaranjado que brigava com a paleta
-     verde e fazia a página parecer montada com peças de origens diferentes.
-     Graduar a foto para a paleta é o que um estúdio faz com a direção de
-     arte; é o mesmo tratamento já aplicado aos retratos da equipe. */
-  filter: saturate(0.4);
-}
-
-/* Segunda metade da graduação: o verde da marca aplicado em modo "color",
-   que empresta a MATIZ sem mexer na luminosidade — as sombras seguem
-   sombras e as luzes seguem luzes, então a foto continua lendo como foto,
-   não como imagem colorizada por cima. */
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-color: var(--color-accent);
-  mix-blend-mode: color;
-  opacity: 0.28;
-  pointer-events: none;
+  /* A foto anterior era um banco de imagens bege-alaranjado e precisava de
+     graduação de cor por CSS (saturate + overlay em mix-blend-mode:color)
+     pra não brigar com a paleta verde. A atual já foi gerada na matiz certa
+     (mesmos valores OKLCH dos tokens — H≈160-166°, croma baixo — descritos
+     no prompt usado), então a graduação foi removida: aplicá-la aqui só
+     reintroduziria uma segunda camada de verde por cima de uma foto que já
+     é verde, deixando tudo mais saturado do que a paleta pede. */
 }
 
 /* Véu claro no topo. A Navbar é transparente sobre o Hero e seu texto é escuro:
@@ -143,8 +128,12 @@
   color: var(--text-secondary);
 }
 
+/* Único uso de cobre na Home, e de propósito. A regra da paleta é ~2% da
+   interface: nunca texto, nunca botão, nunca superfície. As estrelas cabem
+   porque são decorativas (aria-hidden), minúsculas, e a nota vem escrita ao
+   lado — se a cor não for percebida, nada se perde. */
 .hero__stars {
-  color: var(--decor-accent);
+  color: var(--decor-copper);
   letter-spacing: 0.1em;
 }
 

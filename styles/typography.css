@@ -2,22 +2,36 @@
    Lumina Odontologia — Tipografia
    Depende de: tokens.css (carregar antes deste arquivo).
 
-   Regra que organiza tudo aqui: a serifada só aparece acima de 32px.
-   Cormorant Garamond é uma Garamond de alto contraste — bonita grande,
-   frágil e achatada pequena. Abaixo do corte, quem trabalha é a Inter, e o
-   contraste passa a vir do peso (Light 300 contra Medium 500).
+   Regra que organiza tudo aqui: a serifada só aparece acima de 32px. Abaixo
+   do corte quem trabalha é a Inter, e o contraste passa a vir do peso
+   (Light 300 contra Medium 500).
 
-   Orçamento de fonte: 4 arquivos (Seção 7 do Project Bible) — 1 peso de
-   serifada, 3 de sans. A serifada usa um peso só porque nunca aparece em
-   tamanho onde a diferença de peso importaria.
+   TROCA DE SERIFADA (2026-08-14): Cormorant Garamond saiu, entrou Newsreader.
+
+   O motivo não é técnico, é de posicionamento. Cormorant, Playfair, Instrument
+   Serif e DM Serif viraram atalho visual para "luxo" — a serifada de alto
+   contraste no hero é hoje tão previsível quanto o fundo creme que já foi
+   abandonado na revisão de paleta. Trocar a cor e manter a fonte resolveria
+   metade do problema.
+
+   Newsreader (Production Type) é desenhada para leitura em tela, tem contraste
+   moderado em vez de alto, e traz eixo óptico variável — o desenho se ajusta
+   ao tamanho em vez de a mesma forma ser esticada de 16px a 104px. Resultado:
+   editorial contemporânea em vez de "convite de casamento". Menos frágil nos
+   tamanhos grandes e sem a fragilidade de haste fina que obrigava a Cormorant
+   a nunca descer abaixo de 32px.
+
+   Orçamento de fonte: 4 arquivos (Seção 7 do Project Bible) — 1 de serifada,
+   3 de sans. O arquivo da Newsreader é variável, então o peso 400 e todo o
+   eixo óptico vêm no mesmo arquivo, sem custo de requisição extra.
    ========================================================================== */
 
 @font-face {
-  font-family: "Cormorant Garamond";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("../assets/fonts/cormorant-400.woff2") format("woff2");
+  src: url("../assets/fonts/newsreader-400.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
                  U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
                  U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;

@@ -18,45 +18,64 @@
   /* ======================================================================
      1. PRIMITIVAS — COR
 
-     REVISÃO DE PALETA (2026-08-14). A paleta anterior era creme quente
-     (#F7F6F3) com acento dourado (#B58C5A). Ela foi abandonada por evidência
-     concreta, não por gosto: extraído o CSS de um site de clínica que o
-     usuário identificou espontaneamente como "feito por IA", ele usava
-     Cormorant Garamond com a paleta #f7f4ee / #d4bc8e / #b89b6a — a mesma
-     fonte e praticamente as mesmas cores que este projeto. Creme quente +
-     dourado + serifada elegante é o agrupamento visual mais saturado de
-     2026, e é o que o olho treinado identifica em segundos.
+     REVISÃO 2 (2026-08-14, tarde). Direção de arte definida pelo autor do
+     projeto, com um argumento que a revisão anterior não tinha considerado.
 
-     A direção nova troca o eixo quente por um verde-tinta profundo: mantém
-     a leitura de calma e alto padrão (o brief continua proibindo azul médico
-     genérico), mas sai do agrupamento. Ganho colateral grande: o acento novo
-     mede 7.10:1 sobre o fundo e PODE carregar texto — o dourado media 2.83:1
-     e não podia, o que obrigava as variantes "-ink" em todo lugar.
+     A revisão 1 já havia abandonado creme+dourado por evidência: um site que
+     o usuário identificou espontaneamente como "feito por IA" usava
+     #f7f4ee / #d4bc8e / #b89b6a com Cormorant Garamond — praticamente este
+     projeto. Mas ela ainda tratava a paleta como problema de contraste.
+
+     A camada que faltava: o mercado inteiro de clínica premium convergiu
+     para a MESMA fórmula (fundo creme → serifada de alto contraste →
+     dourado → madeira → botão dourado). É bonita e cada vez menos
+     memorável. Como este site é peça de portfólio, o objetivo não é passar
+     por "mais uma clínica premium" — é fazer perguntarem quem fez. Isso
+     muda o critério: sair da fórmula vale mais do que executá-la bem.
+
+     Daí três decisões desta revisão:
+       1. Dourado eliminado por completo. Em seu lugar, um cobre discreto,
+          usado em ~2% da interface — nunca em botão, nunca em texto.
+       2. Verde profundo como cor principal, capaz de carregar texto E de
+          receber texto branco no botão (7.37:1 e 7.70:1).
+       3. Preto quase neutro no lugar do verde-tinta: deixa o verde ser o
+          único acontecimento cromático da página.
+
+     A distribuição de esforço que orienta o projeto daqui pra frente —
+     45% fotografia, 25% composição, 15% tipografia, 10% motion, 5% cor —
+     é o motivo de a LUT (tools/grade.py) existir. Cor é o último 5%.
      ====================================================================== */
-  --color-primary: #F7F8F6;   /* fundo — quase branco levemente frio, não creme */
-  --color-text:    #16241E;   /* verde-tinta profundo   — 15.10:1 sobre primary */
-  --color-gray:    #5E6462;   /* texto secundário       —  5.58:1 — cinza quase neutro */
-  --color-accent:  #1E5F45;   /* verde da marca         —  7.10:1 — PODE ser texto */
-  --color-success: #2E7D5B;   /* confirmação — distinto do acento, mais claro */
+  --color-primary: #FAFAF8;   /* fundo — branco levemente quente */
+  --color-text:    #1B1B1B;   /* preto quase neutro     — 16.48:1 sobre primary */
+  --color-gray:    #6B6B68;   /* texto secundário       —  5.12:1 — cinza quente */
+  --color-accent:  #285C4D;   /* verde profundo         —  7.37:1 — PODE ser texto */
+  --color-success: #2E7358;   /* confirmação — 5.42:1, distinto do acento */
   --color-white:   #FFFFFF;   /* superfícies elevadas sobre o primary */
 
-  /* Os tokens "-ink" existiam porque o dourado e o verde antigos reprovavam
-     em contraste. O acento novo passa em AA sozinho, então eles apontam para
-     ele — mantidos como alias para não quebrar componentes que já os usam. */
-  --color-accent-ink:  var(--color-accent);
-  --color-success-ink: #276B4D;  /* 5.9:1 sobre primary */
+  /* Cobre. Substitui o dourado, e a diferença não é só de matiz: o dourado
+     media 2.83:1 e reprovava até no piso de 3:1 para elemento não-textual —
+     ou seja, era ilegal em qualquer uso, inclusive decorativo. O cobre mede
+     3.92:1 e passa nesse piso, então pode existir de fato como detalhe.
+     Regra de uso: nunca texto, nunca botão, nunca superfície grande. */
+  --color-copper: #9C7653;
 
-  /* Sobre a faixa escura o acento inverte e reprova (2.13:1 sobre o ink), então
-     existe um par claro só para esse contexto. */
-  --color-accent-on-dark: #8FBFA5;  /* 7.79:1 sobre --color-text */
-  --color-gray-on-dark:   #AAB4AF;  /* 8.36:1 sobre --color-text — rótulo na faixa escura */
+  /* Alias mantidos: o acento passa em AA sozinho, então os "-ink" apontam
+     para ele. Existem só para não quebrar componentes que já os consomem. */
+  --color-accent-ink:  var(--color-accent);
+  --color-success-ink: var(--color-success);
+
+  /* Sobre a faixa escura o acento inverte e reprova, então existe um par
+     claro só para esse contexto. */
+  --color-accent-on-dark: #8AAE99;  /* 7.05:1 sobre --color-text */
+  --color-gray-on-dark:   #B1B1AE;  /* 8.01:1 sobre --color-text — rótulo na faixa escura */
 
   /* --- Neutros derivados ---
-     Cinzas com viés verde puxado do fundo (não cinza puro), para que as
-     bordas pareçam parte do papel e não linhas coladas por cima. */
-  --color-hairline: #E4E7E3;  /* divisor sutil, decorativo */
-  --color-border:   #D2D8D3;  /* borda de componente */
-  --color-border-strong: #B4BEB7; /* borda em estado de foco/hover */
+     Gerados em OKLab a partir do próprio fundo (mesma direção de matiz, só
+     descendo o L), não escolhidos a olho: assim as bordas pertencem ao mesmo
+     papel em vez de parecerem linhas cinzas coladas por cima. */
+  --color-hairline: #E6E6E3;  /* divisor sutil, decorativo */
+  --color-border:   #D4D4D1;  /* borda de componente */
+  --color-border-strong: #BBBBB8; /* borda em estado de foco/hover */
 
   /* ======================================================================
      2. SEMÂNTICAS — COR
@@ -77,13 +96,14 @@
   --border-strong:     var(--color-border-strong);
 
   --decor-accent:      var(--color-accent);   /* filetes, formas, preenchimentos */
+  --decor-copper:      var(--color-copper);   /* ver regra de 2% na primitiva */
   --focus-ring:        var(--color-accent-ink);
 
   /* ======================================================================
      3. TIPOGRAFIA
      Escala fluida via clamp() — sem breakpoints de font-size.
      ====================================================================== */
-  --font-heading: "Cormorant Garamond", Georgia, serif;
+  --font-heading: "Newsreader", Georgia, serif;
   --font-body:    "Inter", "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono:    ui-monospace, SFMono-Regular, "SF Mono", Consolas, monospace;
 
@@ -160,10 +180,10 @@
      6. ELEVAÇÃO
      Sombras muito baixas — a hierarquia vem do espaço, não da profundidade.
      ====================================================================== */
-  --shadow-raised: 0 1px 2px rgba(32, 32, 32, 0.04),
-                   0 8px 24px rgba(32, 32, 32, 0.05);
-  --shadow-hover:  0 2px 4px rgba(32, 32, 32, 0.05),
-                   0 12px 32px rgba(32, 32, 32, 0.07);
+  --shadow-raised: 0 1px 2px rgba(27, 27, 27, 0.04),
+                   0 8px 24px rgba(27, 27, 27, 0.05);
+  --shadow-hover:  0 2px 4px rgba(27, 27, 27, 0.05),
+                   0 12px 32px rgba(27, 27, 27, 0.07);
 
   /* ======================================================================
      7. MOTION

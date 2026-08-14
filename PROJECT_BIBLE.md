@@ -177,7 +177,54 @@ exatos desta seção) e semânticas (papéis de uso: `--surface-raised`, `--text
 `--border-default`, `--decor-accent`…). Componentes consomem **sempre** a camada semântica; nenhum
 arquivo além de `tokens.css` pode conter um valor bruto (hex, px, ms).
 
+### 4.1-ter Revisão 2 da paleta — a camada de posicionamento (2026-08-14)
+
+A revisão 4.1-bis trocou creme+dourado por verde-tinta com um argumento correto mas incompleto:
+tratava o problema como acessibilidade e como "sair de um agrupamento visual". Faltava a camada
+decisiva, trazida pelo autor do projeto:
+
+> O mercado inteiro de clínica premium convergiu para a mesma fórmula — fundo creme → serifada de
+> alto contraste → dourado → madeira → botão dourado. É bonita e cada vez menos memorável. Como
+> este site é peça de portfólio, o objetivo não é passar por "mais uma clínica premium", é fazer
+> perguntarem quem fez.
+
+Isso muda o critério de decisão: **sair da fórmula passa a valer mais do que executá-la bem.**
+Consequência prática — não basta trocar a cor mantendo a fonte, porque metade da assinatura da
+fórmula é tipográfica.
+
+**Paleta vigente** (contrastes medidos, não estimados):
+
+| Papel | Token | Hex | Sobre o fundo |
+|---|---|---|---|
+| Fundo | `--color-primary` | `#FAFAF8` | — |
+| Texto | `--color-text` | `#1B1B1B` | 16.48:1 |
+| Texto secundário | `--color-gray` | `#6B6B68` | 5.12:1 |
+| Verde da marca | `--color-accent` | `#285C4D` | 7.37:1 — pode ser texto; branco sobre ele = 7.70:1 |
+| Verde claro (faixa escura) | `--color-accent-on-dark` | `#8AAE99` | 7.05:1 sobre `#1B1B1B` |
+| Cobre (decorativo) | `--color-copper` | `#9C7653` | 3.92:1 |
+
+**Regra do cobre — 2% da interface.** Nunca texto, nunca botão, nunca superfície grande. A diferença
+para o dourado abandonado não é só de matiz: o dourado media 2.83:1 e reprovava até no piso de 3:1
+para elemento não-textual, ou seja, era indefensável em qualquer uso. O cobre passa nesse piso, então
+pode existir de fato como detalhe. Único uso na Home: as estrelas da prova social do Hero
+(decorativas, `aria-hidden`, com a nota escrita ao lado).
+
+**Distribuição de esforço que passa a orientar o projeto:**
+
+| Peso | Área |
+|---|---|
+| 45% | fotografia e direção de arte |
+| 25% | espaçamento e composição |
+| 15% | tipografia |
+| 10% | animações |
+| **5%** | **paleta de cores** |
+
+É o inverso do que se costuma fazer, e é o motivo de `tools/grade.py` existir. Ver 4.5.
+
 ### 4.2 Tipografia
+
+> **REVISADO em 2026-08-14 — ver 4.2-bis.** A especificação original abaixo nomeava Instrument Serif
+> e Cormorant Garamond; as duas foram descartadas pelo mesmo motivo que o dourado.
 
 - **Headings:** Instrument Serif (preferência) ou Cormorant Garamond como fallback de família —
   serifada editorial, nunca serif clássica "institucional". Peso único (400), tamanho e espaço negativo
@@ -203,6 +250,32 @@ arquivo além de `tokens.css` pode conter um valor bruto (hex, px, ms).
   --tracking-heading: -0.01em;
 }
 ```
+
+### 4.2-bis Troca da serifada — Newsreader (2026-08-14)
+
+Cormorant Garamond saiu; entrou **Newsreader** (Production Type, licença livre).
+
+O motivo não é técnico e não é gosto. Cormorant, Playfair, Instrument Serif e DM Serif viraram
+**atalho visual para "luxo"**: a serifada de alto contraste no hero é hoje tão previsível quanto o
+fundo creme já abandonado. Como a assinatura da fórmula de mercado é metade cor e metade tipografia,
+trocar só a paleta resolveria metade do problema — o site continuaria "parecendo aquelas clínicas".
+
+Por que Newsreader especificamente:
+
+- **Contraste moderado**, não alto. Sai do registro "convite de casamento" e entra em editorial
+  contemporâneo, que é onde o projeto quer estar.
+- **Eixo óptico variável (`opsz` 6–72).** O desenho se ajusta ao tamanho em vez de a mesma forma ser
+  esticada de 16px a 104px. Isso remove a fragilidade de haste fina que obrigava a Cormorant a nunca
+  descer abaixo de 32px.
+- **Um arquivo só.** Sendo variável, peso 400 e todo o eixo óptico cabem no mesmo woff2 — o orçamento
+  de 4 arquivos de fonte da Seção 7 continua respeitado.
+
+Alternativas consideradas e descartadas: PP Editorial New, Ivar e Canela (licenciadas, custo sem
+ganho proporcional para peça de portfólio); Fraunces (excelente, mas com personalidade forte demais
+para conviver com fotografia como protagonista). Caminho também válido, não adotado: site inteiro em
+Inter, deixando o luxo emergir só de layout e fotografia.
+
+**A regra do corte em 32px permanece** — acima é serifada, abaixo é Inter.
 
 ### 4.3 Espaçamento
 
@@ -239,6 +312,46 @@ literal — se em dúvida, aumentar o espaçamento, não diminuir.
   `grid-template-rows: 0fr → 1fr` (evita `height: auto` em transições).
 - **Navbar:** transparente sobre o hero, ganha fundo `--color-primary` com leve blur ao scroll
   (>80px), transição 250ms.
+
+### 4.5 LUT — correção de cor única para toda a fotografia (2026-08-14)
+
+**A descoberta que originou esta seção.** O usuário reportou "as cores não estão combinando" e
+propôs trocar a paleta inteira. Medindo a matiz média de cada imagem em OKLCH, a causa apareceu — e
+não era a paleta:
+
+| Imagem | Matiz | |
+|---|---|---|
+| `hero.png` | 149.9° | fria-verde |
+| `sobre.jpg` | 96.5° | quente |
+| `depoimento.jpg` | 44.1° | quente (âmbar) |
+| `equipe-3.jpg` | 50.4° | quente (âmbar) |
+
+**Uma foto a 150° ao lado de outra a 44° briga muito mais aos olhos do que qualquer token de cor.**
+Trocar a paleta teria atacado o sintoma. Regra que fica: quando a queixa for "as cores não combinam",
+**medir as imagens antes de mexer nos tokens**.
+
+**A ferramenta:** `tools/grade.py`. Originais imutáveis em `assets/img/raw/`, saída graduada em
+`assets/img/`. Reexecutável — mudou um parâmetro, roda de novo, sem perda geracional.
+
+Pipeline, na ordem (cada etapa tem motivo registrado no próprio arquivo): balanço de branco
+gray-world → curva tonal em OKLab (pretos levantados + S suave) → dessaturação → split toning
+(sombras para o verde da marca, luzes levemente quentes) → proteção de pele → **trim final**.
+
+**Duas armadilhas encontradas, ambas de medição:**
+
+1. *Matiz é métrica ruim perto do neutro.* A primeira versão media dispersão de matiz e acusou
+   "104°, ainda alta" **depois** de a graduação já ter funcionado. Com croma em ~0.01, a matiz é
+   ruído: dois cinzas quase idênticos podem estar a 100° um do outro. A métrica correta é a
+   **distância euclidiana em (a, b) do OKLab**, que corresponde ao dominante percebido.
+
+2. *Aplicar o mesmo tratamento ≠ terminar no mesmo lugar.* Gray-world normaliza a média em RGB
+   **linear**, e a conversão para OKLab é não-linear — cada foto termina com resíduo próprio. Só com
+   as etapas 1–5 a dispersão caiu **37%**. O **trim final** (medir o dominante real ao fim do
+   pipeline e deslocá-lo para o alvo comum, a 85% e não 100%, para preservar diferença legítima de
+   conteúdo) levou a redução a **85%** — de 0.0409 para 0.0063.
+
+**Critério de aceite:** dispersão em (a,b) < 0.020 entre quaisquer duas imagens do site.
+`python tools/grade.py --check` mede sem escrever.
 
 ---
 

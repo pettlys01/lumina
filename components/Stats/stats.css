@@ -10,10 +10,9 @@
       página parecer gerada. Aqui o padrão quebra por completo: sem sobrelinha,
       sem lead, fundo invertido, número antes do rótulo.
 
-   2. Cor. O dourado da marca mede 2,83:1 sobre o creme — reprova até no piso
-      de 3:1, e por isso em toda a página ele é apenas decorativo. Sobre o
-      #202020 ele mede 5,33:1 e passa em AA. É o único lugar do site onde a
-      cor da marca pode carregar texto, e é justamente onde ela aparece maior.
+   2. Cor. Na paleta atual o fundo invertido é o preto quase neutro #1B1B1B,
+      e sobre ele o verde claro da marca mede 7,05:1. (Este comentário já
+      descreveu um dourado sobre #202020 — paleta de duas revisões atrás.)
 
    Marcação em <dl>: cada número é o valor de um rótulo, que é literalmente a
    relação que uma lista de descrição expressa.
@@ -67,7 +66,11 @@
 
   gap: var(--space-2);
   padding-block-start: var(--space-2);
-  border-block-start: 1px solid rgba(247, 246, 243, 0.2);
+  /* Derivado do token em vez de literal: era rgba(247,246,243,.2), o creme da
+     paleta original, que sobreviveu a duas trocas de paleta sem ninguém notar
+     porque um filete de 20% de opacidade não denuncia a cor errada. */
+  border-block-start: 1px solid
+    color-mix(in srgb, var(--text-on-inverse) 20%, transparent);
 }
 
 .stats__value {

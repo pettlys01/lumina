@@ -71,11 +71,36 @@
   .about__inner {
     grid-template-columns: 0.9fr 1.1fr;
     gap: var(--space-8);
-    align-items: start;
+
+    /* start virou stretch: com aspect-ratio fixo (4/5), a altura da foto só
+       dependia da própria largura, não do texto ao lado. Quando os três
+       tópicos empurravam a coluna de texto além de 5/4 da largura da foto, a
+       foto acabava antes e sobrava fundo vazio no rodapé — lido como imagem
+       cortada. Com stretch a foto passa a ocupar a mesma altura que o texto
+       define, sempre. */
+    align-items: stretch;
   }
 
+  /* Primeira tentativa foi img com block-size:100% dentro do item esticado —
+     não funcionou porque <img> é elemento substituído: o grid usa a razão de
+     aspecto NATURAL da imagem pra dimensionar a faixa (track) antes de
+     resolver o height:100%, então a foto voltava a mandar na própria altura
+     e ultrapassava o texto em vez de igualar. Solução: tirar a foto do
+     cálculo de tamanho da faixa por completo, posicionando-a em absolute
+     dentro da figure. Assim a figure (bloco comum, sem conteúdo que conte
+     pra intrinsic size) é o que estica — e ela estica exatamente até a
+     altura que o texto ao lado definir. */
   .about__figure {
+    position: relative;
     margin-block-start: var(--space-8);
+  }
+
+  .about__figure img {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+    inline-size: 100%;
+    block-size: 100%;
   }
 
   /* A versão anterior puxava este bloco para a esquerda com margem negativa,

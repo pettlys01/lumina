@@ -44,7 +44,7 @@
   inline-size: 2px;
   margin-inline-start: -1px;
   background-color: var(--color-white);
-  box-shadow: 0 0 0 1px rgba(32, 32, 32, 0.15);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-text) 15%, transparent);
   pointer-events: none;
 }
 
