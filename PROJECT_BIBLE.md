@@ -323,6 +323,28 @@ parece um bug de layout e não é. Duas consequências obrigatórias:
    harness de medição deve ter um auto-teste (injetar um elemento largo demais e confirmar que ele
    acusa) antes de se confiar em um resultado "ok".
 
+**Armadilhas adicionais descobertas na Fase 6 — o headless mente sobre tempo, não só sobre largura.**
+Sob `--virtual-time-budget`, três comportamentos **não** são observáveis via `--dump-dom`, e
+concluir "está quebrado" a partir deles é erro de método, não achado:
+- **timeline de animação WAAPI não avança** (`currentTime` fica em 0, `finished` nunca resolve);
+- **`<details>` não recolhe visualmente** — confirmado com um `<details>` 100% nativo, sem nenhum
+  código deste projeto envolvido;
+- **`IntersectionObserver` não reavalia após rolagem**, e dentro de um iframe muito alto só
+  considera corretamente os primeiros ~1100px.
+
+Regra prática: quando um teste falhar em algo dependente de tempo ou de compositação, **reproduzir o
+mesmo cenário com código nativo puro antes de culpar o próprio código**. Se o nativo também falha,
+é limitação do ambiente. E o que é visual de verdade se confirma com `--screenshot` (que força
+compositação), não com `--dump-dom` — foi assim que o bug real da imagem do Hero apareceu, depois de
+passar por todos os testes de DOM.
+
+**Medição instável = defeito do medidor.** Ainda na Fase 6, `tools/overflow-check.html` acusou
+`OVERFLOW +15` de forma intermitente, sem nenhuma mudança de código. O `+15` era exatamente a largura
+da barra de rolagem: ao mudar a largura do iframe, a barra aparece/some durante o relayout, e uma
+leitura feita nessa janela compara `scrollWidth` e `clientWidth` de estados diferentes. A ferramenta
+passou a fazer **duas leituras concordantes** antes de aceitar um resultado. Um número que muda entre
+execuções idênticas nunca é achado — é ruído a ser eliminado na ferramenta.
+
 ---
 
 ## 11. Instruções para o Claude Code
@@ -495,8 +517,48 @@ telas de software odontológico em uso real frequentemente têm dado de paciente
 número de prontuário, radiografia identificável. Ampliar antes de aprovar (Regra 1) não é suficiente
 sozinho aqui: é preciso especificamente checar a área da tela por texto legível, não só procurar
 logotipo. Quando a checagem não for possível com confiança, o padrão é ilustrar, não fotografar.
-- [ ] **Fase 6 — Motion.** Aceite: animações da seção 6 aplicadas, `prefers-reduced-motion` testado,
-      nenhuma regressão de performance introduzida (reconferir Lighthouse).
+- [x] **Fase 6 — Motion.** Aceite: animações da seção 6 aplicadas, `prefers-reduced-motion` testado,
+      nenhuma regressão introduzida. — *Concluída em 2026-08-13.* Entregues:
+      - `scripts/observers.js` — motor de reveal por scroll, compartilhado. Convenção sem
+        configuração: `.reveal` sozinho é observado individualmente; dentro de um
+        `[data-reveal-group]`, o grupo é observado uma vez e os filhos revelam juntos com atraso
+        escalonado (teto de 6, conforme Seção 6). `unobserve` após disparar — não repete ao rolar
+        para cima e para baixo.
+      - `scripts/animations.js` — a única sequência orquestrada do site: entrada do Hero (stagger no
+        painel de texto + mask reveal por `clip-path` na imagem). Um momento forte vale mais que
+        efeitos espalhados; o resto da página usa o mesmo reveal uniforme.
+      - `components/FAQ/faq.js` — abrir/fechar animado do acordeão.
+      - Animação do painel de menu em `components/Navbar/navbar.js`.
+      - `@view-transition { navigation: auto }` para navegação entre páginas, aninhado em
+        `@media (prefers-reduced-motion: no-preference)` — **o navegador não desliga View
+        Transitions sozinho sob movimento reduzido**, diferente dos tokens `--duration-*`; sem esse
+        gate explícito, a única transição que troca a página inteira ficaria de fora da regra.
+
+      **Decisão técnica que contraria o previsto na Fase 4:** o Bible previa animar o FAQ por CSS
+      (`interpolate-size: allow-keywords`). Testado nesta sessão: a **abertura** anima de forma
+      confiável, mas o **fechamento** não — medido três vezes, a altura parava no meio ou não se
+      movia, inclusive mirando `::details-content` diretamente (seletor aceito pelo parser). O mesmo
+      vale para `display` + `@starting-style` + `transition-behavior: allow-discrete` no painel do
+      menu. Ambos foram feitos com WAAPI e valores explícitos, que é a técnica que se confirmou
+      funcionando. Regra que fica: **não usar técnica que não se consegue confirmar funcionando.**
+
+## 12.3 Padrão obrigatório para toda animação via WAAPI
+
+Três bugs da mesma família apareceram na Fase 6, e o terceiro só foi pego numa captura de tela real
+(a foto do Hero simplesmente não aparecia). A causa é sempre a mesma: **uma animação WAAPI cujo
+timeline não avança deixa o elemento preso no primeiro quadro para sempre** — não "sem animação", e
+sim invisível, ou com altura travada. Com `fill: "backwards"` isso é ainda mais grave, porque o
+primeiro quadro é justamente o estado oculto. Aba em segundo plano é uma condição documentada no
+próprio spec em que isso acontece de verdade.
+
+Por isso, toda animação WAAPI neste projeto segue o mesmo padrão, já aplicado em `animations.js`,
+`faq.js` e `navbar.js`:
+1. escutar `anim.finished` (`.then` **e** `.catch` — cancelamento rejeita a promise);
+2. ter um `setTimeout` de rede de segurança um pouco maior que a duração total;
+3. o que roda no fim **chama `anim.cancel()`**, devolvendo o elemento ao valor real do CSS;
+4. a função de finalização é idempotente (guard de "já executou").
+
+Nunca depender apenas de `anim.finished`.
 - [ ] **Fase 7 — SEO.** Aceite: itens da seção 8 implementados e validados (rich results test equivalente,
       heading outline correto).
 - [ ] **Fase 8 — Performance.** Aceite: metas da seção 7 e checklist da seção 10 100% cumpridas.

@@ -34,7 +34,7 @@
 
 <main id="conteudo">
 
-  <header class="page-header">
+  <header class="page-header reveal">
     <div class="container">
       <nav class="page-header__crumbs" aria-label="Trilha de navegação">
         <a href="index.html">Home</a>
@@ -63,7 +63,7 @@
         <span class="section-head__eyebrow">Indicação</span>
         <h2 class="section-head__title">Para quem é indicado</h2>
       </div>
-      <ul class="specialty__list">
+      <ul class="specialty__list" data-reveal-group>
 {{INDICADO_HTML}}
       </ul>
     </div>
@@ -75,7 +75,7 @@
         <span class="section-head__eyebrow">Como funciona</span>
         <h2 class="section-head__title">Etapas do tratamento</h2>
       </div>
-      <ol class="specialty__steps">
+      <ol class="specialty__steps" data-reveal-group>
 {{STEPS_HTML}}
       </ol>
     </div>
@@ -99,7 +99,7 @@
         <span class="section-head__eyebrow">Continue explorando</span>
         <h2 class="section-head__title">Outras especialidades</h2>
       </div>
-      <ul class="specialty__related-list">
+      <ul class="specialty__related-list" data-reveal-group>
 {{RELATED_HTML}}
       </ul>
     </div>
@@ -112,6 +112,8 @@
 <!-- include: components/Footer/footer.html -->
 
 <script src="components/Navbar/navbar.js" defer></script>
+<script src="components/FAQ/faq.js" defer></script>
+<script src="scripts/observers.js" defer></script>
 
 </body>
 </html>

@@ -71,7 +71,7 @@
 
 <main id="conteudo">
 
-  <header class="page-header">
+  <header class="page-header reveal">
     <div class="container">
       <nav class="page-header__crumbs" aria-label="Trilha de navegação">
         <a href="../index.html">Home</a>
@@ -101,7 +101,7 @@
         <span class="section-head__eyebrow">Indicação</span>
         <h2 class="section-head__title">Para quem é indicado</h2>
       </div>
-      <ul class="specialty__list">
+      <ul class="specialty__list" data-reveal-group>
         <li>Perda de um dente por trauma, cárie extensa ou fratura</li>
         <li>Perda de múltiplos dentes, com prótese removível instável ou desconfortável</li>
         <li>Volume ósseo suficiente na região, confirmado por tomografia</li>
@@ -116,7 +116,7 @@
         <span class="section-head__eyebrow">Como funciona</span>
         <h2 class="section-head__title">Etapas do tratamento</h2>
       </div>
-      <ol class="specialty__steps">
+      <ol class="specialty__steps" data-reveal-group>
         <li class="specialty__step">
           <span class="specialty__step-num" aria-hidden="true">1</span>
           <h3 class="specialty__step-title">Avaliação e tomografia</h3>
@@ -172,7 +172,7 @@
         <span class="section-head__eyebrow">Continue explorando</span>
         <h2 class="section-head__title">Outras especialidades</h2>
       </div>
-      <ul class="specialty__related-list">
+      <ul class="specialty__related-list" data-reveal-group>
         <li>
           <a class="specialty__related-link" href="../especialidades/lentes-de-contato-dental.html">Lentes de Contato Dental</a>
         </li>
@@ -192,7 +192,7 @@
   <section class="section cta" id="agendamento">
     <div class="container">
 
-      <div class="section-head section-head--center">
+      <div class="section-head section-head--center reveal">
         <span class="section-head__eyebrow">Primeiro passo</span>
         <h2 class="section-head__title">Agende sua avaliação</h2>
         <p class="section-head__lead">
@@ -293,6 +293,8 @@
 </footer>
 
 <script src="../components/Navbar/navbar.js" defer></script>
+<script src="../components/FAQ/faq.js" defer></script>
+<script src="../scripts/observers.js" defer></script>
 
 </body>
 </html>

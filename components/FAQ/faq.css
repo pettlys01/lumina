@@ -2,9 +2,13 @@
    Seção: FAQ
    Depende de: tokens.css, layout.css
 
-   Construída sobre <details>/<summary> nativos. A animação de altura fica para
-   a Fase 6 — animar <details> exige interpolate-size, que é aprimoramento
-   progressivo e não deve bloquear o funcionamento agora.
+   Construída sobre <details>/<summary> nativos. A animação de altura
+   (Fase 6) é feita por components/FAQ/faq.js via WAAPI, não por CSS —
+   testado nesta sessão que interpolate-size anima a abertura mas não o
+   fechamento de forma confiável neste motor. overflow:hidden abaixo é o que
+   permite o conteúdo ficar clipado durante essa animação controlada por JS;
+   sem JS, o <details> nativo mostra/esconde tudo de uma vez, sem clipping
+   necessário.
    ========================================================================== */
 
 /* A largura restrita fica na lista, não no container: aplicada ao container,
@@ -90,6 +94,7 @@
    Resposta
    -------------------------------------------------------------------------- */
 .faq__a {
+  overflow: hidden; /* clipa o conteúdo durante a animação de altura via JS */
   padding-block-end: var(--space-3);
   padding-inline-end: var(--space-6);
   font-size: var(--text-body);

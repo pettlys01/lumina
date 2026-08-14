@@ -100,6 +100,62 @@ img, svg, video {
 }
 
 /* --------------------------------------------------------------------------
+   Reveal de scroll (Fase 6 — motion)
+   Motor em scripts/observers.js. Aqui só o estado visual: escondido/deslocado
+   -> visível, na duração e no easing padrão do projeto (--duration-slow,
+   --ease-out, já usados em todo o site desde a Fase 2).
+
+   Classificação por camada (Base de Conhecimento, motion-necessity-spectrum,
+   já consultada na Fase 3): este é motion DECORATIVO — comunica menos sobre
+   estado do que a transição da Navbar ao rolar, por exemplo. É a primeira
+   camada a cortar se a Fase 8 (performance) encontrar orçamento apertado.
+   -------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Pertence ao Bible desde a Fase 0 (Seção 6): "prefers-reduced-motion:
+   obrigatório... aparecem instantaneamente". Redundante com o bypass que
+   scripts/observers.js já faz em JS (que nem chega a esconder o elemento
+   quando reduzido está ativo) — mas um leitor que desativa motion depois do
+   carregamento, ou um elemento que escapou da varredura do script por algum
+   motivo, ainda fica coberto só pelo CSS. Duas camadas, uma garantia. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Navegação entre páginas — Seção 6 do Bible.
+   Cross-document View Transitions: nenhum JavaScript, nenhuma dependência.
+   Onde o navegador não suporta, a regra é simplesmente ignorada — fallback
+   silencioso por definição do próprio recurso.
+
+   O navegador NÃO desativa isto sozinho sob movimento reduzido — diferente
+   de --duration-* (que colapsam na origem, no tokens.css) e de .reveal (que
+   nem chega a animar), este é um recurso que exige o gate explícito do
+   autor. Sem o @media aqui, prefers-reduced-motion:reduce ficaria furado
+   bem na única transição que troca a página inteira de uma vez. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+/* --------------------------------------------------------------------------
    Acessibilidade
    -------------------------------------------------------------------------- */
 

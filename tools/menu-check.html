@@ -42,15 +42,19 @@ f.onload=()=>setTimeout(()=>{
     menu.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Tab',shiftKey:true,bubbles:true}));
     ok('Shift+Tab no primeiro vai ao ultimo', d.activeElement===foc[foc.length-1]);
 
-    // Esc fecha e devolve foco
+    // Esc fecha e devolve foco. aria-expanded e o foco mudam na hora; a
+    // classe/overflow so se desfazem depois da animacao de fechar (Fase 6:
+    // components/Navbar/navbar.js), por isso a espera final e maior que a
+    // duracao da animacao (220ms) + a rede de seguranca (100ms).
     d.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+    ok('Esc fechou (aria-expanded na hora)', tog.getAttribute('aria-expanded')==='false');
+    ok('Esc devolveu foco ao botao na hora', d.activeElement===tog);
     setTimeout(()=>{
-      ok('Esc fechou', tog.getAttribute('aria-expanded')==='false');
-      ok('Esc devolveu foco ao botao', d.activeElement===tog);
-      ok('scroll do body liberado', d.body.style.overflow==='');
+      ok('scroll do body liberado apos a animacao de fechar', d.body.style.overflow==='');
+      ok('menu oculto apos a animacao de fechar', !vis(menu));
       const falhas=R.filter(r=>r.startsWith('FALHOU')).length;
       document.title=(falhas?falhas+' FALHA(S)':'TUDO PASSOU')+' :: '+R.join(' | ');
-    },250);
+    },400);
   },250);
 },900);
 </script></body></html>

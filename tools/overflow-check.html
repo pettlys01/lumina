@@ -53,12 +53,40 @@
     if (ruim) falhas++;
   }
 
+  /* Mede duas vezes e só aceita quando as duas leituras concordam.
+
+     Motivo: mudar a largura do iframe dispara relayout, e durante o relayout
+     a barra de rolagem vertical pode aparecer/sumir. Se a leitura cair
+     exatamente nessa janela, scrollWidth e clientWidth vêm de estados
+     diferentes e a diferença dá +15 (a largura da barra) — um falso
+     "OVERFLOW" que aparece de forma intermitente, sem nenhuma mudança de
+     código. Foi exatamente o que aconteceu na Fase 6, e custou várias
+     rodadas até ficar claro que o defeito era do medidor, não do site.
+     Duas leituras concordantes eliminam a corrida. */
   function medir(largura, callback) {
     frame.style.width = largura + "px";
     frame.style.height = "1400px";
-    setTimeout(function () {
+
+    function ler() {
       var doc = frame.contentDocument;
-      callback(doc.documentElement.scrollWidth, doc.documentElement.clientWidth);
+      return [doc.documentElement.scrollWidth, doc.documentElement.clientWidth];
+    }
+
+    setTimeout(function () {
+      var primeira = ler();
+      setTimeout(function () {
+        var segunda = ler();
+        // Discordância entre as duas = layout ainda assentando: espera mais
+        // um pouco e usa a leitura mais recente, já estabilizada.
+        if (primeira[0] !== segunda[0] || primeira[1] !== segunda[1]) {
+          setTimeout(function () {
+            var terceira = ler();
+            callback(terceira[0], terceira[1]);
+          }, 250);
+          return;
+        }
+        callback(segunda[0], segunda[1]);
+      }, 150);
     }, 350);
   }
 

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Verificacao de grupo de reveal (stagger)</title>
+<style>
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .3s, transform .3s; transition-delay: var(--reveal-delay, 0ms); }
+  .reveal.is-visible { opacity: 1; transform: none; }
+  .grade { display: flex; gap: 12px; padding: 20px; }
+  .item { width: 100px; height: 80px; background: #ddd; }
+</style>
+</head>
+<body style="margin:0">
+<!-- Grupo dentro dos ~1100px que este harness headless realmente renderiza
+     (ver nota em tools/motion-check.html sobre o limite do compositor). Usa
+     o observers.js real do projeto, não uma reimplementação. -->
+<div class="grade" data-reveal-group>
+  <div class="item reveal">1</div>
+  <div class="item reveal">2</div>
+  <div class="item reveal">3</div>
+</div>
+<div class="item reveal" style="margin:20px">avulso</div>
+
+<script src="../scripts/observers.js" defer></script>
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    var itens = document.querySelectorAll('.grade .reveal');
+    var avulso = document.querySelector('body > .reveal');
+    var R = [];
+    function ok(n, c, d) { R.push((c ? 'PASS ' : 'FALHOU ') + n + (d && !c ? ' [' + d + ']' : '')); }
+
+    var todosVisiveis = true, delays = new Set();
+    itens.forEach(function (el) {
+      if (!el.classList.contains('is-visible')) todosVisiveis = false;
+      delays.add(el.style.getPropertyValue('--reveal-delay'));
+    });
+    ok('todos os itens do grupo ganharam is-visible juntos', todosVisiveis);
+    ok('atrasos escalonados diferentes entre si', delays.size === 3, [...delays].join(','));
+    ok('item avulso (fora de grupo) tambem revelou', avulso.classList.contains('is-visible'));
+
+    var falhas = R.filter(function (r) { return r.indexOf('FALHOU') === 0; }).length;
+    document.title = (falhas ? falhas + ' FALHA(S)' : 'TUDO PASSOU') + ' :: ' + R.join(' | ');
+  }, 600);
+});
+</script>
+</body>
+</html>

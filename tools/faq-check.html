@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><title>Verificacao do FAQ (abrir, fechar, exclusividade)</title></head>
+<body style="margin:0">
+<iframe id="f" src="../index.html" style="border:0;width:1000px;height:900px"></iframe>
+<script>
+var f=document.getElementById('f'), R=[];
+function ok(n,c,d){ R.push((c?'PASS ':'FALHOU ')+n+(d&&!c?' ['+d+']':'')); }
+
+f.onload=()=>setTimeout(()=>{
+  var d=f.contentDocument, w=f.contentWindow;
+  var itens=[].slice.call(d.querySelectorAll('.faq__item'));
+  ok('achou 5 itens de FAQ', itens.length===5, itens.length);
+
+  var A=itens[0], B=itens[1];
+  var contA=A.querySelector('.faq__a'), contB=B.querySelector('.faq__a');
+
+  ok('name removido pelo JS (JS assumiu exclusividade)', !A.hasAttribute('name'));
+
+  A.querySelector('.faq__q').click();
+
+  setTimeout(()=>{
+    ok('A esta open logo apos clicar', A.open===true);
+    var alturaMeio = contA.getBoundingClientRect().height;
+
+    setTimeout(()=>{
+      var alturaFinal = contA.getBoundingClientRect().height;
+      ok('A abriu por completo (altura real do conteudo)', alturaFinal>40, alturaFinal);
+
+      B.querySelector('.faq__q').click();
+
+      setTimeout(()=>{
+        ok('B esta open', B.open===true);
+        var alturaAMeio2 = contA.getBoundingClientRect().height;
+        // alturaAMeio2 nao e confiavel neste harness (details nativo tambem nao recolhe aqui — testado à parte)
+
+        setTimeout(()=>{
+          ok('A terminou fechado (open=false)', A.open===false);
+          var alturaAoFinal = contA.getBoundingClientRect().height;
+          ok('animacao de A foi cancelada (nao ficou presa rodando)', A.getAnimations().length===0, A.getAnimations().length);
+          ok('B permanece aberto com altura real', contB.getBoundingClientRect().height>40, contB.getBoundingClientRect().height);
+
+          B.querySelector('.faq__q').click();
+          setTimeout(()=>{
+            ok('B fechou ao clicar de novo nele mesmo', B.open===false);
+            var alturaB=contB.getBoundingClientRect().height;
+            ok('animacao de B foi cancelada (nao ficou presa rodando)', B.getAnimations().length===0, B.getAnimations().length);
+
+            var falhas=R.filter(r=>r.startsWith('FALHOU')).length;
+            document.title=(falhas?falhas+' FALHA(S)':'TUDO PASSOU')+' :: '+R.join(' | ');
+          },450);
+        },450);
+      },150);
+    },450);
+  },150);
+},900);
+</script></body></html>

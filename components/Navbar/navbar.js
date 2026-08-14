@@ -45,6 +45,19 @@
   var FOCAVEIS = 'a[href], button:not(:disabled), input, select, textarea, [tabindex]:not([tabindex="-1"])';
   var aberto = false;
 
+  // Abrir/fechar o painel via WAAPI, não via transição de display em CSS.
+  // Testado nesta sessão (Fase 6): a combinação interpolate-size +
+  // @starting-style + transition-behavior:allow-discrete para animar um
+  // display:none<->flex ficou com a opacidade travada em 0 em dois testes
+  // isolados neste motor — mesma classe de instabilidade encontrada ao tentar
+  // animar o fechamento do FAQ só em CSS. WAAPI com keyframes explícitos é a
+  // técnica que se confirmou funcionando nos dois casos.
+  var reduzido = window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var podeAnimar = !reduzido && "animate" in Element.prototype;
+  var DURACAO_PAINEL = 220;
+  var EASING_PAINEL = "cubic-bezier(0.16, 1, 0.3, 1)";
+
   // getClientRects() é o teste confiável de "está renderizado": offsetParent
   // retorna null para qualquer elemento position:fixed, o que daria falso
   // negativo se um focável do painel viesse a ser fixo.
@@ -59,12 +72,38 @@
     if (aberto) return;
     aberto = true;
 
+    // A classe entra ANTES da animação: é ela que faz display:flex via CSS
+    // (regra já existente, responsiva). O WAAPI assume a partir daí — ele não
+    // precisa da classe para saber que o elemento está com display não-none,
+    // só para poder medir/animar opacity e transform de verdade.
     navbar.classList.add("navbar--open");
     toggle.setAttribute("aria-expanded", "true");
     if (rotulo) rotulo.textContent = "Fechar menu";
-
-    // Impede a página de rolar por trás do painel.
     document.body.style.overflow = "hidden";
+
+    if (podeAnimar) {
+      var animAbertura = menu.animate(
+        [
+          { opacity: 0, transform: "translateY(-8px)" },
+          { opacity: 1, transform: "translateY(0)" },
+        ],
+        { duration: DURACAO_PAINEL, easing: EASING_PAINEL }
+      );
+      // Sem isto, se o timeline da animação nunca avançar (mesma condição
+      // documentada em components/FAQ/faq.js), o painel ficaria com
+      // opacity:0 congelada para sempre — visível no layout (display:flex),
+      // mas invisível de verdade. cancel() devolve ao valor real do CSS.
+      // cancel() em cima de uma animação já finalizada não tem efeito
+      // colateral — não precisa de guard contra chamada dupla aqui.
+      var jaCancelou = false;
+      var cancelarAbertura = function () {
+        if (jaCancelou) return;
+        jaCancelou = true;
+        animAbertura.cancel();
+      };
+      animAbertura.finished.then(cancelarAbertura).catch(cancelarAbertura);
+      setTimeout(cancelarAbertura, DURACAO_PAINEL + 100);
+    }
 
     var alvos = focaveisDoMenu();
     if (alvos.length) alvos[0].focus();
@@ -74,11 +113,8 @@
     if (!aberto) return;
     aberto = false;
 
-    navbar.classList.remove("navbar--open");
     toggle.setAttribute("aria-expanded", "false");
     if (rotulo) rotulo.textContent = "Abrir menu";
-
-    document.body.style.overflow = "";
 
     // O foco volta para o próprio botão, não para "o que estava focado antes":
     // o painel só pode ser aberto por este botão, então ele é sempre o ponto de
@@ -88,6 +124,46 @@
     // clique em link roubaria o foco do destino navegado.
     if (devolverFoco) {
       toggle.focus();
+    }
+
+    // A classe (display:none) e o overflow só voltam ao normal DEPOIS da
+    // animação terminar — removê-los antes cortaria o fade pela metade e
+    // deixaria o fundo rolar por trás de um painel ainda visível.
+    //
+    // O "if (aberto) return" existe por causa de um clique rápido
+    // fechar->abrir: se a pessoa reabrir o painel antes desta animação de
+    // fechamento antiga terminar, `aberto` já voltou a `true` quando esta
+    // callback disparar. Sem o guard, ela removeria a classe do painel
+    // recém-reaberto e fecharia por engano o que deveria continuar aberto.
+    var anim; // atribuída abaixo quando podeAnimar; fica undefined no fallback sem animação
+
+    function finalizarFechamento() {
+      if (aberto) return;
+      // cancel() evita que o efeito da animação de fechar (congelado no
+      // primeiro quadro se "finished" nunca resolver — mesmo caso do FAQ,
+      // ver components/FAQ/faq.js) fique competindo com a próxima animação
+      // de abrir, na próxima vez que o painel abrir.
+      if (anim) anim.cancel();
+      navbar.classList.remove("navbar--open");
+      document.body.style.overflow = "";
+    }
+
+    if (podeAnimar) {
+      anim = menu.animate(
+        [
+          { opacity: 1, transform: "translateY(0)" },
+          { opacity: 0, transform: "translateY(-8px)" },
+        ],
+        { duration: DURACAO_PAINEL, easing: EASING_PAINEL }
+      );
+      anim.finished.then(finalizarFechamento).catch(finalizarFechamento);
+      // Rede de segurança: mesmo raciocínio do FAQ (components/FAQ/faq.js) —
+      // "finished" pode nunca resolver em certas condições reais (aba em
+      // segundo plano, entre outras do próprio spec). finalizarFechamento já
+      // é seguro para rodar duas vezes, graças ao "if (aberto) return".
+      setTimeout(finalizarFechamento, DURACAO_PAINEL + 100);
+    } else {
+      finalizarFechamento();
     }
   }
 
