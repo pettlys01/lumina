@@ -19,6 +19,11 @@
   min-block-size: min(88svh, 46rem);
   overflow: hidden;
   background-color: var(--color-hairline);  /* cor de espera enquanto a imagem carrega */
+
+  /* Contém o mix-blend-mode do ::after nesta seção. Sem isolar, o modo de
+     mesclagem procuraria o pano de fundo do documento inteiro e o efeito
+     mudaria conforme o que estivesse atrás. */
+  isolation: isolate;
 }
 
 .hero__image {
@@ -28,6 +33,29 @@
   block-size: 100%;
   object-fit: cover;
   aspect-ratio: 16 / 10;
+
+  /* Dessaturação parcial, primeira metade da graduação de cor (a segunda é o
+     ::after abaixo). Fotografia de banco vem com a temperatura que o
+     fotógrafo escolheu — aqui, um bege alaranjado que brigava com a paleta
+     verde e fazia a página parecer montada com peças de origens diferentes.
+     Graduar a foto para a paleta é o que um estúdio faz com a direção de
+     arte; é o mesmo tratamento já aplicado aos retratos da equipe. */
+  filter: saturate(0.4);
+}
+
+/* Segunda metade da graduação: o verde da marca aplicado em modo "color",
+   que empresta a MATIZ sem mexer na luminosidade — as sombras seguem
+   sombras e as luzes seguem luzes, então a foto continua lendo como foto,
+   não como imagem colorizada por cima. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--color-accent);
+  mix-blend-mode: color;
+  opacity: 0.28;
+  pointer-events: none;
 }
 
 /* Véu claro no topo. A Navbar é transparente sobre o Hero e seu texto é escuro:

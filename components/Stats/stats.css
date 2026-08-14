@@ -76,11 +76,16 @@
   font-size: clamp(3rem, 4vw + 1rem, 4.5rem);
   line-height: 0.95;
   letter-spacing: var(--tracking-title);
-  /* Sobre a faixa escura o acento reprova (2,13:1). O par claro existe só
-     para este contexto e mede 7,79:1 — a relação entre as duas cores se
-     inverte quando o fundo inverte, e isso é decidido por medição, não por
-     aparência. */
-  color: var(--color-accent-on-dark);
+  /* Quase-branco, não o verde claro que estava aqui antes.
+
+     O verde claro media 7,79:1 e passava em AA — mas era a MESMA MATIZ do
+     fundo, e contraste monocromático é percebido como muito mais fraco do
+     que o número diz. Foi exatamente essa a leitura do usuário: "não está
+     tendo contraste nenhum", numa combinação que a matemática aprovava.
+     O quase-branco mede 15,10:1 e, mais importante, separa por matiz e por
+     saturação, não só por luminância. Passar em AA é piso, não garantia
+     de que a hierarquia visual funciona. */
+  color: var(--color-primary);
 
   /* Cormorant usa algarismos de texto por padrão — o 1 fica na altura-x e o 3
      e o 4 descem. Bonito dentro de parágrafo, desalinhado em número grande. */

@@ -78,18 +78,15 @@
     margin-block-start: var(--space-8);
   }
 
-  .about__values {
-    margin-inline-start: calc(var(--space-8) * -1.5);
-    padding: var(--space-4);
-    background-color: var(--surface-page);
-    border-radius: var(--radius);
-    position: relative;
-    z-index: 1;
-  }
+  /* A versão anterior puxava este bloco para a esquerda com margem negativa,
+     por cima da foto. A intenção era assimetria; o resultado lia como erro de
+     renderização — o retângulo branco cortava a imagem numa posição sem
+     lógica visual, e foi assim que o usuário reportou ("arrumar o erro").
 
-  /* Sobre fundo elevado, o bloco precisa da cor da própria seção para se
-     destacar da imagem — senão some contra ela. */
-  .section--raised .about__values {
-    background-color: var(--surface-raised);
+     Sobreposição só funciona quando fica evidente que é deliberada: alinhada
+     a alguma borda, com sombra que a descole, ou avançando o suficiente para
+     ninguém confundir com defeito. Meio-termo lê como bug. Retirada. */
+  .about__values {
+    padding-inline-start: var(--space-2);
   }
 }

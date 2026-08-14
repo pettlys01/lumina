@@ -35,7 +35,7 @@
      ====================================================================== */
   --color-primary: #F7F8F6;   /* fundo — quase branco levemente frio, não creme */
   --color-text:    #16241E;   /* verde-tinta profundo   — 15.10:1 sobre primary */
-  --color-gray:    #5A6560;   /* texto secundário       —  5.69:1 sobre primary */
+  --color-gray:    #5E6462;   /* texto secundário       —  5.58:1 — cinza quase neutro */
   --color-accent:  #1E5F45;   /* verde da marca         —  7.10:1 — PODE ser texto */
   --color-success: #2E7D5B;   /* confirmação — distinto do acento, mais claro */
   --color-white:   #FFFFFF;   /* superfícies elevadas sobre o primary */
@@ -49,7 +49,7 @@
   /* Sobre a faixa escura o acento inverte e reprova (2.13:1 sobre o ink), então
      existe um par claro só para esse contexto. */
   --color-accent-on-dark: #8FBFA5;  /* 7.79:1 sobre --color-text */
-  --color-gray-on-dark:   #9FB0A6;  /* 7.08:1 sobre --color-text */
+  --color-gray-on-dark:   #AAB4AF;  /* 8.36:1 sobre --color-text — rótulo na faixa escura */
 
   /* --- Neutros derivados ---
      Cinzas com viés verde puxado do fundo (não cinza puro), para que as
