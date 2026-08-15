@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Verificação do diálogo de especialidades</title>
+<style>
+  body { font: 14px ui-monospace, Consolas, monospace; padding: 16px; }
+  #frame { border: 1px solid #ccc; width: 1100px; height: 800px; }
+  li.ok  { color: #2e7d32; }
+  li.bad { color: #c62828; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<h1>Diálogo de especialidades</h1>
+<ul id="saida"></ul>
+<iframe id="frame" src="../index.html" title="alvo"></iframe>
+
+<script>
+/* ==========================================================================
+   Verifica o comportamento real do diálogo no DOM, não a aparência.
+
+   Por que não testar a animação: sob --virtual-time-budget o timeline da WAAPI
+   fica congelado em currentTime=0 (limitação já documentada no Bible), então
+   medir progresso de animação aqui produziria falha falsa. O que importa e é
+   testável é o ESTADO: o diálogo abriu, montou o conteúdo do card certo,
+   fechou, e o link continua navegável se o script não existir.
+
+   Esc não é testado: o evento "cancel" do <dialog> é interno do navegador e
+   não dispara a partir de um keydown sintético. Testar isso aqui daria um
+   falso negativo sobre código que funciona. O caminho de fechamento é
+   exercitado pelo botão e pelo clique no fundo, que compartilham a mesma
+   função fechar().
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var saida = document.getElementById("saida");
+  var frame = document.getElementById("frame");
+  var linhas = [];
+  var falhas = 0;
+
+  function reg(texto, ruim) {
+    var li = document.createElement("li");
+    li.textContent = texto;
+    li.className = ruim ? "bad" : "ok";
+    saida.appendChild(li);
+    linhas.push((ruim ? "FALHOU " : "PASS ") + texto);
+    if (ruim) falhas++;
+  }
+
+  function esperar(ms) {
+    return new Promise(function (r) { setTimeout(r, ms); });
+  }
+
+  frame.onload = function () {
+    var doc = frame.contentDocument;
+    var win = frame.contentWindow;
+
+    (async function () {
+      await esperar(400);   // deixa o defer dos scripts rodar
+
+      var cards = doc.querySelectorAll(".card--expansivel");
+      var dlg = doc.querySelector(".esp-dialog");
+
+      reg("achou " + cards.length + " cards expansiveis (esperado 5)",
+          cards.length !== 5);
+
+      if (!dlg) {
+        reg("nao achou o <dialog> — resto do teste impossivel", true);
+        return concluir();
+      }
+
+      // --- progressive enhancement: o link precisa continuar sendo um link ---
+      var primeiroLink = cards[0].querySelector(".card__link");
+      var href = primeiroLink ? primeiroLink.getAttribute("href") : "";
+      reg('link do 1o card aponta para a pagina completa ("' + href + '")',
+          href !== "especialidades/implantes.html");
+
+      reg("link anuncia aria-haspopup=dialog (so apos o JS rodar)",
+          primeiroLink.getAttribute("aria-haspopup") !== "dialog");
+
+      // --- abertura ---
+      reg("dialogo comeca fechado", dlg.open === true);
+
+      primeiroLink.click();
+      await esperar(120);
+
+      reg("clique no card abriu o dialogo", dlg.open !== true);
+
+      var titulo = doc.querySelector(".esp-dialog__titulo").textContent.trim();
+      reg('titulo montado a partir do card clicado ("' + titulo + '")',
+          titulo !== "Implantes");
+
+      var texto = doc.querySelector(".esp-dialog__texto").textContent.trim();
+      reg("texto expandido veio do <template> (" + texto.length + " chars)",
+          texto.length < 80);
+
+      var cta = doc.querySelector(".esp-dialog__cta").getAttribute("href");
+      reg('CTA aponta para a pagina completa ("' + cta + '")',
+          cta !== "especialidades/implantes.html");
+
+      var media = doc.querySelector(".esp-dialog__media");
+      reg("sem data-img, a area de midia fica oculta", media.hidden !== true);
+
+      // --- fechamento pelo botao ---
+      doc.querySelector(".esp-dialog__fechar").click();
+      await esperar(900);   // animacao (420ms) + rede de seguranca (150ms) + folga
+
+      reg("botao fechar encerrou o dialogo", dlg.open !== false);
+      reg("rolagem do fundo foi destravada",
+          doc.body.classList.contains("tem-dialog-aberto"));
+
+      // --- troca de card: o mesmo dialogo precisa remontar com outro conteudo ---
+      cards[4].querySelector(".card__link").click();
+      await esperar(120);
+
+      var titulo2 = doc.querySelector(".esp-dialog__titulo").textContent.trim();
+      reg('reabriu com o conteudo do 5o card ("' + titulo2 + '")',
+          titulo2 !== "Clareamento");
+
+      // --- fechamento por clique no fundo ---
+      dlg.dispatchEvent(new win.MouseEvent("click", { bubbles: true }));
+      await esperar(900);
+      reg("clique no fundo encerrou o dialogo", dlg.open !== false);
+
+      await autoTeste(doc);
+      concluir();
+    })();
+
+    /* Prova que o harness sabe acusar. Sem isto, uma bateria toda verde pode
+       significar apenas que o metodo esta cego. */
+    async function autoTeste(doc) {
+      var falso = doc.createElement("div");
+      falso.className = "card--expansivel";
+      doc.querySelector(".services__grid").appendChild(falso);
+      var n = doc.querySelectorAll(".card--expansivel").length;
+      reg("auto-teste: card injetado foi detectado (" + n + " != 5)", n === 5);
+      falso.remove();
+    }
+
+    function concluir() {
+      var veredito = falhas === 0 ? "TUDO PASSOU" : falhas + " FALHA(S)";
+      document.title = "RESULTADO " + veredito + " :: " + linhas.join(" | ");
+    }
+  };
+})();
+</script>
+
+</body>
+</html>

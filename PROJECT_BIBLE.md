@@ -713,6 +713,29 @@ Por isso, toda animação WAAPI neste projeto segue o mesmo padrão, já aplicad
 4. a função de finalização é idempotente (guard de "já executou").
 
 Nunca depender apenas de `anim.finished`.
+
+### 12.4 Trava de animação não pode engolir a intenção do usuário (2026-08-14)
+
+Descoberto ao construir o diálogo de Especialidades. A primeira versão protegia contra animações
+sobrepostas com um booleano — `if (animando) return;` na entrada de `abrir()` e `fechar()`. Parece
+prudente e está errado: durante os 420ms da animação de abertura, **o botão de fechar não fazia
+nada**. Clicar num card sem querer e ir direto no X é um gesto comum, e nesse intervalo a interface
+ficava inerte, sem qualquer retorno.
+
+O `tools/services-check.html` pegou porque clica em fechar 120ms depois de abrir. Não era artefato de
+teste — era o defeito exato que um usuário apressado encontraria.
+
+**Regra:** ação do usuário nunca é descartada por haver animação em curso. O padrão correto é
+interromper o que está em voo e começar a nova transição **de onde a anterior parou** (ler
+`getComputedStyle().transform` antes de cancelar e usá-lo como primeiro keyframe), em vez de ignorar
+o clique ou saltar para o estado inicial.
+
+Isso traz um segundo problema, e ele também precisa de solução explícita: com animações
+interrompíveis, a rede de segurança da Seção 12.3 de uma transição abortada dispara depois e executa
+o efeito colateral fora de hora — no caso, fechando um diálogo que o usuário acabou de reabrir. A
+correção é um **contador de geração**: cada abertura/fechamento incrementa, e todo callback pendente
+compara antes de agir. Sem isso, a rede de segurança vira a própria fonte do bug.
+
 - [ ] **Fase 7 — SEO.** Aceite: itens da seção 8 implementados e validados (rich results test equivalente,
       heading outline correto).
 - [ ] **Fase 8 — Performance.** Aceite: metas da seção 7 e checklist da seção 10 100% cumpridas.

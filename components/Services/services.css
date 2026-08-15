@@ -37,3 +37,179 @@
 .services__grid .card {
   inline-size: 100%;
 }
+
+/* ==========================================================================
+   Diálogo de prévia da especialidade
+   Comportamento em components/Services/services.js.
+   ========================================================================== */
+
+/* O <dialog> nativo vem com estilo de user-agent (borda, padding, largura
+   automática e margin:auto) que precisa ser zerado antes de qualquer coisa. */
+.esp-dialog {
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-inline-size: min(52rem, calc(100vw - 2 * var(--space-3)));
+  inline-size: 100%;
+  max-block-size: calc(100vh - 2 * var(--space-4));
+
+  /* Origem no canto superior esquerdo: a matemática do FLIP no services.js
+     calcula o deslocamento a partir de left/top. Com a origem no centro
+     (padrão), a caixa animaria a partir do lugar errado. */
+  transform-origin: top left;
+}
+
+.esp-dialog::backdrop {
+  background-color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  backdrop-filter: blur(3px);
+}
+
+.esp-dialog__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  background-color: var(--surface-page);
+  border-radius: var(--radius-media);
+  box-shadow: var(--shadow-hover);
+  padding: var(--space-4);
+
+  max-block-size: calc(100vh - 2 * var(--space-4));
+  overflow-y: auto;
+  transform-origin: top left;   /* par da escala inversa aplicada pelo JS */
+}
+
+.esp-dialog__media {
+  margin: 0;
+  border-radius: var(--radius-media);
+  overflow: hidden;
+}
+
+.esp-dialog__media img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.esp-dialog__corpo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.esp-dialog__titulo {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-h2);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
+  margin: 0;
+}
+
+.esp-dialog__texto p {
+  color: var(--text-secondary);
+  max-inline-size: 60ch;
+}
+
+.esp-dialog__texto p + p {
+  margin-block-start: var(--space-2);
+}
+
+.esp-dialog__cta {
+  margin-block-start: var(--space-1);
+}
+
+/* Botão de fechar: 44px de alvo (mesmo piso do resto do site), sobre a
+   superfície do diálogo e não sobre a imagem — sobre foto, o contraste
+   dependeria de qual imagem entrasse ali. */
+.esp-dialog__fechar {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-end: var(--space-2);
+  z-index: 1;
+
+  inline-size: 44px;
+  block-size: 44px;
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--border-default);
+  border-radius: 50%;
+  background-color: var(--surface-raised);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out),
+              background-color var(--duration-fast) var(--ease-out);
+}
+
+.esp-dialog__fechar:hover,
+.esp-dialog__fechar:focus-visible {
+  border-color: var(--border-strong);
+  background-color: var(--surface-page);
+}
+
+/* O X é desenhado em CSS — dois traços rotacionados. O projeto não carrega
+   biblioteca de ícones, e um X é a forma mais simples que existe: importar
+   um pacote inteiro para desenhá-la seria peso sem retorno. */
+.esp-dialog__fechar span,
+.esp-dialog__fechar span::before {
+  content: "";
+  display: block;
+  inline-size: 15px;
+  block-size: 1.5px;
+  background-color: var(--text-primary);
+  transform: rotate(45deg);
+}
+
+.esp-dialog__fechar span::before {
+  transform: rotate(90deg);
+}
+
+/* Trava a rolagem do fundo. <dialog> modal torna o resto inerte, mas não
+   impede a página atrás de rolar. */
+body.tem-dialog-aberto {
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Marcador "+" no card expansível
+   Decorativo (aria-hidden): sinaliza que o card abre algo. Não é um botão
+   separado — o alvo de clique continua sendo o card inteiro, via .card__link.
+   -------------------------------------------------------------------------- */
+.card--expansivel {
+  padding-block-end: var(--space-4);   /* espaço para o marcador não colar no texto */
+}
+
+.card__mais,
+.card__mais::before {
+  content: "";
+  position: absolute;
+  inset-block-end: var(--space-3);
+  inset-inline-end: var(--space-3);
+
+  inline-size: 13px;
+  block-size: 1.5px;
+  background-color: var(--text-secondary);
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.card__mais::before {
+  inset: 0;
+  transform: rotate(90deg);
+}
+
+.card--expansivel:hover .card__mais,
+.card--expansivel:hover .card__mais::before,
+.card--expansivel:focus-within .card__mais,
+.card--expansivel:focus-within .card__mais::before {
+  background-color: var(--text-accent);
+}
+
+@media (max-width: 40rem) {
+  .esp-dialog__inner {
+    padding: var(--space-3);
+  }
+}

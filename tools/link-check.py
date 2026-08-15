@@ -62,6 +62,14 @@ def ids_de(nome: str) -> set:
 
 def conferir(pagina: Path, ids_home: set):
     html = pagina.read_text(encoding="utf-8")
+
+    # Comentários HTML saem antes da extração. Sem isto, um href citado dentro
+    # de um comentário — explicando justamente por que aquele href NÃO deve
+    # existir — é lido como link de verdade e acusado como quebrado. Aconteceu:
+    # o comentário do molde de CTA em Services/services.html derrubou o
+    # link-check com um "#" que não existe em lugar nenhum da página renderizada.
+    html = re.sub(r"<!--.*?-->", "", html, flags=re.DOTALL)
+
     ids = set(re.findall(r'id="([^"]+)"', html))
     hrefs = re.findall(r'href="([^"]+)"', html)
     ehDemo = pagina.name in PAGINAS_DEMO

@@ -34,13 +34,11 @@
   object-fit: cover;
   aspect-ratio: 16 / 9;
 
-  /* A foto anterior era um banco de imagens bege-alaranjado e precisava de
-     graduação de cor por CSS (saturate + overlay em mix-blend-mode:color)
-     pra não brigar com a paleta verde. A atual já foi gerada na matiz certa
-     (mesmos valores OKLCH dos tokens — H≈160-166°, croma baixo — descritos
-     no prompt usado), então a graduação foi removida: aplicá-la aqui só
-     reintroduziria uma segunda camada de verde por cima de uma foto que já
-     é verde, deixando tudo mais saturado do que a paleta pede. */
+  /* Sem graduação de cor por CSS — pedido explícito do autor do projeto
+     para esta foto (assets/img/foto.jpg): entra do jeito que veio, sem
+     passar pela LUT (tools/grade.py) nem por saturate/overlay. Se algum dia
+     ela destoar da paleta na tela, a correção é rodar a LUT sobre ela, não
+     reintroduzir o filtro CSS que já foi removido daqui uma vez. */
 }
 
 /* Véu claro no topo. A Navbar é transparente sobre o Hero e seu texto é escuro:

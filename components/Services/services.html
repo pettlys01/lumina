@@ -10,58 +10,138 @@
       </p>
     </div>
 
+    <!-- Cada card continua sendo um LINK para a página completa da especialidade.
+         O services.js intercepta o clique e abre o diálogo de prévia; sem JS, o
+         link navega normalmente. É por isso que as cinco páginas de Fase 5
+         continuam alcançáveis mesmo se o script falhar ou não carregar.
+
+         O <template> não é renderizado nem anunciado por leitor de tela — serve
+         só de fonte para o diálogo montar o texto expandido. O conteúdo dele é a
+         copy que já existe na página da especialidade, não texto novo. -->
     <ul class="services__grid" data-reveal-group>
       <li>
-        <article class="card reveal">
+        <article class="card card--expansivel reveal"
+                 data-titulo="Implantes">
           <h3 class="card__title">Implantes</h3>
           <p class="card__text">
             Reposição unitária ou total, guiada por tomografia e cirurgia planejada
             em software antes do dia do procedimento.
           </p>
+          <template class="card__detalhe">
+            <p>Reposição de um ou mais dentes com raiz artificial de titânio,
+               planejada em tomografia antes do primeiro corte.</p>
+            <p>A posição exata do implante é definida em software antes da
+               cirurgia, com guia impresso quando o caso indica.</p>
+          </template>
           <a class="card__link" href="especialidades/implantes.html">Implantes</a>
+          <span class="card__mais" aria-hidden="true"></span>
         </article>
       </li>
       <li>
-        <article class="card reveal">
+        <article class="card card--expansivel reveal"
+                 data-titulo="Lentes de contato dental">
           <h3 class="card__title">Lentes de contato dental</h3>
           <p class="card__text">
             Lâminas de porcelana de 0,3 mm. Simulação em 3D e ensaio no próprio
             sorriso antes de qualquer desgaste.
           </p>
+          <template class="card__detalhe">
+            <p>Lâminas de porcelana de 0,2 a 0,5 mm cimentadas sobre o dente,
+               para corrigir cor, forma ou pequenos desalinhamentos.</p>
+            <p>A simulação em 3D e o ensaio no próprio sorriso vêm antes de
+               qualquer desgaste — você aprova o resultado antes de começar.</p>
+          </template>
           <a class="card__link" href="especialidades/lentes-de-contato-dental.html">Lentes de contato dental</a>
+          <span class="card__mais" aria-hidden="true"></span>
         </article>
       </li>
       <li>
-        <article class="card reveal">
+        <article class="card card--expansivel reveal"
+                 data-titulo="Harmonização facial">
           <h3 class="card__title">Harmonização facial</h3>
           <p class="card__text">
             Proporção e sustentação do terço inferior da face, tratada junto do
             sorriso e não como procedimento isolado.
           </p>
+          <template class="card__detalhe">
+            <p>Toxina botulínica e preenchedores para equilibrar o terço inferior
+               da face — tratados junto do sorriso, não como procedimento isolado.</p>
+            <p>A proporção e a sustentação da região são avaliadas no mesmo plano
+               que o tratamento dentário, por um único responsável.</p>
+          </template>
           <a class="card__link" href="especialidades/harmonizacao-facial.html">Harmonização facial</a>
+          <span class="card__mais" aria-hidden="true"></span>
         </article>
       </li>
       <li>
-        <article class="card reveal">
+        <article class="card card--expansivel reveal"
+                 data-titulo="Ortodontia estética">
           <h3 class="card__title">Ortodontia estética</h3>
           <p class="card__text">
             Alinhadores transparentes e aparelhos cerâmicos, com previsão de
             duração fechada na primeira consulta.
           </p>
+          <template class="card__detalhe">
+            <p>Alinhadores transparentes ou aparelhos cerâmicos, com o resultado
+               final simulado digitalmente antes de você decidir começar.</p>
+            <p>A previsão de duração é fechada já na primeira consulta, e não
+               revisada a cada retorno.</p>
+          </template>
           <a class="card__link" href="especialidades/ortodontia-estetica.html">Ortodontia estética</a>
+          <span class="card__mais" aria-hidden="true"></span>
         </article>
       </li>
       <li>
-        <article class="card reveal">
+        <article class="card card--expansivel reveal"
+                 data-titulo="Clareamento">
           <h3 class="card__title">Clareamento</h3>
           <p class="card__text">
             Protocolo de consultório ou supervisionado em casa, definido pela
             sensibilidade e pelo tom de partida de cada paciente.
           </p>
+          <template class="card__detalhe">
+            <p>Protocolo em consultório ou supervisionado em casa, ajustado pela
+               sensibilidade e pelo tom de partida de cada paciente — não um
+               produto padrão para todos.</p>
+            <p>O tom de partida é registrado antes do início, para que o
+               resultado seja comparável e não uma impressão subjetiva.</p>
+          </template>
           <a class="card__link" href="especialidades/clareamento.html">Clareamento</a>
+          <span class="card__mais" aria-hidden="true"></span>
         </article>
       </li>
     </ul>
 
   </div>
+
+  <!-- Um <dialog> só, preenchido a cada abertura, em vez de cinco no DOM.
+       Nativo de propósito: showModal() entrega travamento de foco, tecla Esc,
+       ::backdrop e renderização na top layer sem disputa de z-index — tudo que
+       uma implementação manual teria que refazer (e costuma refazer com
+       defeito). O mesmo motivo pelo qual o FAQ usa <details> nativo. -->
+  <dialog class="esp-dialog" aria-labelledby="esp-dialog-titulo">
+    <div class="esp-dialog__inner">
+
+      <button type="button" class="esp-dialog__fechar" aria-label="Fechar">
+        <span aria-hidden="true"></span>
+      </button>
+
+      <figure class="esp-dialog__media" hidden>
+        <img alt="" width="1200" height="800" loading="lazy" decoding="async">
+      </figure>
+
+      <div class="esp-dialog__corpo">
+        <h2 class="esp-dialog__titulo" id="esp-dialog-titulo"></h2>
+        <div class="esp-dialog__texto"></div>
+        <!-- Sem href no markup estático, de propósito. Este <a> é um molde que
+             o services.js preenche com o destino do card clicado. Um href="#"
+             de placeholder seria um link quebrado de verdade no HTML entregue
+             (o link-check acusou), e <a> sem href não é link: não recebe foco
+             nem é anunciado como tal enquanto não tiver destino. -->
+        <a class="btn btn--primary esp-dialog__cta">Ver página completa</a>
+      </div>
+
+    </div>
+  </dialog>
+
 </section>
