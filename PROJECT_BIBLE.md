@@ -736,6 +736,45 @@ o efeito colateral fora de hora — no caso, fechando um diálogo que o usuário
 correção é um **contador de geração**: cada abertura/fechamento incrementa, e todo callback pendente
 compara antes de agir. Sem isso, a rede de segurança vira a própria fonte do bug.
 
+### 12.5 Imagem com texto gravado e rolagem suave em headless (2026-08-14)
+
+Duas descobertas ao montar o carrossel de Especialidades.
+
+**1. Texto gravado em pixel exige texto real no DOM.** As cinco imagens de especialidade chegaram
+como composições prontas: título, dois parágrafos e um ícone **gravados na imagem**, junto da
+fotografia. Isso as torna inúteis como imagem de card (a ~380px o corpo de texto renderiza em torno
+de 8px) e cria um buraco silencioso: texto em pixel não é lido pelo Google, não é selecionável, não
+é traduzível e não acompanha aumento de fonte.
+
+Regra: **toda imagem que carrega texto essencial precisa do mesmo texto no DOM.** Aqui isso é um
+bloco `.visually-hidden` dentro do link de cada slide, com `alt=""` na imagem — alt descritivo
+faria o leitor de tela anunciar o mesmo conteúdo duas vezes. O `tools/services-check.html` verifica
+a presença e o tamanho mínimo desse bloco em cada slide, justamente porque ele é invisível e
+ninguém notaria se sumisse numa edição futura.
+
+Corolário para geração de imagem por IA: **pedir a arte sem texto**. Texto pertence ao HTML.
+
+**2. `scroll-behavior: smooth` não avança sob `--virtual-time-budget`.** Novo membro da família já
+documentada (WAAPI congelada, `<details>` que não colapsa, IntersectionObserver que não redispara).
+Reproduzido com código nativo mínimo — um `div` com `overflow-x` e três filhos, nada do projeto:
+
+```
+scrollTo({left:300, behavior:'smooth'})  ->  scrollLeft = 0
+scrollTo({left:600, behavior:'auto'})    ->  scrollLeft = 576
+```
+
+Rolagem suave corre no timeline de animação, que fica congelado. Testes de carrossel devem rodar com
+`--force-prefers-reduced-motion=reduce`, que leva o componente ao caminho `behavior:'auto'` e permite
+exercitar a lógica de verdade. Ganho colateral: o caminho de movimento reduzido passa a ser testado,
+e ele é o que pessoas com sensibilidade a movimento realmente recebem.
+
+**3. A LUT ganhou caminho leve.** Peça gráfica não é fotografia: levantar pretos e cortar croma a
+0.62 lavaria o texto gravado, que já é a parte mais frágil. Mas ignorá-las quebrava a consistência
+(a≈+0.010 contra a≈−0.014 das fotos, 0.0301 de distância, acima do critério de 0.020 da Seção 4.5).
+`GRAFICOS` em `tools/grade.py` aplica só balanço de branco e trim de dominante — corrige o desvio de
+cor sem encostar no contraste do que está escrito. Medido depois: L inalterado (81.3 → 81.3),
+dominante em linha com o resto, dispersão do conjunto em 0.0063.
+
 - [ ] **Fase 7 — SEO.** Aceite: itens da seção 8 implementados e validados (rich results test equivalente,
       heading outline correto).
 - [ ] **Fase 8 — Performance.** Aceite: metas da seção 7 e checklist da seção 10 100% cumpridas.

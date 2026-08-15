@@ -87,6 +87,28 @@ PROTECAO_PELE = 0.65  # quanto do split é retirado sobre pele (0 = sem proteç�
 VIES_COMUM = 0.014
 FORCA_TRIM = 0.85     # ver "trim final" em graduar()
 
+# --------------------------------------------------------------------------
+# Peças gráficas: tratamento leve, e por um motivo de princípio.
+#
+# Os slides de especialidade não são fotografia — são composições com título e
+# parágrafos GRAVADOS em pixel sobre uma metade fotográfica. O pipeline
+# completo foi desenhado para foto: levantar pretos e cortar croma a 0.62
+# lavaria justamente o texto, que já é a parte mais frágil (não pode ser
+# aumentado, selecionado nem relido pelo navegador).
+#
+# Mas ignorá-los também não serve: medidos, ficam em a≈+0.010 enquanto as
+# fotos graduadas ficam em a≈-0.014 — 0.0301 de distância, acima do critério
+# de 0.020 da Seção 4.5. Numa mesma página isso aparece como um bloco morno no
+# meio de um conjunto frio.
+#
+# Solução: só balanço de branco e trim de dominante. Corrige o desvio de cor
+# sem encostar no contraste do que está escrito.
+# --------------------------------------------------------------------------
+GRAFICOS = {
+    "implantes.png", "lentes.png", "harmonizacao.png",
+    "ortodontia.png", "clareamento.png",
+}
+
 VERDE_MARCA = "#285C4D"
 
 
@@ -135,8 +157,11 @@ def hex_para_oklab(hx):
 
 # ---------- o pipeline ----------------------------------------------------
 
-def graduar(img):
-    """Recebe e devolve array float 0..1 em sRGB."""
+def graduar(img, leve=False):
+    """Recebe e devolve array float 0..1 em sRGB.
+
+    leve=True: só balanço de branco e trim de dominante, sem curva tonal, sem
+    dessaturação e sem split toning. Ver GRAFICOS, acima."""
     lin = srgb_para_linear(img)
 
     # 1. Balanço de branco por gray-world, em luz linear (a média só faz
@@ -149,6 +174,16 @@ def graduar(img):
 
     lab = linear_para_oklab(lin)
     L = lab[..., 0]
+
+    # Caminho leve das peças gráficas: pula tudo que mexeria no contraste do
+    # texto gravado e vai direto ao trim de dominante.
+    if leve:
+        verde = hex_para_oklab(VERDE_MARCA)
+        dv = np.array([verde[1], verde[2]])
+        dv = dv / np.linalg.norm(dv)
+        a = lab[..., 1] + (dv[0] * VIES_COMUM - lab[..., 1].mean()) * FORCA_TRIM
+        b = lab[..., 2] + (dv[1] * VIES_COMUM - lab[..., 2].mean()) * FORCA_TRIM
+        return linear_para_srgb(oklab_para_linear(np.stack([L, a, b], axis=-1)))
 
     # 2. Curva tonal. Pretos levantados primeiro, curva em S depois — na
     #    ordem inversa a curva desfaria parte do levantamento.
@@ -241,12 +276,19 @@ def main():
         destino = DESTINO / origem.name
         La, aa, ba = medir(origem)
 
+        eh_gr = origem.name in GRAFICOS
+        # Slides saem em JPEG mesmo vindo de PNG: são 1,7 MB cada como PNG
+        # (8,7 MB no conjunto), e o conteúdo é fotográfico o bastante para o
+        # JPEG não deixar artefato visível. O PNG original fica intacto em raw/.
+        if eh_gr:
+            destino = destino.with_suffix(".jpg")
+
         if not somente_medir:
             im = Image.open(origem).convert("RGB")
             arr = np.asarray(im, dtype=np.float64) / 255.0
-            out = np.clip(graduar(arr), 0.0, 1.0)
+            out = np.clip(graduar(arr, leve=eh_gr), 0.0, 1.0)
             saida = Image.fromarray((out * 255.0 + 0.5).astype(np.uint8))
-            if origem.suffix.lower() == ".png":
+            if destino.suffix.lower() == ".png":
                 saida.save(destino, optimize=True)
             else:
                 saida.save(destino, quality=88, optimize=True,

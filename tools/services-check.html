@@ -2,43 +2,61 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Verificação do diálogo de especialidades</title>
+<title>Verificação do carrossel de especialidades</title>
 <style>
   body { font: 14px ui-monospace, Consolas, monospace; padding: 16px; }
-  #frame { border: 1px solid #ccc; width: 1100px; height: 800px; }
+  #frame { border: 1px solid #ccc; width: 1200px; height: 850px; }
   li.ok  { color: #2e7d32; }
   li.bad { color: #c62828; font-weight: 700; }
 </style>
 </head>
 <body>
 
-<h1>Diálogo de especialidades</h1>
+<h1>Carrossel de especialidades</h1>
 <ul id="saida"></ul>
 <iframe id="frame" src="../index.html" title="alvo"></iframe>
 
 <script>
 /* ==========================================================================
-   Verifica o comportamento real do diálogo no DOM, não a aparência.
+   O que este arquivo cobre, e por quê.
 
-   Por que não testar a animação: sob --virtual-time-budget o timeline da WAAPI
-   fica congelado em currentTime=0 (limitação já documentada no Bible), então
-   medir progresso de animação aqui produziria falha falsa. O que importa e é
-   testável é o ESTADO: o diálogo abriu, montou o conteúdo do card certo,
-   fechou, e o link continua navegável se o script não existir.
+   O risco real deste componente não é visual — é o texto. As cinco imagens
+   trazem título e descrição GRAVADOS em pixel, e pixel não é lido pelo Google
+   nem por leitor de tela. O bloco .visually-hidden é a única coisa que
+   sustenta esta seção para busca e acessibilidade, e é invisível por
+   definição: ninguém vai notar se ele sumir numa edição futura. Por isso ele
+   é verificado aqui, item por item.
 
-   Esc não é testado: o evento "cancel" do <dialog> é interno do navegador e
-   não dispara a partir de um keydown sintético. Testar isso aqui daria um
-   falso negativo sobre código que funciona. O caminho de fechamento é
-   exercitado pelo botão e pelo clique no fundo, que compartilham a mesma
-   função fechar().
+   Também cobre o contrato de enriquecimento progressivo: os controles nascem
+   com [hidden] e só o JS os revela. Se alguém remover o atributo do HTML, o
+   site passa a mostrar setas mortas quando o script falhar — e este teste
+   acusa.
+
+   COMO RODAR — a flag não é opcional:
+
+       chrome --headless=new --force-prefers-reduced-motion=reduce \
+              --virtual-time-budget=15000 .../tools/services-check.html
+
+   Sem ela, os três testes de navegação reprovam sem que haja defeito algum.
+   Motivo, reproduzido com código nativo mínimo (um div com overflow e três
+   filhos, sem nada do projeto):
+
+       scrollTo({left:300, behavior:'smooth'})  ->  scrollLeft = 0
+       scrollTo({left:600, behavior:'auto'})    ->  scrollLeft = 576
+
+   Rolagem suave corre no timeline de animação, que fica congelado sob
+   --virtual-time-budget — a mesma limitação já registrada para a WAAPI. Com a
+   flag, o componente cai no caminho de movimento reduzido (behavior:'auto') e
+   a lógica de verdade — irPara, indiceVisivel, sincronizar — passa a ser
+   exercitada. Testar o caminho reduzido também tem valor próprio: é o que
+   pessoas com sensibilidade a movimento realmente recebem.
    ========================================================================== */
 (function () {
   "use strict";
 
   var saida = document.getElementById("saida");
   var frame = document.getElementById("frame");
-  var linhas = [];
-  var falhas = 0;
+  var linhas = [], falhas = 0;
 
   function reg(texto, ruim) {
     var li = document.createElement("li");
@@ -49,99 +67,120 @@
     if (ruim) falhas++;
   }
 
-  function esperar(ms) {
-    return new Promise(function (r) { setTimeout(r, ms); });
-  }
+  function esperar(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  var DESTINOS = [
+    "especialidades/implantes.html",
+    "especialidades/lentes-de-contato-dental.html",
+    "especialidades/harmonizacao-facial.html",
+    "especialidades/ortodontia-estetica.html",
+    "especialidades/clareamento.html"
+  ];
 
   frame.onload = function () {
     var doc = frame.contentDocument;
-    var win = frame.contentWindow;
 
     (async function () {
-      await esperar(400);   // deixa o defer dos scripts rodar
+      await esperar(500);
 
-      var cards = doc.querySelectorAll(".card--expansivel");
-      var dlg = doc.querySelector(".esp-dialog");
+      var raiz = doc.querySelector("[data-carrossel]");
+      if (!raiz) { reg("nao achou o carrossel", true); return concluir(); }
 
-      reg("achou " + cards.length + " cards expansiveis (esperado 5)",
-          cards.length !== 5);
+      var trilho = raiz.querySelector(".carrossel__trilho");
+      var slides = raiz.querySelectorAll(".carrossel__slide");
 
-      if (!dlg) {
-        reg("nao achou o <dialog> — resto do teste impossivel", true);
-        return concluir();
+      reg("achou " + slides.length + " slides (esperado 5)", slides.length !== 5);
+
+      // --- destinos ---
+      var destinosOk = true;
+      for (var i = 0; i < slides.length; i++) {
+        var a = slides[i].querySelector("a.carrossel__link");
+        if (!a || a.getAttribute("href") !== DESTINOS[i]) destinosOk = false;
       }
+      reg("os 5 slides apontam para as 5 paginas de especialidade", !destinosOk);
 
-      // --- progressive enhancement: o link precisa continuar sendo um link ---
-      var primeiroLink = cards[0].querySelector(".card__link");
-      var href = primeiroLink ? primeiroLink.getAttribute("href") : "";
-      reg('link do 1o card aponta para a pagina completa ("' + href + '")',
-          href !== "especialidades/implantes.html");
+      // --- o ponto critico: texto real por tras da imagem ---
+      var semTexto = 0, curtos = 0;
+      for (var j = 0; j < slides.length; j++) {
+        var vh = slides[j].querySelector(".visually-hidden");
+        if (!vh) { semTexto++; continue; }
+        if (vh.textContent.trim().length < 120) curtos++;
+      }
+      reg("todo slide tem texto real em .visually-hidden (faltando: " + semTexto + ")",
+          semTexto > 0);
+      reg("nenhum desses textos e curto demais para substituir a imagem (" +
+          curtos + " curtos)", curtos > 0);
 
-      reg("link anuncia aria-haspopup=dialog (so apos o JS rodar)",
-          primeiroLink.getAttribute("aria-haspopup") !== "dialog");
+      // --- alt vazio: o conteudo vem do bloco oculto, nao do alt ---
+      var altErrado = 0;
+      for (var k = 0; k < slides.length; k++) {
+        var img = slides[k].querySelector("img");
+        if (!img || img.getAttribute("alt") === null) altErrado++;
+      }
+      reg("toda imagem declara alt (vazio, por ter texto equivalente ao lado)",
+          altErrado > 0);
 
-      // --- abertura ---
-      reg("dialogo comeca fechado", dlg.open === true);
+      // --- enriquecimento progressivo ---
+      var htmlCru = await (await fetch("../index.html")).text();
+      var temHiddenNoHtml =
+        /class="carrossel__seta carrossel__seta--ant"[^>]*hidden/.test(htmlCru) ||
+        /carrossel__seta--ant[\s\S]{0,120}?hidden/.test(htmlCru);
+      reg("controles nascem [hidden] no HTML entregue", !temHiddenNoHtml);
 
-      primeiroLink.click();
-      await esperar(120);
+      var btnProx = raiz.querySelector(".carrossel__seta--prox");
+      var btnAnt = raiz.querySelector(".carrossel__seta--ant");
+      reg("o JS revelou as setas", btnProx.hidden !== false);
+      reg("o JS montou os pontos (" +
+          raiz.querySelectorAll(".carrossel__ponto").length + ")",
+          raiz.querySelectorAll(".carrossel__ponto").length !== 5);
 
-      reg("clique no card abriu o dialogo", dlg.open !== true);
+      // --- estado inicial ---
+      reg("seta 'anterior' comeca desabilitada", btnAnt.disabled !== true);
+      reg("seta 'proxima' comeca habilitada", btnProx.disabled !== false);
 
-      var titulo = doc.querySelector(".esp-dialog__titulo").textContent.trim();
-      reg('titulo montado a partir do card clicado ("' + titulo + '")',
-          titulo !== "Implantes");
+      // --- navegacao ---
+      var antes = trilho.scrollLeft;
+      btnProx.click();
+      await esperar(700);
+      var depois = trilho.scrollLeft;
+      reg("clicar em 'proxima' rolou o trilho (" + Math.round(antes) +
+          " -> " + Math.round(depois) + ")", depois <= antes);
 
-      var texto = doc.querySelector(".esp-dialog__texto").textContent.trim();
-      reg("texto expandido veio do <template> (" + texto.length + " chars)",
-          texto.length < 80);
+      var pontoAtivo = raiz.querySelector('.carrossel__ponto[aria-selected="true"]');
+      var indiceAtivo = Array.prototype.indexOf.call(
+        raiz.querySelectorAll(".carrossel__ponto"), pontoAtivo);
+      reg("o ponto ativo acompanhou a rolagem (indice " + indiceAtivo + ")",
+          indiceAtivo !== 1);
 
-      var cta = doc.querySelector(".esp-dialog__cta").getAttribute("href");
-      reg('CTA aponta para a pagina completa ("' + cta + '")',
-          cta !== "especialidades/implantes.html");
+      reg("seta 'anterior' foi habilitada apos sair do inicio",
+          btnAnt.disabled !== false);
 
-      var media = doc.querySelector(".esp-dialog__media");
-      reg("sem data-img, a area de midia fica oculta", media.hidden !== true);
+      // --- a pagina nao pode ter rolado na vertical junto ---
+      // (era o defeito do scrollIntoView, documentado no services.js)
+      var topo = doc.documentElement.scrollTop;
+      btnProx.click();
+      await esperar(700);
+      reg("navegar no carrossel nao rolou a pagina na vertical",
+          Math.abs(doc.documentElement.scrollTop - topo) > 4);
 
-      // --- fechamento pelo botao ---
-      doc.querySelector(".esp-dialog__fechar").click();
-      await esperar(900);   // animacao (420ms) + rede de seguranca (150ms) + folga
-
-      reg("botao fechar encerrou o dialogo", dlg.open !== false);
-      reg("rolagem do fundo foi destravada",
-          doc.body.classList.contains("tem-dialog-aberto"));
-
-      // --- troca de card: o mesmo dialogo precisa remontar com outro conteudo ---
-      cards[4].querySelector(".card__link").click();
-      await esperar(120);
-
-      var titulo2 = doc.querySelector(".esp-dialog__titulo").textContent.trim();
-      reg('reabriu com o conteudo do 5o card ("' + titulo2 + '")',
-          titulo2 !== "Clareamento");
-
-      // --- fechamento por clique no fundo ---
-      dlg.dispatchEvent(new win.MouseEvent("click", { bubbles: true }));
-      await esperar(900);
-      reg("clique no fundo encerrou o dialogo", dlg.open !== false);
-
-      await autoTeste(doc);
+      await autoTeste(doc, raiz);
       concluir();
     })();
 
-    /* Prova que o harness sabe acusar. Sem isto, uma bateria toda verde pode
-       significar apenas que o metodo esta cego. */
-    async function autoTeste(doc) {
-      var falso = doc.createElement("div");
-      falso.className = "card--expansivel";
-      doc.querySelector(".services__grid").appendChild(falso);
-      var n = doc.querySelectorAll(".card--expansivel").length;
-      reg("auto-teste: card injetado foi detectado (" + n + " != 5)", n === 5);
+    /* Prova que o harness enxerga. */
+    async function autoTeste(doc, raiz) {
+      var falso = doc.createElement("li");
+      falso.className = "carrossel__slide";
+      raiz.querySelector(".carrossel__trilho").appendChild(falso);
+      var n = raiz.querySelectorAll(".carrossel__slide").length;
+      reg("auto-teste: slide injetado foi detectado (" + n + " != 5)", n === 5);
       falso.remove();
     }
 
     function concluir() {
-      var veredito = falhas === 0 ? "TUDO PASSOU" : falhas + " FALHA(S)";
-      document.title = "RESULTADO " + veredito + " :: " + linhas.join(" | ");
+      document.title = "RESULTADO " +
+        (falhas === 0 ? "TUDO PASSOU" : falhas + " FALHA(S)") +
+        " :: " + linhas.join(" | ");
     }
   };
 })();

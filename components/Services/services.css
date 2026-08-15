@@ -1,92 +1,96 @@
 /* ==========================================================================
-   Seção: Especialidades
-   Depende de: tokens.css, layout.css, Card/card.css
+   Seção: Especialidades — carrossel
+   Depende de: tokens.css, layout.css
+   Comportamento (setas e pontos) em components/Services/services.js
 
-   É uma <ul>: cinco itens irmãos de mesmo peso são uma lista, e um leitor de
-   tela anuncia "lista de 5 itens" antes de percorrê-los. O marcador é removido
-   visualmente, a semântica permanece.
+   A grade de cards que existia aqui foi substituída por um carrossel porque as
+   cinco imagens da especialidade são composições prontas — título e parágrafos
+   gravados em pixel junto da fotografia. Num card de ~380px o corpo de texto
+   delas renderizaria em torno de 8px. Elas precisam de largura para funcionar,
+   e é isso que o carrossel dá.
+
+   A rolagem é NATIVA (scroll-snap). O JavaScript não move nada: só acrescenta
+   setas e pontos. Sem ele, o carrossel continua navegável com dedo, trackpad,
+   roda e teclado.
    ========================================================================== */
 
-.services__grid {
+.carrossel {
+  position: relative;
+  margin-block-start: var(--space-6);
+}
+
+/* --------------------------------------------------------------------------
+   Trilho
+   -------------------------------------------------------------------------- */
+.carrossel__trilho {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: var(--space-3);
-}
 
-/* Cinco itens numa grade automática produzem 3 + 2, com um vão à direita que
-   lê como erro de montagem. Em 6 colunas, os três primeiros ocupam 2 e os dois
-   últimos ocupam 3 — as duas linhas fecham inteiras. */
-@media (min-width: 60rem) {
-  .services__grid {
-    grid-template-columns: repeat(6, 1fr);
-  }
-  .services__grid > li            { grid-column: span 2; }
-  .services__grid > li:nth-child(4),
-  .services__grid > li:nth-child(5) { grid-column: span 3; }
-}
-
-/* O card preenche a altura da célula para que a linha fique alinhada mesmo com
-   textos de comprimentos diferentes. */
-.services__grid > li {
   display: flex;
-}
-
-.services__grid .card {
-  inline-size: 100%;
-}
-
-/* ==========================================================================
-   Diálogo de prévia da especialidade
-   Comportamento em components/Services/services.js.
-   ========================================================================== */
-
-/* O <dialog> nativo vem com estilo de user-agent (borda, padding, largura
-   automática e margin:auto) que precisa ser zerado antes de qualquer coisa. */
-.esp-dialog {
-  border: none;
-  padding: 0;
-  background: transparent;
-  max-inline-size: min(52rem, calc(100vw - 2 * var(--space-3)));
-  inline-size: 100%;
-  max-block-size: calc(100vh - 2 * var(--space-4));
-
-  /* Origem no canto superior esquerdo: a matemática do FLIP no services.js
-     calcula o deslocamento a partir de left/top. Com a origem no centro
-     (padrão), a caixa animaria a partir do lugar errado. */
-  transform-origin: top left;
-}
-
-.esp-dialog::backdrop {
-  background-color: color-mix(in srgb, var(--color-text) 55%, transparent);
-  backdrop-filter: blur(3px);
-}
-
-.esp-dialog__inner {
-  position: relative;
-  display: flex;
-  flex-direction: column;
   gap: var(--space-3);
 
-  background-color: var(--surface-page);
-  border-radius: var(--radius-media);
-  box-shadow: var(--shadow-hover);
-  padding: var(--space-4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;   /* não "vaza" para o histórico do navegador */
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
 
-  max-block-size: calc(100vh - 2 * var(--space-4));
-  overflow-y: auto;
-  transform-origin: top left;   /* par da escala inversa aplicada pelo JS */
+  /* Recuo lateral igual ao container do site: o primeiro e o último slide
+     param alinhados ao texto da seção, em vez de colados na borda da janela. */
+  padding-inline: var(--space-container);
+
+  /* A barra de rolagem apareceria sob os slides em desktop. A navegação já é
+     evidente pelas setas, pelos pontos e pelo slide seguinte espiando na
+     borda — a barra só somaria ruído. */
+  scrollbar-width: none;
 }
 
-.esp-dialog__media {
-  margin: 0;
+.carrossel__trilho::-webkit-scrollbar {
+  display: none;
+}
+
+/* O trilho é focável (tabindex=0) para quem navega por teclado poder rolá-lo
+   com as setas. Focável sem anel de foco é uma armadilha: a pessoa perde a
+   posição na página. */
+.carrossel__trilho:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Slide
+   -------------------------------------------------------------------------- */
+.carrossel__slide {
+  flex: 0 0 auto;
+
+  /* Menos de 100%: o próximo slide aparece pela borda. É o que comunica "tem
+     mais coisa aqui" sem precisar de instrução escrita — um carrossel onde o
+     slide ocupa a largura inteira parece uma imagem estática. */
+  inline-size: min(64rem, 88%);
+
+  scroll-snap-align: center;
+}
+
+.carrossel__link {
+  display: block;
   border-radius: var(--radius-media);
   overflow: hidden;
+  box-shadow: var(--shadow-raised);
+  transition: box-shadow var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
 }
 
-.esp-dialog__media img {
+.carrossel__link:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-3px);
+}
+
+.carrossel__link:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.carrossel__link img {
   display: block;
   inline-size: 100%;
   block-size: auto;
@@ -94,45 +98,18 @@
   object-fit: cover;
 }
 
-.esp-dialog__corpo {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-2);
-}
-
-.esp-dialog__titulo {
-  font-family: var(--font-heading);
-  font-weight: var(--weight-regular);
-  font-size: var(--text-h2);
-  line-height: var(--leading-title);
-  letter-spacing: var(--tracking-title);
-  margin: 0;
-}
-
-.esp-dialog__texto p {
-  color: var(--text-secondary);
-  max-inline-size: 60ch;
-}
-
-.esp-dialog__texto p + p {
-  margin-block-start: var(--space-2);
-}
-
-.esp-dialog__cta {
-  margin-block-start: var(--space-1);
-}
-
-/* Botão de fechar: 44px de alvo (mesmo piso do resto do site), sobre a
-   superfície do diálogo e não sobre a imagem — sobre foto, o contraste
-   dependeria de qual imagem entrasse ali. */
-.esp-dialog__fechar {
+/* --------------------------------------------------------------------------
+   Setas
+   Ficam sobre as bordas do trilho, não fora dele: em telas médias, setas
+   externas empurrariam o carrossel para uma largura menor que a do texto.
+   -------------------------------------------------------------------------- */
+.carrossel__seta {
   position: absolute;
-  inset-block-start: var(--space-2);
-  inset-inline-end: var(--space-2);
-  z-index: 1;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
 
-  inline-size: 44px;
+  inline-size: 44px;   /* piso de alvo do projeto */
   block-size: 44px;
   display: grid;
   place-items: center;
@@ -141,75 +118,99 @@
   border-radius: 50%;
   background-color: var(--surface-raised);
   cursor: pointer;
+
   transition: border-color var(--duration-fast) var(--ease-out),
-              background-color var(--duration-fast) var(--ease-out);
+              opacity var(--duration-fast) var(--ease-out);
 }
 
-.esp-dialog__fechar:hover,
-.esp-dialog__fechar:focus-visible {
+.carrossel__seta--ant  { inset-inline-start: var(--space-2); }
+.carrossel__seta--prox { inset-inline-end:   var(--space-2); }
+
+.carrossel__seta:hover:not(:disabled) {
   border-color: var(--border-strong);
-  background-color: var(--surface-page);
 }
 
-/* O X é desenhado em CSS — dois traços rotacionados. O projeto não carrega
-   biblioteca de ícones, e um X é a forma mais simples que existe: importar
-   um pacote inteiro para desenhá-la seria peso sem retorno. */
-.esp-dialog__fechar span,
-.esp-dialog__fechar span::before {
-  content: "";
-  display: block;
-  inline-size: 15px;
-  block-size: 1.5px;
-  background-color: var(--text-primary);
-  transform: rotate(45deg);
+.carrossel__seta:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
-.esp-dialog__fechar span::before {
-  transform: rotate(90deg);
+/* Desabilitada em vez de escondida: um controle que some no fim do percurso
+   desloca o layout e faz a pessoa procurar o que sumiu. */
+.carrossel__seta:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
-/* Trava a rolagem do fundo. <dialog> modal torna o resto inerte, mas não
-   impede a página atrás de rolar. */
-body.tem-dialog-aberto {
-  overflow: hidden;
+/* Chevron em CSS — dois lados de um quadrado, girado 45°. O projeto não
+   carrega biblioteca de ícones e isto é uma borda rotacionada. */
+.carrossel__seta span {
+  inline-size: 9px;
+  block-size: 9px;
+  border-inline-start: 1.5px solid var(--text-primary);
+  border-block-start: 1.5px solid var(--text-primary);
 }
+
+.carrossel__seta--ant span  { transform: rotate(-45deg); margin-inline-start: 3px; }
+.carrossel__seta--prox span { transform: rotate(135deg); margin-inline-end: 3px; }
 
 /* --------------------------------------------------------------------------
-   Marcador "+" no card expansível
-   Decorativo (aria-hidden): sinaliza que o card abre algo. Não é um botão
-   separado — o alvo de clique continua sendo o card inteiro, via .card__link.
+   Pontos
    -------------------------------------------------------------------------- */
-.card--expansivel {
-  padding-block-end: var(--space-4);   /* espaço para o marcador não colar no texto */
+.carrossel__pontos {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-1);
+  margin-block-start: var(--space-3);
 }
 
-.card__mais,
-.card__mais::before {
-  content: "";
-  position: absolute;
-  inset-block-end: var(--space-3);
-  inset-inline-end: var(--space-3);
+/* O alvo tem 44px; o desenho visível é o traço interno. Ponto de 8px é
+   confortável de ver e impossível de acertar com o dedo. */
+.carrossel__ponto {
+  inline-size: 32px;
+  block-size: 44px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
 
-  inline-size: 13px;
-  block-size: 1.5px;
-  background-color: var(--text-secondary);
+.carrossel__ponto::before {
+  content: "";
+  inline-size: 100%;
+  block-size: 2px;
+  background-color: var(--border-strong);
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 
-.card__mais::before {
-  inset: 0;
-  transform: rotate(90deg);
+.carrossel__ponto[aria-selected="true"]::before {
+  background-color: var(--decor-accent);
 }
 
-.card--expansivel:hover .card__mais,
-.card--expansivel:hover .card__mais::before,
-.card--expansivel:focus-within .card__mais,
-.card--expansivel:focus-within .card__mais::before {
-  background-color: var(--text-accent);
+.carrossel__ponto:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -6px;
 }
 
-@media (max-width: 40rem) {
-  .esp-dialog__inner {
-    padding: var(--space-3);
+/* --------------------------------------------------------------------------
+   Telas estreitas
+   -------------------------------------------------------------------------- */
+@media (max-width: 48rem) {
+  .carrossel__slide {
+    inline-size: 92%;
   }
+
+  /* Em telas de toque, arrastar é o gesto natural e as setas cobririam parte
+     da imagem numa área já apertada. Os pontos permanecem, como indicação de
+     posição e como alvo alternativo. */
+  .carrossel__seta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carrossel__trilho { scroll-behavior: auto; }
+  .carrossel__link:hover { transform: none; }
 }
