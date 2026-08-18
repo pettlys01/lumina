@@ -9,6 +9,20 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* O atributo [hidden] vale `display: none` apenas na folha do NAVEGADOR, que
+   perde para qualquer `display` declarado por nós. Basta um `.caso { display:
+   flex }` para o elemento continuar visível com hidden="" no HTML — foi
+   exatamente o que aconteceu com os casos extras de Resultados: o JavaScript
+   marcava `.hidden = true`, a propriedade respondia `true`, e os dois seguiam
+   na tela.
+
+   Erro silencioso por natureza: quem testa lendo `elemento.hidden` vê o valor
+   certo e conclui que está funcionando. Só a captura de tela denunciou.
+
+   A declaração vale para o site inteiro porque o problema é de todo elemento
+   que receba um display no CSS, não só daquele componente. */
+[hidden] { display: none !important; }
+
 /* A marca é um mundo claro e deliberadamente único — declarar o esquema faz
    controles nativos e barras de rolagem seguirem a página em vez do sistema. */
 :root { color-scheme: light; }

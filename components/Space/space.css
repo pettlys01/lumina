@@ -10,13 +10,39 @@
    gerada por template.
    ========================================================================== */
 
+/* Em telas estreitas a galeria vira CARROSSEL, não grade empilhada.
+
+   Motivo medido: empilhada a 393px, cada foto ficava com 330x248 e as seis
+   somavam 1565px de rolagem vertical — a pessoa percorre uma coluna longa de
+   imagens pequenas, e fotografia de ambiente não sobrevive a esse tamanho.
+   Deitado, cada foto ganha a largura quase inteira da tela e o gesto passa a
+   ser arrastar, que é o natural no telefone.
+
+   Rolagem nativa com scroll-snap: nenhum JavaScript novo. */
 .espaco__grade {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
+
+  display: flex;
   gap: var(--space-2);
-  grid-template-columns: 1fr;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  /* Sangria: a grade vive dentro de .container, que já tem recuo lateral.
+     Acrescentar recuo próprio dobrava o espaçamento e ENCOLHIA as fotos —
+     medido, cada uma caía de 330px para 237px, o oposto do pedido. A margem
+     negativa devolve a largura da janela ao trilho, e o recuo interno mantém
+     a primeira foto alinhada ao texto da seção. */
+  margin-inline: calc(var(--space-container) * -1);
+  padding-inline: var(--space-container);
+  scroll-padding-inline-start: var(--space-container);
+}
+
+.espaco__grade::-webkit-scrollbar {
+  display: none;
 }
 
 .espaco__item {
@@ -24,6 +50,15 @@
   border-radius: var(--radius-media);
   overflow: hidden;
   background-color: var(--color-hairline);  /* cor de espera no carregamento */
+
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+
+  /* Em vw, não em %: a porcentagem se mediria sobre o conteúdo já recuado do
+     trilho, e não sobre a tela. 86vw deixa a foto maior do que era empilhada
+     (338px contra 330px) e ainda sobra borda do vizinho, que é o que anuncia
+     que há mais para o lado. */
+  inline-size: 86vw;
 }
 
 .espaco__item img {
@@ -31,7 +66,12 @@
   inline-size: 100%;
   block-size: 100%;
   object-fit: cover;
-  aspect-ratio: 4 / 3;
+
+  /* Retrato no telefone. Empilhada, a foto tinha 330x248; aqui passa a
+     ~338x422 — quase o dobro de área, usando a tela vertical que o aparelho
+     tem de sobra. Fotografia de ambiente precisa de tamanho para transmitir
+     a sensação do lugar. */
+  aspect-ratio: 4 / 5;
 
   transition: transform var(--duration-slow) var(--ease-out);
 }
@@ -47,12 +87,25 @@
    Telas médias e largas
    -------------------------------------------------------------------------- */
 @media (min-width: 48rem) {
+  /* Volta a ser grade: no desktop há largura para ver o conjunto de uma vez,
+     e ver o conjunto é o que transmite a sensação do lugar. */
   .espaco__grade {
+    display: grid;
+    overflow: visible;
+    padding-inline: 0;
     /* Duas colunas, não três. Com três, cada imagem ficava com ~1/3 da
        largura do conteúdo — pequena para fotografia de ambiente, que depende
        de espaço para transmitir a sensação do lugar. */
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-3);
+  }
+
+  .espaco__item {
+    inline-size: auto;
+  }
+
+  .espaco__item img {
+    aspect-ratio: 4 / 3;
   }
 
   /* Fechamento das linhas, contado em unidades de coluna:

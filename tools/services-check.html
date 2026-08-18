@@ -150,6 +150,19 @@
       var btnProx = raiz.querySelector(".carrossel__seta--prox");
       var btnAnt = raiz.querySelector(".carrossel__seta--ant");
       reg("o JS revelou as setas", btnProx.hidden !== false);
+
+      /* [hidden] precisa REALMENTE ocultar, não só ter a propriedade em true.
+         O atributo vale display:none apenas na folha do navegador, e perde
+         para qualquer display declarado no CSS — aconteceu com os casos de
+         Resultados: .hidden respondia true e os elementos seguiam na tela.
+         Ler a propriedade não pega isso; ler o display computado, sim. */
+      var alvo = doc.createElement("div");
+      alvo.style.display = "flex";
+      alvo.hidden = true;
+      doc.body.appendChild(alvo);
+      var ocultou = doc.defaultView.getComputedStyle(alvo).display === "none";
+      alvo.remove();
+      reg("[hidden] vence um display declarado (reset global)", !ocultou);
       reg("o JS montou os pontos (" +
           raiz.querySelectorAll(".carrossel__ponto").length + ")",
           raiz.querySelectorAll(".carrossel__ponto").length !== 5);

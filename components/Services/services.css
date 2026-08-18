@@ -296,16 +296,24 @@
   }
 
   /* Empilha: foto em cima, texto embaixo. Lado a lado em 390px daria uma
-     coluna de texto de ~180px, estreita demais para leitura corrida. */
+     coluna de texto de ~180px, estreita demais para leitura corrida.
+
+     A proporção do SLIDE precisa sair aqui. Ela existe no desktop para dar
+     altura conhecida às duas colunas; empilhado, ela vira um teto: medido a
+     393px, o slide ficava travado em 177px de altura, a legenda ocupava 174
+     e sobrava 1px para a foto — que foi exatamente o "sumiram as imagens".
+     Sem a proporção, a altura passa a ser a soma real de foto + texto. */
   .carrossel__link {
     grid-template-columns: 1fr;
+    aspect-ratio: auto;
   }
 
-  /* A imagem volta a ocupar espaço no fluxo — sem a coluna ao lado, não há
-     altura para ela acompanhar. */
+  /* A foto ganha altura própria e generosa: é ela que deve pesar no slide,
+     não o texto. 4/5 (retrato suave) usa bem a tela vertical do telefone sem
+     empurrar o texto para fora da primeira olhada. */
   .carrossel__midia {
     min-block-size: 0;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 4 / 5;
   }
 
   /* A foto vem antes do texto na leitura visual, mas o título precisa vir

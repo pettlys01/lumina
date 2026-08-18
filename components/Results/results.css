@@ -34,6 +34,15 @@
   min-inline-size: 0;   /* deixa o comparador encolher dentro da coluna */
 }
 
+/* O palco do BeforeAfter nasce 16/9, proporção da seção de método (onde as
+   fontes são 16/9 mesmo). As imagens de caso são 4/3: exibidas em 16/9, o
+   object-fit:cover corta a faixa de cima e a de baixo, e num par antes/depois
+   é justamente a borda incisal que se perde — o detalhe que se quer comparar.
+   Aqui o palco acompanha a fonte. */
+.caso__figura .ba__stage {
+  aspect-ratio: 4 / 3;
+}
+
 /* --------------------------------------------------------------------------
    Legenda
    -------------------------------------------------------------------------- */

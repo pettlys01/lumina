@@ -155,10 +155,19 @@
     align-items: stretch;
   }
 
+  /* Medido a 393px: com 4/3 a imagem ficava com 284px de altura e a Navbar
+     (77px, fixa e transparente) cobria 27% dela — o banner parecia pequeno e
+     tampado, nada parecido com o desktop, onde a foto ocupa a tela inteira
+     atrás do painel.
+
+     Retrato usa a tela vertical do telefone: a mesma foto passa a ~500px e a
+     Navbar cai para ~15% dela. */
   .hero__image {
     position: relative;
     block-size: auto;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 4;
+    max-block-size: 62svh;   /* teto para o painel não sair da primeira tela */
+    object-fit: cover;
   }
 
   .hero__container {

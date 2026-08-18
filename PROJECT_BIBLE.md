@@ -808,6 +808,44 @@ Contorno adotado: abaixo de 48rem a imagem passa a `aspect-ratio: 3/4` com `obje
 mostrando só a metade fotográfica, e `.carrossel__legenda` deixa de ser oculta e vira texto de
 verdade. **É contorno, não solução** — o certo é a arte vir sem texto (ver 12.5).
 
+### 12.7 `[hidden]` perde para o CSS, e proporção fixa vira teto (2026-08-18)
+
+Rodada de correções de celular, medida a 393px (Redmi Note 8). Três achados.
+
+**1. `[hidden]` não escondia nada.** O atributo vale `display: none` apenas na folha do **navegador**, que
+perde para qualquer `display` declarado por nós. `.caso { display: flex }` bastava para os casos extras
+de Resultados continuarem na tela com `hidden=""` no HTML.
+
+O que torna isso perigoso é o modo de falhar: `elemento.hidden` responde `true`, então um teste que lê a
+propriedade — como o que eu mesmo tinha escrito — aprova. Só a captura de tela denunciou.
+
+Correção: `[hidden] { display: none !important; }` no reset de `styles/layout.css`, valendo para o site
+todo, porque o problema atinge qualquer elemento que receba `display` no CSS. O `services-check` passou a
+verificar isso criando um elemento com `display:flex` + `hidden` e lendo o **display computado**, nunca a
+propriedade.
+
+**Regra que fica:** para "está escondido?", ler `getComputedStyle().display` ou a altura real. A
+propriedade `.hidden` só diz que o atributo foi setado.
+
+**2. `aspect-ratio` num contêiner vira teto quando o conteúdo empilha.** `.carrossel__link` usa
+`aspect-ratio: 16/10` no desktop para dar altura conhecida às duas colunas. No celular o layout vira
+coluna única e a mesma regra passou a limitar a altura TOTAL: medido a 393px, o slide ficava travado em
+177px, a legenda ocupava 174 e sobrava **1px** para a foto — foi o "sumiram as imagens das
+especialidades". Toda proporção fixa em contêiner precisa de `aspect-ratio: auto` no ponto em que o
+conteúdo deixa de ser lado a lado.
+
+**3. Recuo duplicado encolhe em vez de aumentar.** Ao transformar Nosso Espaço em carrossel, dei
+`padding-inline` a um trilho que já vivia dentro de `.container`. As fotos caíram de 330px para 237px —
+o oposto do pedido. Trilho dentro de container pede **sangria** (`margin-inline` negativa + `padding`
+interno), e a largura dos itens deve ser medida em `vw`, não em `%`: a porcentagem se mede sobre o
+conteúdo já recuado, não sobre a tela.
+
+**Ajustes de proporção para telefone**, todos pela mesma razão — a tela é vertical e sobra altura:
+Hero de 4/3 para 3/4 (a Navbar de 77px cobria 27% da imagem, agora ~15%); slide de especialidade com
+mídia em 4/5; galeria do Espaço em 4/5 (338x422 contra 330x248 empilhada); e o palco dos casos de
+Resultados de 16/9 para 4/3, acompanhando a proporção real das imagens de caso — em 16/9 o corte comia
+justamente a borda incisal, que é o detalhe que o comparador existe para mostrar.
+
 - [ ] **Fase 7 — SEO.** Aceite: itens da seção 8 implementados e validados (rich results test equivalente,
       heading outline correto).
 - [ ] **Fase 8 — Performance.** Aceite: metas da seção 7 e checklist da seção 10 100% cumpridas.
