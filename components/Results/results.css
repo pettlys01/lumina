@@ -1,0 +1,153 @@
+/* ==========================================================================
+   Seção: Resultados (antes e depois)
+   Depende de: tokens.css, layout.css
+
+   Sem JavaScript, de propósito. A página já tem um comparador arrastável na
+   seção de método (BeforeAfter) e um carrossel nas Especialidades; um terceiro
+   componente interativo faria a Home inteira parecer uma demonstração de
+   truques. Aqui o par fica lado a lado, visível de uma vez — que é também a
+   forma mais rápida de comparar duas imagens.
+   ========================================================================== */
+
+.resultados__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-6);
+}
+
+/* Dois casos por linha em tela larga. Quatro casos fecham duas linhas
+   completas — sem sobra, diferente do 3+2 que a grade de especialidades
+   precisou resolver. */
+@media (min-width: 60rem) {
+  .resultados__lista {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-8) var(--space-6);
+  }
+}
+
+.caso {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   O par
+
+   Duas imagens coladas, divididas por um filete. Sem espaço entre elas: a
+   comparação depende de o olho ir de uma à outra sem interrupção, e qualquer
+   vão introduz uma pausa que atrapalha exatamente isso.
+   -------------------------------------------------------------------------- */
+.caso__par {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: var(--radius-media);
+  overflow: hidden;
+  box-shadow: var(--shadow-raised);
+  background-color: var(--surface-raised);
+}
+
+.caso__lado {
+  position: relative;
+  min-inline-size: 0;   /* deixa a imagem encolher dentro da coluna do grid */
+}
+
+/* O filete divisor fica no lado esquerdo do segundo item, e não como borda dos
+   dois — assim ele tem 1px de verdade, e não 2px empilhados. */
+.caso__lado + .caso__lado {
+  border-inline-start: 1px solid var(--border-default);
+}
+
+.caso__lado img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------------------------
+   Rótulos
+
+   Texto de verdade sobre a imagem, não parte da arte: acompanham zoom, são
+   lidos pela busca e continuam existindo se a imagem não carregar.
+
+   O fundo sólido resolve o contraste por construção — sobre fotografia
+   qualquer, texto sem fundo depende de quão clara é a imagem naquele ponto,
+   que é o mesmo raciocínio do véu da Navbar sobre o Hero.
+   -------------------------------------------------------------------------- */
+.caso__marca {
+  position: absolute;
+  inset-block-start: var(--space-1);
+  inset-inline-start: var(--space-1);
+  z-index: 1;
+
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+
+  color: var(--text-primary);
+  background-color: var(--surface-page);
+  border-radius: var(--radius);
+  padding: 0.35em 0.7em;
+}
+
+/* O "depois" recebe a cor da marca — é o único dos dois que carrega
+   significado de resultado. O "antes" fica neutro. */
+.caso__marca--depois {
+  color: var(--text-on-inverse);
+  background-color: var(--color-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Legenda
+   -------------------------------------------------------------------------- */
+.caso__titulo {
+  font-family: var(--font-body);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-h3);
+  margin: 0 0 0.25em;
+}
+
+.caso__texto {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  margin: 0;
+  max-inline-size: 52ch;
+}
+
+/* --------------------------------------------------------------------------
+   Nota
+
+   Fica logo abaixo dos casos e não no rodapé: aviso sobre variação de
+   resultado só cumpre a função se estiver onde a afirmação foi feita.
+   -------------------------------------------------------------------------- */
+.resultados__nota {
+  margin-block-start: var(--space-6);
+  padding-block-start: var(--space-2);
+  border-block-start: 1px solid var(--border-subtle);
+
+  font-size: var(--text-micro);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  max-inline-size: 70ch;
+}
+
+/* --------------------------------------------------------------------------
+   Telas estreitas
+
+   O par continua lado a lado. Empilhar "antes" em cima de "depois" parece a
+   saída óbvia, mas destrói a comparação: com as duas imagens em telas
+   diferentes de rolagem, a pessoa passa a comparar de memória. Metade da
+   largura de um telefone ainda é suficiente para ler a diferença.
+   -------------------------------------------------------------------------- */
+@media (max-width: 40rem) {
+  .caso__lado img {
+    aspect-ratio: 1 / 1;
+  }
+}

@@ -21,7 +21,11 @@
   /* Largura do slide num só lugar: o trilho precisa do mesmo valor para
      calcular o recuo, e dois números soltos saem de sincronia na primeira
      alteração. */
-  --slide: min(48rem, 68%);
+  /* Histórico: começou em min(64rem, 88%) — grande demais, ocupava a tela
+     inteira. Foi para min(48rem, 68%) e ficou pequeno demais, com o texto
+     gravado quase ilegível. Este valor fica logo abaixo do original: o slide
+     ainda domina a seção, mas o vizinho aparece na borda. */
+  --slide: min(58rem, 82%);
 }
 
 /* --------------------------------------------------------------------------

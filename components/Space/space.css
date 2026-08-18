@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Seção: Nosso espaço
+   Depende de: tokens.css, layout.css
+
+   Grade assimétrica de propósito. Seis imagens de mesmo tamanho lidas em
+   sequência viram catálogo — e catálogo é justamente a leitura que uma
+   clínica de alto padrão não quer. Dois itens ocupam largura dupla e quebram
+   o ritmo, na mesma lógica da faixa escura de números e da composição
+   deslocada do Sobre: quebra de padrão é o que impede a página de parecer
+   gerada por template.
+   ========================================================================== */
+
+.espaco__grade {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: 1fr;
+}
+
+.espaco__item {
+  margin: 0;
+  border-radius: var(--radius-media);
+  overflow: hidden;
+  background-color: var(--color-hairline);  /* cor de espera no carregamento */
+}
+
+.espaco__item img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  aspect-ratio: 4 / 3;
+
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+/* Aproximação muito discreta no hover. O recorte fica com overflow:hidden no
+   item, então a imagem cresce por dentro da moldura, que não se mexe — o
+   layout ao redor permanece parado. */
+.espaco__item:hover img {
+  transform: scale(1.03);
+}
+
+/* --------------------------------------------------------------------------
+   Telas médias e largas
+   -------------------------------------------------------------------------- */
+@media (min-width: 48rem) {
+  .espaco__grade {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+  }
+
+  /* Fechamento das linhas, contado em unidades de coluna:
+       linha 1 -> item 1 (2) + item 2 (1) = 3
+       linha 2 -> itens 3, 4 e 5 (1 cada)  = 3
+       linha 3 -> item 6, largura inteira  = 3
+     Total 9 em 3 colunas, três linhas cheias.
+
+     A primeira versão dava span 2 ao último item e somava 8: sobrava uma
+     célula vazia no canto, que é exatamente o tipo de buraco que faz uma
+     grade parecer quebrada em vez de composta. */
+  .espaco__item--largo {
+    grid-column: span 2;
+  }
+
+  .espaco__item--total {
+    grid-column: 1 / -1;
+  }
+
+  /* Itens que ocupam mais de uma coluna ficam mais baixos em proporção. Com
+     4/3 eles dominariam a linha e o conjunto perderia equilíbrio. */
+  .espaco__item--largo img { aspect-ratio: 16 / 9; }
+  .espaco__item--total img { aspect-ratio: 21 / 9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .espaco__item:hover img { transform: none; }
+}
