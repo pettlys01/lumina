@@ -109,6 +109,27 @@ GRAFICOS = {
     "ortodontia.png", "clareamento.png",
 }
 
+# --------------------------------------------------------------------------
+# Recorte dos slides: fica só a metade fotográfica.
+#
+# A arte veio com título, dois parágrafos e um ícone gravados na metade
+# esquerda. Isso quebrava de três formas: o texto não é lido pelo Google nem
+# por leitor de tela, não reflui no celular, e — a queixa que fechou a
+# decisão — fica pequeno demais para ler no próprio desktop, porque foi
+# composto a 1536px e exibido a menos da metade disso.
+#
+# Cortando fora o painel de texto, sobra fotografia limpa. O título e a
+# descrição passam a ser HTML de verdade ao lado da imagem, que é onde eles
+# sempre deveriam ter estado: escalam com a preferência de fonte, aceitam
+# zoom, aparecem na busca e podem ser traduzidos.
+#
+# 48% medido, não estimado: a energia vertical por coluna (textura da foto
+# contra fundo liso do painel) apontou o início da fotografia entre 38% e 48%
+# em quatro das cinco. A quinta (clareamento) tem fundo claro e texturizado
+# que confunde a medição, então vale o corte mais conservador do grupo.
+# --------------------------------------------------------------------------
+CORTE_GRAFICO = 0.48
+
 VERDE_MARCA = "#285C4D"
 
 
@@ -285,6 +306,8 @@ def main():
 
         if not somente_medir:
             im = Image.open(origem).convert("RGB")
+            if eh_gr:
+                im = im.crop((int(im.width * CORTE_GRAFICO), 0, im.width, im.height))
             arr = np.asarray(im, dtype=np.float64) / 255.0
             out = np.clip(graduar(arr, leve=eh_gr), 0.0, 1.0)
             saida = Image.fromarray((out * 255.0 + 0.5).astype(np.uint8))

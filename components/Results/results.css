@@ -17,21 +17,34 @@
   gap: var(--space-6);
 }
 
-/* Dois casos por linha em tela larga. Quatro casos fecham duas linhas
-   completas — sem sobra, diferente do 3+2 que a grade de especialidades
-   precisou resolver. */
-@media (min-width: 60rem) {
-  .resultados__lista {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-8) var(--space-6);
-  }
-}
-
+/* Base (telas estreitas) vem primeiro; as variações por largura vêm depois.
+   Escrito ao contrário, a regra base sobrescreve a da media query — as duas
+   têm a mesma especificidade e a última do arquivo vence. Aconteceu aqui, e
+   já tinha acontecido na seção Sobre. */
 .caso {
   margin: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+}
+
+/* Um caso por linha, com o par ocupando a largura toda.
+
+   A primeira versão punha dois casos por linha. Fechava a grade sem sobra,
+   mas cada imagem ficava com um quarto da largura do conteúdo — pequena
+   demais para o olho comparar duas fotos parecidas, que é a única coisa que
+   esta seção precisa fazer. Comparação exige tamanho; economia de altura de
+   página, não.
+
+   Em tela larga o texto vai para o lado do par, aproveitando a folga que
+   sobra e encurtando a seção sem encolher as imagens. */
+@media (min-width: 64rem) {
+  .caso {
+    display: grid;
+    grid-template-columns: 1fr 17rem;
+    align-items: center;
+    gap: var(--space-4);
+  }
 }
 
 /* --------------------------------------------------------------------------

@@ -211,25 +211,22 @@
     <!-- ======================================================================
          Carrossel de especialidades
 
-         As cinco imagens são composições prontas: o título e os dois parágrafos
-         vêm GRAVADOS em pixel, junto da fotografia. Isso decide dois pontos da
-         marcação abaixo, e ambos são obrigatórios:
+         A arte original vinha com título, dois parágrafos e um ícone GRAVADOS
+         em pixel, ocupando a metade esquerda da imagem. Isso foi desfeito: a
+         LUT (tools/grade.py) recorta os 48% da esquerda e mantém só a
+         fotografia, e o texto voltou a ser HTML de verdade aqui.
 
-         1. alt="" na imagem. O conteúdo dela não é a foto, é o texto — e esse
-            texto está logo ao lado, em .carrossel__legenda. Descrever tudo no
-            alt faria o leitor de tela anunciar a mesma coisa duas vezes.
-         2. O texto real precisa existir no DOM de qualquer forma. Texto em
-            pixel não é lido pelo Google, não é selecionável, não é traduzível e
-            não acompanha aumento de fonte.
+         Por que o contorno anterior não bastava. Ele só trocava a imagem no
+         celular; no desktop o texto gravado continuava, e era pequeno demais
+         para ler com conforto — a arte foi composta a 1536px e é exibida a
+         menos da metade disso. Aumentar o slide para compensar deixava a seção
+         desproporcional. Texto em imagem não tem saída boa: não escala com a
+         preferência de fonte, não aceita zoom, não é lido pela busca nem por
+         leitor de tela, e não pode ser traduzido.
 
-         A legenda é oculta visualmente no desktop (onde o texto gravado é
-         legível) e VISÍVEL no celular, onde a imagem passa a ser recortada só
-         na metade fotográfica. Motivo medido: a arte foi composta a 1536px de
-         largura; num telefone de 390px aquele corpo de texto cai para o
-         equivalente a ~4px. Não é questão de gosto, é ilegível.
-
-         Isto é contorno, não solução. O certo é a arte vir SEM texto — ver a
-         recomendação no fim da conversa e a Seção 12.5 do Bible.
+         Com o recorte, o alt volta a descrever a FOTOGRAFIA (antes era vazio,
+         porque o conteúdo real estava no texto gravado), e a legenda deixa de
+         ser oculta: ela é o texto visível em qualquer largura.
 
          A rolagem é nativa (scroll-snap): funciona com dedo, trackpad, roda e
          teclado antes de qualquer JavaScript. As setas e os pontos são
@@ -245,55 +242,70 @@
 
         <li class="carrossel__slide">
           <a class="carrossel__link" href="especialidades/implantes.html">
-            <img src="assets/img/implantes.jpg" alt=""
-                 width="1536" height="1024" loading="lazy" decoding="async">
             <div class="carrossel__legenda">
               <h3 class="carrossel__titulo">Implantes</h3>
               <p class="carrossel__texto">Reposição de um ou mais dentes com raiz artificial de titânio, planejada em tomografia antes do primeiro corte.</p>
+            </div>
+            <div class="carrossel__midia">
+              <img src="assets/img/implantes.jpg"
+                 alt="Render de implante de titânio inserido no osso, entre dois dentes naturais"
+                 width="799" height="1024" loading="lazy" decoding="async">
             </div>
           </a>
         </li>
 
         <li class="carrossel__slide">
           <a class="carrossel__link" href="especialidades/lentes-de-contato-dental.html">
-            <img src="assets/img/lentes.jpg" alt=""
-                 width="1536" height="1024" loading="lazy" decoding="async">
             <div class="carrossel__legenda">
               <h3 class="carrossel__titulo">Lentes de contato dental</h3>
               <p class="carrossel__texto">Lâminas de porcelana de 0,2 a 0,5 mm cimentadas sobre o dente, para corrigir cor, forma ou pequenos desalinhamentos.</p>
+            </div>
+            <div class="carrossel__midia">
+              <img src="assets/img/lentes.jpg"
+                 alt="Prova de lâmina de porcelana sobre o dente, com simulação em 3D na tela ao lado"
+                 width="799" height="1024" loading="lazy" decoding="async">
             </div>
           </a>
         </li>
 
         <li class="carrossel__slide">
           <a class="carrossel__link" href="especialidades/harmonizacao-facial.html">
-            <img src="assets/img/harmonizacao.jpg" alt=""
-                 width="1536" height="1024" loading="lazy" decoding="async">
             <div class="carrossel__legenda">
               <h3 class="carrossel__titulo">Harmonização facial</h3>
               <p class="carrossel__texto">Toxina botulínica e preenchedores para equilibrar o terço inferior da face — tratados junto do sorriso, não como procedimento isolado.</p>
+            </div>
+            <div class="carrossel__midia">
+              <img src="assets/img/harmonizacao.jpg"
+                 alt="Marcação de pontos no terço inferior da face, com análise de proporção na tela"
+                 width="799" height="1024" loading="lazy" decoding="async">
             </div>
           </a>
         </li>
 
         <li class="carrossel__slide">
           <a class="carrossel__link" href="especialidades/ortodontia-estetica.html">
-            <img src="assets/img/ortodontia.jpg" alt=""
-                 width="1536" height="1024" loading="lazy" decoding="async">
             <div class="carrossel__legenda">
               <h3 class="carrossel__titulo">Ortodontia estética</h3>
               <p class="carrossel__texto">Alinhadores transparentes ou aparelhos cerâmicos, com o resultado final simulado digitalmente antes de você decidir começar.</p>
+            </div>
+            <div class="carrossel__midia">
+              <img src="assets/img/ortodontia.jpg"
+                 alt="Alinhador transparente sendo posicionado, com o plano de tratamento na tela"
+                 width="799" height="1024" loading="lazy" decoding="async">
             </div>
           </a>
         </li>
 
         <li class="carrossel__slide">
           <a class="carrossel__link" href="especialidades/clareamento.html">
-            <img src="assets/img/clareamento.jpg" alt=""
-                 width="1536" height="1024" loading="lazy" decoding="async">
             <div class="carrossel__legenda">
               <h3 class="carrossel__titulo">Clareamento</h3>
               <p class="carrossel__texto">Protocolo em consultório ou supervisionado em casa, ajustado pela sensibilidade e pelo tom de partida de cada paciente.</p>
+            </div>
+            <div class="carrossel__midia">
+              <img src="assets/img/clareamento.jpg"
+                 alt="Sessão de clareamento em consultório, com escala de cor ao lado"
+                 width="799" height="1024" loading="lazy" decoding="async">
             </div>
           </a>
         </li>

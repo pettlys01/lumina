@@ -3,11 +3,11 @@
    Depende de: tokens.css, layout.css
    Comportamento (setas e pontos) em components/Services/services.js
 
-   A grade de cards que existia aqui foi substituída por um carrossel porque as
-   cinco imagens da especialidade são composições prontas — título e parágrafos
-   gravados em pixel junto da fotografia. Num card de ~380px o corpo de texto
-   delas renderizaria em torno de 8px. Elas precisam de largura para funcionar,
-   e é isso que o carrossel dá.
+   O slide é fotografia + texto em HTML, lado a lado, reproduzindo a composição
+   da arte original — que vinha com o texto gravado em pixel. A LUT recorta os
+   48% da esquerda (o painel de texto) e o título/descrição voltaram a ser
+   marcação de verdade: escalam com a preferência de fonte, aceitam zoom,
+   aparecem na busca e podem ser traduzidos. Nada disso valia para pixel.
 
    A rolagem é NATIVA (scroll-snap). O JavaScript não move nada: só acrescenta
    setas e pontos. Sem ele, o carrossel continua navegável com dedo, trackpad,
@@ -44,13 +44,19 @@
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
 
-  /* Recuo que permite o PRIMEIRO e o ÚLTIMO slide centralizarem de fato.
+  /* Recuo igual ao do container do site: o primeiro slide começa alinhado
+     ao título da seção, e não no meio da tela.
 
-     Com o recuo fixo anterior, o snap ao centro era inalcançável nas pontas —
-     medido: o último slide precisava de scrollLeft 4032 e o máximo era 3962.
-     Isso deixava o índice ambíguo justamente nos extremos, que é onde o
-     usuário encontrou o botão "anterior" sem resposta. */
-  padding-inline: max(var(--space-container), calc((100% - var(--slide)) / 2));
+     A versão anterior calculava (100% - slide) / 2 para que as pontas
+     pudessem CENTRALIZAR, já que o snap era ao centro. Isso gerava ~248px de
+     recuo e empurrava o primeiro card para o meio da tela — foi exatamente a
+     queixa. Com snap ao INÍCIO o problema deixa de existir: alinhar a ponta
+     esquerda não exige folga nenhuma. */
+  padding-inline: var(--space-container);
+
+  /* O snap precisa respeitar o recuo, senão o slide encosta na borda da
+     janela ao parar. */
+  scroll-padding-inline-start: var(--space-container);
 
   /* A barra de rolagem apareceria sob os slides em desktop. A navegação já é
      evidente pelas setas, pelos pontos e pelo slide seguinte espiando na
@@ -81,11 +87,19 @@
      slide ocupa a largura inteira parece uma imagem estática. */
   inline-size: var(--slide);
 
-  scroll-snap-align: center;
+  scroll-snap-align: start;
 }
 
 .carrossel__link {
-  display: block;
+  /* Texto à esquerda, foto à direita — mesma leitura da arte original, agora
+     com o texto refluindo. A foto tem largura fixa em fração para o bloco de
+     texto ficar com medida de leitura confortável, e não esticada. */
+  display: grid;
+  grid-template-columns: 1fr 0.85fr;
+  align-items: stretch;
+
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-media);
   overflow: hidden;
 
@@ -109,28 +123,51 @@
   outline-offset: 3px;
 }
 
+/* A imagem ocupa a altura que o texto ao lado definir. block-size:100% num
+   <img> dentro de grid não basta — elemento substituído usa a proporção
+   natural para dimensionar a faixa antes de resolver a porcentagem, o mesmo
+   tropeço já registrado na seção Sobre. Position absolute tira a imagem do
+   cálculo de tamanho da faixa e resolve. */
+.carrossel__midia {
+  position: relative;
+  min-block-size: 18rem;
+}
+
 .carrossel__link img {
-  display: block;
+  position: absolute;
+  inset: 0;
   inline-size: 100%;
-  block-size: auto;
-  aspect-ratio: 3 / 2;
+  block-size: 100%;
   object-fit: cover;
 }
 
 /* --------------------------------------------------------------------------
-   Legenda
-
-   No desktop ela existe só para busca e leitor de tela — o texto visível é o
-   que está gravado na imagem. Some visualmente sem sair do DOM (mesma técnica
-   de .visually-hidden em layout.css).
+   Legenda — agora o texto visível do slide, em qualquer largura.
    -------------------------------------------------------------------------- */
 .carrossel__legenda {
-  position: absolute;
-  inline-size: 1px;
-  block-size: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.carrossel__titulo {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-h2);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
+  color: var(--text-accent);
+  margin: 0;
+}
+
+.carrossel__texto {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--text-secondary);
+  margin: 0;
+  max-inline-size: 42ch;
 }
 
 /* --------------------------------------------------------------------------
@@ -234,7 +271,7 @@
    -------------------------------------------------------------------------- */
 @media (max-width: 48rem) {
   .carrossel {
-    --slide: 84%;
+    --slide: 86%;
   }
 
   /* Em telas de toque, arrastar é o gesto natural e as setas cobririam parte
@@ -244,49 +281,34 @@
     display: none;
   }
 
-  /* ---- A troca que resolve o texto ilegível no celular ----
-
-     A arte foi composta a 1536px, com o texto ocupando a metade esquerda. Num
-     telefone de 390px esse corpo de texto cai para o equivalente a ~4px — não
-     dá para ler, e aumentar a imagem não resolve porque ela não reflui.
-
-     Aqui a imagem passa a mostrar só a METADE FOTOGRÁFICA (recorte à direita)
-     e a legenda vira texto de verdade, que reflui, aceita zoom e acompanha a
-     preferência de fonte do sistema. 3/4 sobre uma origem 3/2 mostra metade da
-     largura — exatamente a parte onde está a fotografia. */
-  .carrossel__link img {
-    aspect-ratio: 3 / 4;
-    object-position: 100% center;
+  /* Empilha: foto em cima, texto embaixo. Lado a lado em 390px daria uma
+     coluna de texto de ~180px, estreita demais para leitura corrida. */
+  .carrossel__link {
+    grid-template-columns: 1fr;
   }
 
-  .carrossel__legenda {
-    position: static;
-    inline-size: auto;
-    block-size: auto;
-    overflow: visible;
-    clip-path: none;
-    white-space: normal;
+  /* A imagem volta a ocupar espaço no fluxo — sem a coluna ao lado, não há
+     altura para ela acompanhar. */
+  .carrossel__midia {
+    min-block-size: 0;
+    aspect-ratio: 4 / 3;
+  }
 
-    background-color: var(--surface-raised);
+  /* A foto vem antes do texto na leitura visual, mas o título precisa vir
+     antes no DOM para a ordem de leitura por leitor de tela fazer sentido. */
+  .carrossel__midia { order: -1; }
+
+  .carrossel__legenda {
     padding: var(--space-3);
-    display: flex;
-    flex-direction: column;
-    gap: 0.4em;
+    gap: var(--space-1);
   }
 
   .carrossel__titulo {
-    font-family: var(--font-heading);
-    font-weight: var(--weight-regular);
     font-size: var(--text-display-sm);
-    line-height: var(--leading-title);
-    color: var(--text-accent);
-    margin: 0;
   }
 
   .carrossel__texto {
     font-size: var(--text-small);
-    color: var(--text-secondary);
-    margin: 0;
   }
 }
 
