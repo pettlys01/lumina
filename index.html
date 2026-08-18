@@ -214,13 +214,20 @@
          marcação abaixo, e ambos são obrigatórios:
 
          1. alt="" na imagem. O conteúdo dela não é a foto, é o texto — e esse
-            texto está logo ao lado, como HTML de verdade em .visually-hidden.
-            Descrever tudo no alt faria o leitor de tela anunciar a mesma coisa
-            duas vezes.
+            texto está logo ao lado, em .carrossel__legenda. Descrever tudo no
+            alt faria o leitor de tela anunciar a mesma coisa duas vezes.
          2. O texto real precisa existir no DOM de qualquer forma. Texto em
             pixel não é lido pelo Google, não é selecionável, não é traduzível e
-            não acompanha aumento de fonte. Sem o bloco oculto, esta seção
-            simplesmente não existiria para busca nem para leitor de tela.
+            não acompanha aumento de fonte.
+
+         A legenda é oculta visualmente no desktop (onde o texto gravado é
+         legível) e VISÍVEL no celular, onde a imagem passa a ser recortada só
+         na metade fotográfica. Motivo medido: a arte foi composta a 1536px de
+         largura; num telefone de 390px aquele corpo de texto cai para o
+         equivalente a ~4px. Não é questão de gosto, é ilegível.
+
+         Isto é contorno, não solução. O certo é a arte vir SEM texto — ver a
+         recomendação no fim da conversa e a Seção 12.5 do Bible.
 
          A rolagem é nativa (scroll-snap): funciona com dedo, trackpad, roda e
          teclado antes de qualquer JavaScript. As setas e os pontos são
@@ -238,12 +245,10 @@
           <a class="carrossel__link" href="especialidades/implantes.html">
             <img src="assets/img/implantes.jpg" alt=""
                  width="1536" height="1024" loading="lazy" decoding="async">
-            <span class="visually-hidden">
-              Implantes. Reposição de um ou mais dentes com raiz artificial de
-              titânio, planejada em tomografia antes do primeiro corte. A posição
-              exata do implante é definida em software antes da cirurgia, com guia
-              impresso quando o caso indica. Ver a página completa.
-            </span>
+            <div class="carrossel__legenda">
+              <h3 class="carrossel__titulo">Implantes</h3>
+              <p class="carrossel__texto">Reposição de um ou mais dentes com raiz artificial de titânio, planejada em tomografia antes do primeiro corte.</p>
+            </div>
           </a>
         </li>
 
@@ -251,12 +256,10 @@
           <a class="carrossel__link" href="especialidades/lentes-de-contato-dental.html">
             <img src="assets/img/lentes.jpg" alt=""
                  width="1536" height="1024" loading="lazy" decoding="async">
-            <span class="visually-hidden">
-              Lentes de contato dental. Lâminas de porcelana de 0,2 a 0,5 mm
-              cimentadas sobre o dente, para corrigir cor, forma ou pequenos
-              desalinhamentos. A simulação em 3D e o ensaio no próprio sorriso vêm
-              antes de qualquer desgaste. Ver a página completa.
-            </span>
+            <div class="carrossel__legenda">
+              <h3 class="carrossel__titulo">Lentes de contato dental</h3>
+              <p class="carrossel__texto">Lâminas de porcelana de 0,2 a 0,5 mm cimentadas sobre o dente, para corrigir cor, forma ou pequenos desalinhamentos.</p>
+            </div>
           </a>
         </li>
 
@@ -264,13 +267,10 @@
           <a class="carrossel__link" href="especialidades/harmonizacao-facial.html">
             <img src="assets/img/harmonizacao.jpg" alt=""
                  width="1536" height="1024" loading="lazy" decoding="async">
-            <span class="visually-hidden">
-              Harmonização facial. Toxina botulínica e preenchedores para
-              equilibrar o terço inferior da face — tratados junto do sorriso, não
-              como procedimento isolado. A proporção e a sustentação da região são
-              avaliadas no mesmo plano que o tratamento dentário. Ver a página
-              completa.
-            </span>
+            <div class="carrossel__legenda">
+              <h3 class="carrossel__titulo">Harmonização facial</h3>
+              <p class="carrossel__texto">Toxina botulínica e preenchedores para equilibrar o terço inferior da face — tratados junto do sorriso, não como procedimento isolado.</p>
+            </div>
           </a>
         </li>
 
@@ -278,12 +278,10 @@
           <a class="carrossel__link" href="especialidades/ortodontia-estetica.html">
             <img src="assets/img/ortodontia.jpg" alt=""
                  width="1536" height="1024" loading="lazy" decoding="async">
-            <span class="visually-hidden">
-              Ortodontia estética. Alinhadores transparentes ou aparelhos
-              cerâmicos, com o resultado final simulado digitalmente antes de você
-              decidir começar. A previsão de duração é fechada já na primeira
-              consulta. Ver a página completa.
-            </span>
+            <div class="carrossel__legenda">
+              <h3 class="carrossel__titulo">Ortodontia estética</h3>
+              <p class="carrossel__texto">Alinhadores transparentes ou aparelhos cerâmicos, com o resultado final simulado digitalmente antes de você decidir começar.</p>
+            </div>
           </a>
         </li>
 
@@ -291,13 +289,10 @@
           <a class="carrossel__link" href="especialidades/clareamento.html">
             <img src="assets/img/clareamento.jpg" alt=""
                  width="1536" height="1024" loading="lazy" decoding="async">
-            <span class="visually-hidden">
-              Clareamento. Protocolo em consultório ou supervisionado em casa,
-              ajustado pela sensibilidade e pelo tom de partida de cada paciente —
-              não um produto padrão para todos. O tom de partida é registrado antes
-              do início, para que o resultado seja comparável. Ver a página
-              completa.
-            </span>
+            <div class="carrossel__legenda">
+              <h3 class="carrossel__titulo">Clareamento</h3>
+              <p class="carrossel__texto">Protocolo em consultório ou supervisionado em casa, ajustado pela sensibilidade e pelo tom de partida de cada paciente.</p>
+            </div>
           </a>
         </li>
 

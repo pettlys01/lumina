@@ -17,6 +17,11 @@
 .carrossel {
   position: relative;
   margin-block-start: var(--space-6);
+
+  /* Largura do slide num só lugar: o trilho precisa do mesmo valor para
+     calcular o recuo, e dois números soltos saem de sincronia na primeira
+     alteração. */
+  --slide: min(48rem, 68%);
 }
 
 /* --------------------------------------------------------------------------
@@ -35,9 +40,13 @@
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
 
-  /* Recuo lateral igual ao container do site: o primeiro e o último slide
-     param alinhados ao texto da seção, em vez de colados na borda da janela. */
-  padding-inline: var(--space-container);
+  /* Recuo que permite o PRIMEIRO e o ÚLTIMO slide centralizarem de fato.
+
+     Com o recuo fixo anterior, o snap ao centro era inalcançável nas pontas —
+     medido: o último slide precisava de scrollLeft 4032 e o máximo era 3962.
+     Isso deixava o índice ambíguo justamente nos extremos, que é onde o
+     usuário encontrou o botão "anterior" sem resposta. */
+  padding-inline: max(var(--space-container), calc((100% - var(--slide)) / 2));
 
   /* A barra de rolagem apareceria sob os slides em desktop. A navegação já é
      evidente pelas setas, pelos pontos e pelo slide seguinte espiando na
@@ -66,7 +75,7 @@
   /* Menos de 100%: o próximo slide aparece pela borda. É o que comunica "tem
      mais coisa aqui" sem precisar de instrução escrita — um carrossel onde o
      slide ocupa a largura inteira parece uma imagem estática. */
-  inline-size: min(64rem, 88%);
+  inline-size: var(--slide);
 
   scroll-snap-align: center;
 }
@@ -75,6 +84,12 @@
   display: block;
   border-radius: var(--radius-media);
   overflow: hidden;
+
+  /* A legenda do celular vive dentro deste <a> e herdava o sublinhado padrão
+     de link, deixando título e parágrafo inteiros riscados. O card já se
+     anuncia como clicável pela elevação e pelo cursor. */
+  text-decoration: none;
+  color: inherit;
   box-shadow: var(--shadow-raised);
   transition: box-shadow var(--duration-fast) var(--ease-out),
               transform var(--duration-fast) var(--ease-out);
@@ -96,6 +111,22 @@
   block-size: auto;
   aspect-ratio: 3 / 2;
   object-fit: cover;
+}
+
+/* --------------------------------------------------------------------------
+   Legenda
+
+   No desktop ela existe só para busca e leitor de tela — o texto visível é o
+   que está gravado na imagem. Some visualmente sem sair do DOM (mesma técnica
+   de .visually-hidden em layout.css).
+   -------------------------------------------------------------------------- */
+.carrossel__legenda {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /* --------------------------------------------------------------------------
@@ -198,8 +229,8 @@
    Telas estreitas
    -------------------------------------------------------------------------- */
 @media (max-width: 48rem) {
-  .carrossel__slide {
-    inline-size: 92%;
+  .carrossel {
+    --slide: 84%;
   }
 
   /* Em telas de toque, arrastar é o gesto natural e as setas cobririam parte
@@ -207,6 +238,51 @@
      posição e como alvo alternativo. */
   .carrossel__seta {
     display: none;
+  }
+
+  /* ---- A troca que resolve o texto ilegível no celular ----
+
+     A arte foi composta a 1536px, com o texto ocupando a metade esquerda. Num
+     telefone de 390px esse corpo de texto cai para o equivalente a ~4px — não
+     dá para ler, e aumentar a imagem não resolve porque ela não reflui.
+
+     Aqui a imagem passa a mostrar só a METADE FOTOGRÁFICA (recorte à direita)
+     e a legenda vira texto de verdade, que reflui, aceita zoom e acompanha a
+     preferência de fonte do sistema. 3/4 sobre uma origem 3/2 mostra metade da
+     largura — exatamente a parte onde está a fotografia. */
+  .carrossel__link img {
+    aspect-ratio: 3 / 4;
+    object-position: 100% center;
+  }
+
+  .carrossel__legenda {
+    position: static;
+    inline-size: auto;
+    block-size: auto;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+
+    background-color: var(--surface-raised);
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+  }
+
+  .carrossel__titulo {
+    font-family: var(--font-heading);
+    font-weight: var(--weight-regular);
+    font-size: var(--text-display-sm);
+    line-height: var(--leading-title);
+    color: var(--text-accent);
+    margin: 0;
+  }
+
+  .carrossel__texto {
+    font-size: var(--text-small);
+    color: var(--text-secondary);
+    margin: 0;
   }
 }
 

@@ -39,12 +39,57 @@
            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
+  /* A rolagem dispara dezenas de vezes por segundo; coalescer num quadro evita
+     rodar sincronizar() muito mais do que a tela consegue mostrar. O segundo
+     disparo, atrasado, existe para a rolagem SUAVE: ela continua depois do
+     último evento de scroll, e sem esta remarcação o estado dos botões
+     congelaria no valor de meio do caminho. */
+  var agendado = false;
+  var atrasado = null;
+  function agendarSincronia() {
+    // Sincroniza JÁ, antes de qualquer agendamento. Sem esta chamada imediata
+    // havia um estado morto: quando a rolagem pedida coincide com a posição
+    // atual (fim do carrossel, por exemplo), o navegador não dispara evento de
+    // scroll — não houve mudança — e os botões ficavam congelados no valor
+    // anterior. Foi assim que "próxima" continuava habilitada no último slide.
+    sincronizar();
+
+    if (!agendado) {
+      agendado = true;
+      requestAnimationFrame(function () {
+        agendado = false;
+        sincronizar();
+      });
+    }
+    // A rolagem suave continua depois do último evento de scroll; esta
+    // remarcação pega o estado final.
+    clearTimeout(atrasado);
+    atrasado = setTimeout(sincronizar, 260);
+  }
+
+  /* Centraliza o slide, medindo por getBoundingClientRect.
+
+     A versão anterior usava offsetLeft e tinha dois defeitos somados. Primeiro,
+     offsetLeft é medido a partir do offsetParent — que aqui é .carrossel (por
+     ter position:relative), e não o trilho — enquanto scrollLeft vive no
+     sistema de coordenadas do próprio trilho. Os dois só coincidem por
+     acidente. Segundo, ela calculava alinhamento à ESQUERDA enquanto o CSS
+     snapa ao CENTRO, então o navegador reposicionava logo depois.
+
+     rect + scrollLeft atual não tem essa ambiguidade: mede-se a distância real
+     entre o centro do slide e o centro do trilho, na tela. */
   function irPara(indice) {
     indice = Math.max(0, Math.min(slides.length - 1, indice));
+    var rt = trilho.getBoundingClientRect();
+    var rs = slides[indice].getBoundingClientRect();
+    var delta = (rs.left + rs.width / 2) - (rt.left + rt.width / 2);
     trilho.scrollTo({
-      left: slides[indice].offsetLeft - trilho.offsetLeft,
+      left: trilho.scrollLeft + delta,
       behavior: movimentoReduzido() ? "auto" : "smooth"
     });
+    // A rolagem suave termina depois; sem esta remarcação o estado dos botões
+    // ficaria congelado no valor de antes do movimento.
+    agendarSincronia();
   }
 
   /* Índice a partir da posição real da rolagem, e não de um contador próprio.
@@ -53,12 +98,13 @@
      tela mostraria o 4. Ler a rolagem faz o arraste e os botões chegarem à
      mesma fonte de verdade. */
   function indiceVisivel() {
-    var centro = trilho.scrollLeft + trilho.clientWidth / 2;
+    var rt = trilho.getBoundingClientRect();
+    var centro = rt.left + rt.width / 2;
     var melhor = 0;
     var menorDist = Infinity;
     for (var i = 0; i < slides.length; i++) {
-      var meio = slides[i].offsetLeft - trilho.offsetLeft + slides[i].offsetWidth / 2;
-      var d = Math.abs(meio - centro);
+      var r = slides[i].getBoundingClientRect();
+      var d = Math.abs((r.left + r.width / 2) - centro);
       if (d < menorDist) { menorDist = d; melhor = i; }
     }
     return melhor;
@@ -67,8 +113,22 @@
   function sincronizar() {
     atual = indiceVisivel();
 
-    btnAnt.disabled = atual === 0;
-    btnProx.disabled = atual === slides.length - 1;
+    /* Estado dos botões vem do LIMITE DE ROLAGEM, não do índice.
+
+       Pelo índice havia um caso morto real, medido: com snap ao centro, o
+       primeiro e o último slide não conseguem centralizar — falta recuo. O
+       último precisaria de scrollLeft 4032 e o máximo é 3962. Nesse ponto o
+       índice fica ambíguo, o botão "anterior" continuava marcado como
+       desabilitado no fim do carrossel e engolia o primeiro clique: a pessoa
+       clicava para voltar e nada acontecia.
+
+       O limite de rolagem não tem ambiguidade — ou ainda dá para rolar, ou
+       não dá. A folga de 2px absorve o arredondamento subpixel que aparece
+       com zoom do navegador ou tela de densidade fracionária. */
+    var FOLGA = 2;
+    var maximo = trilho.scrollWidth - trilho.clientWidth;
+    btnAnt.disabled = trilho.scrollLeft <= FOLGA;
+    btnProx.disabled = trilho.scrollLeft >= maximo - FOLGA;
 
     var pontos = caixaPontos.querySelectorAll(".carrossel__ponto");
     for (var i = 0; i < pontos.length; i++) {
@@ -117,17 +177,7 @@
 
   // ---- Sincronia ----------------------------------------------------------
 
-  var agendado = false;
-  trilho.addEventListener("scroll", function () {
-    // A rolagem dispara dezenas de vezes por segundo; sem coalescer em um
-    // quadro, sincronizar() rodaria muito mais do que a tela consegue mostrar.
-    if (agendado) return;
-    agendado = true;
-    requestAnimationFrame(function () {
-      agendado = false;
-      sincronizar();
-    });
-  }, { passive: true });
+  trilho.addEventListener("scroll", agendarSincronia, { passive: true });
 
   // Largura do slide muda com o viewport; o índice precisa ser remedido.
   window.addEventListener("resize", sincronizar);

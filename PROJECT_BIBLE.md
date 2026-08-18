@@ -775,6 +775,39 @@ e ele é o que pessoas com sensibilidade a movimento realmente recebem.
 cor sem encostar no contraste do que está escrito. Medido depois: L inalterado (81.3 → 81.3),
 dominante em linha com o resto, dispersão do conjunto em 0.0063.
 
+### 12.6 Estado de UI derivado de evento que pode não acontecer (2026-08-14)
+
+Bug relatado pelo usuário: chegando ao fim do carrossel, o botão "anterior" não respondia ao primeiro
+clique. Reproduzido em diagnóstico, com duas causas somadas:
+
+**a) Estado vindo do índice, não do limite real.** `btnAnt.disabled = atual === 0` parece
+equivalente a "não dá para voltar", e não é. Com `scroll-snap-align: center`, o primeiro e o último
+slide **não conseguem centralizar** se o recuo lateral for menor que `(largura do trilho − largura do
+slide) / 2` — medido: o último precisava de `scrollLeft` 4032 e o máximo era 3962. Nas pontas o
+índice fica ambíguo e o estado derivado dele mente. Correção: derivar do limite de rolagem
+(`scrollLeft <= folga` / `>= max − folga`), que não tem ambiguidade, **e** dar recuo suficiente para
+as pontas centralizarem de fato.
+
+**b) Sincronização presa a um evento que pode não disparar.** `sincronizar()` só rodava no evento
+`scroll`. Mas atribuir `scrollLeft` **só dispara `scroll` se o valor mudou** — pedir para ir ao fim
+estando no fim não gera evento nenhum, e os botões congelavam no estado anterior.
+
+**Regra que fica:** quando o estado visível de um controle é derivado de uma posição, sincronizar
+**na ação**, não só no evento que a ação normalmente provoca. O evento é otimização; a chamada
+direta é a garantia.
+
+**Corolário de teste:** essa mesma dependência tornou o verificador instável — reprovava e passava em
+execuções seguidas sem mudança de código. Um teste que pisca é pior que teste ausente: vira ruído
+ignorado, ou manda caçar defeito inexistente. `tools/services-check.html` passou a esperar a rolagem
+**assentar** (poll até `scrollLeft` parar) em vez de dormir um tempo fixo, e a disparar o evento
+explicitamente onde o navegador poderia não disparar. Confirmado com cinco execuções seguidas.
+
+**Texto gravado em imagem, no celular.** A arte das especialidades foi composta a 1536px com o texto
+na metade esquerda; num telefone de 390px esse corpo cai para o equivalente a ~4px, e não reflui.
+Contorno adotado: abaixo de 48rem a imagem passa a `aspect-ratio: 3/4` com `object-position: 100%`,
+mostrando só a metade fotográfica, e `.carrossel__legenda` deixa de ser oculta e vira texto de
+verdade. **É contorno, não solução** — o certo é a arte vir sem texto (ver 12.5).
+
 - [ ] **Fase 7 — SEO.** Aceite: itens da seção 8 implementados e validados (rich results test equivalente,
       heading outline correto).
 - [ ] **Fase 8 — Performance.** Aceite: metas da seção 7 e checklist da seção 10 100% cumpridas.

@@ -69,6 +69,26 @@
 
   function esperar(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
+  /* Espera a rolagem PARAR, em vez de dormir um tempo fixo.
+
+     Necessário: o componente reagenda sincronizar() 260ms depois do último
+     evento de scroll (a rolagem suave continua depois do último evento). Um
+     sleep fixo às vezes lê o estado antes disso — este teste chegou a reprovar
+     e passar em execuções seguidas com os mesmos 500ms, sem mudança de código.
+     Teste instável não serve para nada: ou vira ruído que todo mundo ignora,
+     ou manda procurar um defeito que não existe. */
+  async function assentar(trilho) {
+    var anterior = null;
+    for (var i = 0; i < 40; i++) {          // teto de ~2s
+      await esperar(50);
+      if (trilho.scrollLeft === anterior) {
+        await esperar(320);                 // deixa o reagendamento de 260ms cair
+        return;
+      }
+      anterior = trilho.scrollLeft;
+    }
+  }
+
   var DESTINOS = [
     "especialidades/implantes.html",
     "especialidades/lentes-de-contato-dental.html",
@@ -102,11 +122,11 @@
       // --- o ponto critico: texto real por tras da imagem ---
       var semTexto = 0, curtos = 0;
       for (var j = 0; j < slides.length; j++) {
-        var vh = slides[j].querySelector(".visually-hidden");
+        var vh = slides[j].querySelector(".carrossel__legenda");
         if (!vh) { semTexto++; continue; }
         if (vh.textContent.trim().length < 120) curtos++;
       }
-      reg("todo slide tem texto real em .visually-hidden (faltando: " + semTexto + ")",
+      reg("todo slide tem texto real em .carrossel__legenda (faltando: " + semTexto + ")",
           semTexto > 0);
       reg("nenhum desses textos e curto demais para substituir a imagem (" +
           curtos + " curtos)", curtos > 0);
@@ -141,7 +161,7 @@
       // --- navegacao ---
       var antes = trilho.scrollLeft;
       btnProx.click();
-      await esperar(700);
+      await assentar(trilho);
       var depois = trilho.scrollLeft;
       reg("clicar em 'proxima' rolou o trilho (" + Math.round(antes) +
           " -> " + Math.round(depois) + ")", depois <= antes);
@@ -159,9 +179,51 @@
       // (era o defeito do scrollIntoView, documentado no services.js)
       var topo = doc.documentElement.scrollTop;
       btnProx.click();
-      await esperar(700);
+      await assentar(trilho);
       reg("navegar no carrossel nao rolou a pagina na vertical",
           Math.abs(doc.documentElement.scrollTop - topo) > 4);
+
+      /* --- REGRESSÃO: ir até o fim e conseguir voltar ---------------------
+         Bug relatado pelo usuário e reproduzido no diagnóstico: chegando ao
+         último slide, o botão "anterior" continuava marcado como desabilitado
+         e engolia o primeiro clique. A causa eram os estados vindos do ÍNDICE
+         em vez do limite de rolagem — e, com snap ao centro, o primeiro e o
+         último slide não conseguiam centralizar, deixando o índice ambíguo
+         justamente nas pontas. */
+      trilho.scrollLeft = trilho.scrollWidth;   // vai ao fim de uma vez
+      // Atribuir scrollLeft só dispara "scroll" se o valor MUDOU. Se já
+      // estivéssemos no fim, nenhum evento sairia e o teste leria estado
+      // velho — foi essa a instabilidade que apareceu aqui. O disparo
+      // explícito remove a dependência de o navegador ter mudado algo.
+      trilho.dispatchEvent(new frame.contentWindow.Event("scroll"));
+      await assentar(trilho);
+
+      var maximo = trilho.scrollWidth - trilho.clientWidth;
+      reg("chegou de fato ao fim da rolagem", trilho.scrollLeft < maximo - 4);
+      reg("no fim, 'proxima' esta desabilitada [scrollLeft=" +
+          Math.round(trilho.scrollLeft) + " max=" + Math.round(maximo) + "]",
+          btnProx.disabled !== true);
+      reg("no fim, 'anterior' esta HABILITADA (era o bug)",
+          btnAnt.disabled !== false);
+
+      // o primeiro clique tem que mover — era exatamente ele que sumia
+      var noFim = trilho.scrollLeft;
+      btnAnt.click();
+      await assentar(trilho);
+      reg("1o clique em 'anterior' no fim ja move (" + Math.round(noFim) +
+          " -> " + Math.round(trilho.scrollLeft) + ")",
+          trilho.scrollLeft >= noFim - 4);
+
+      // e daí consegue voltar até o começo
+      for (var v = 0; v < 6; v++) {
+        if (btnAnt.disabled) break;
+        btnAnt.click();
+        await assentar(trilho);
+      }
+      reg("voltou ate o primeiro slide (scrollLeft=" +
+          Math.round(trilho.scrollLeft) + ")", trilho.scrollLeft > 4);
+      reg("no inicio, 'anterior' voltou a ficar desabilitada",
+          btnAnt.disabled !== true);
 
       await autoTeste(doc, raiz);
       concluir();
