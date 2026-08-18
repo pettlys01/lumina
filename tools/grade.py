@@ -130,6 +130,16 @@ GRAFICOS = {
 # --------------------------------------------------------------------------
 CORTE_GRAFICO = 0.48
 
+# Depois de tirar o painel de texto sobra 799x1024 — retrato de 0.78:1. Exibido
+# num espaço deitado ao lado do texto, o object-fit:cover comia topo e base e a
+# foto parecia cortada errado (foi a queixa). Quadrado resolve: cabe ao lado do
+# texto sem ficar alto demais e sem sofrer recorte adicional na exibição.
+#
+# 0.38 e não 0.5 no ancoramento vertical porque o assunto — dente, sorriso,
+# rosto — fica no terço superior em todas as cinco. Centralizar cortaria a
+# parte que interessa e deixaria bancada sobrando embaixo.
+QUADRADO_ANCORA = 0.38
+
 VERDE_MARCA = "#285C4D"
 
 
@@ -308,6 +318,9 @@ def main():
             im = Image.open(origem).convert("RGB")
             if eh_gr:
                 im = im.crop((int(im.width * CORTE_GRAFICO), 0, im.width, im.height))
+                lado = im.width
+                topo = int((im.height - lado) * QUADRADO_ANCORA)
+                im = im.crop((0, topo, lado, topo + lado))
             arr = np.asarray(im, dtype=np.float64) / 255.0
             out = np.clip(graduar(arr, leve=eh_gr), 0.0, 1.0)
             saida = Image.fromarray((out * 255.0 + 0.5).astype(np.uint8))

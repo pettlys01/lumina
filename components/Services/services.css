@@ -92,11 +92,22 @@
 
 .carrossel__link {
   /* Texto à esquerda, foto à direita — mesma leitura da arte original, agora
-     com o texto refluindo. A foto tem largura fixa em fração para o bloco de
-     texto ficar com medida de leitura confortável, e não esticada. */
+     com o texto refluindo.
+
+     A foto leva a fração maior. Na primeira versão as colunas eram quase
+     iguais (1fr / 0.85fr) e o conjunto lia como um bloco de texto com uma
+     imagem de apoio, quando é o contrário: numa seção de especialidades a
+     fotografia é o que prende, e o texto explica. */
   display: grid;
-  grid-template-columns: 1fr 0.85fr;
+  grid-template-columns: 0.72fr 1fr;
   align-items: stretch;
+
+  /* A proporção fica no SLIDE, não na mídia. Com aspect-ratio no elemento da
+     foto, ele virava quadrado e parava antes da borda da coluna, deixando uma
+     faixa branca à direita — a coluna media 649px e a foto só 538px.
+     Definindo aqui, a altura do slide passa a ser conhecida e a coluna da
+     imagem é preenchida por inteiro. */
+  aspect-ratio: 16 / 10;
 
   background-color: var(--surface-raised);
   border: 1px solid var(--border-subtle);
@@ -123,14 +134,17 @@
   outline-offset: 3px;
 }
 
-/* A imagem ocupa a altura que o texto ao lado definir. block-size:100% num
-   <img> dentro de grid não basta — elemento substituído usa a proporção
-   natural para dimensionar a faixa antes de resolver a porcentagem, o mesmo
-   tropeço já registrado na seção Sobre. Position absolute tira a imagem do
-   cálculo de tamanho da faixa e resolve. */
+/* A mídia é QUADRADA e é ela que define a altura do slide — o inverso da
+   primeira versão, onde o texto mandava na altura e a foto era esticada para
+   acompanhar. Como a imagem já vem quadrada da LUT, aqui não sobra recorte
+   nenhum: o que se vê é a foto inteira.
+
+   Era daí que vinha a impressão de "cortada errado": o recorte era retrato
+   (0.78:1) e o espaço deitado, então o object-fit:cover comia topo e base. Com
+   a fonte já quadrada e a coluna em ~1.1:1, o que sobra é um acerto de
+   enquadramento mínimo. */
 .carrossel__midia {
   position: relative;
-  min-block-size: 18rem;
 }
 
 .carrossel__link img {
@@ -155,7 +169,7 @@
 .carrossel__titulo {
   font-family: var(--font-heading);
   font-weight: var(--weight-regular);
-  font-size: var(--text-h2);
+  font-size: var(--text-display-sm);
   line-height: var(--leading-title);
   letter-spacing: var(--tracking-title);
   color: var(--text-accent);

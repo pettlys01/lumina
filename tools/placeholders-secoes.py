@@ -39,7 +39,7 @@ ALVOS = [
     ("caso-lentes-depois.jpg",     1200, 900, "DEPOIS · recontorno"),
     ("caso-implante-antes.jpg",    1200, 900, "ANTES · reposição"),
     ("caso-implante-depois.jpg",   1200, 900, "DEPOIS · reposição"),
-    ("espaco-1.jpg", 1400, 1050, "ESPAÇO 1 · recepção"),
+    ("espaco-1.jpg", 1900, 815, "ESPAÇO 1 · recepção"),
     ("espaco-2.jpg", 1400, 1050, "ESPAÇO 2 · corredor"),
     ("espaco-3.jpg", 1400, 1050, "ESPAÇO 3 · atendimento"),
     ("espaco-4.jpg", 1400, 1050, "ESPAÇO 4 · planejamento"),

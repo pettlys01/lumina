@@ -48,31 +48,31 @@
    -------------------------------------------------------------------------- */
 @media (min-width: 48rem) {
   .espaco__grade {
-    grid-template-columns: repeat(3, 1fr);
+    /* Duas colunas, não três. Com três, cada imagem ficava com ~1/3 da
+       largura do conteúdo — pequena para fotografia de ambiente, que depende
+       de espaço para transmitir a sensação do lugar. */
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-3);
   }
 
   /* Fechamento das linhas, contado em unidades de coluna:
-       linha 1 -> item 1 (2) + item 2 (1) = 3
-       linha 2 -> itens 3, 4 e 5 (1 cada)  = 3
-       linha 3 -> item 6, largura inteira  = 3
-     Total 9 em 3 colunas, três linhas cheias.
+       linha 1 -> item 1, largura inteira   = 2
+       linha 2 -> itens 2 e 3 (1 cada)      = 2
+       linha 3 -> itens 4 e 5 (1 cada)      = 2
+       linha 4 -> item 6, largura inteira   = 2
+     Total 8 em 2 colunas, quatro linhas cheias.
 
      A primeira versão dava span 2 ao último item e somava 8: sobrava uma
      célula vazia no canto, que é exatamente o tipo de buraco que faz uma
      grade parecer quebrada em vez de composta. */
   .espaco__item--largo {
-    grid-column: span 2;
-  }
-
-  .espaco__item--total {
     grid-column: 1 / -1;
   }
 
-  /* Itens que ocupam mais de uma coluna ficam mais baixos em proporção. Com
-     4/3 eles dominariam a linha e o conjunto perderia equilíbrio. */
-  .espaco__item--largo img { aspect-ratio: 16 / 9; }
-  .espaco__item--total img { aspect-ratio: 21 / 9; }
+  /* Os itens de largura inteira ficam bem mais baixos em proporção. Com 4/3
+     eles tomariam a altura de uma tela sozinhos e o conjunto perderia o
+     caráter de galeria. */
+  .espaco__item--largo img { aspect-ratio: 21 / 9; }
 }
 
 @media (prefers-reduced-motion: reduce) {

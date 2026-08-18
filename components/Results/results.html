@@ -5,134 +5,152 @@
       <span class="section-head__eyebrow">Antes e depois</span>
       <h2 class="section-head__title">O plano, e o que ele entrega</h2>
       <p class="section-head__lead">
-        Quatro situações frequentes na clínica, com o quadro inicial e o
-        resultado projetado lado a lado.
+        Quatro situações frequentes na clínica. Arraste o divisor sobre cada
+        imagem para ver o quadro inicial e o resultado projetado.
       </p>
     </div>
 
     <!-- ==================================================================
-         Pares antes/depois.
+         Cada caso é UMA imagem com divisor arrastável, não um par lado a
+         lado. A troca resolve dois problemas de uma vez: o par dividia a
+         largura disponível em dois, deixando cada foto pequena demais para
+         comparar detalhe; e comparar duas imagens separadas exige que o olho
+         vá e volte, enquanto o divisor mostra a mesma região nas duas
+         versões, no mesmo lugar da tela.
 
-         Marcação em <figure>/<figcaption>: o par é uma unidade de conteúdo
-         com legenda própria, que é exatamente a relação que <figure>
-         expressa. O <h3> dentro da legenda mantém a estrutura de títulos
-         navegável por leitor de tela (h2 da seção -> h3 de cada caso).
+         Reaproveita o componente BeforeAfter, que já existe na seção de
+         método — o before-after.js percorre todos os [data-ba] da página, sem
+         nenhuma alteração necessária para múltiplas instâncias.
 
-         Cada imagem carrega alt descritivo próprio — aqui o conteúdo É a
-         imagem, diferente do carrossel de especialidades, onde o conteúdo era
-         o texto gravado e o alt fica vazio.
-
-         Os rótulos "Antes" e "Depois" são texto de verdade sobre a imagem, e
-         não parte da arte: seguem legíveis com zoom, aparecem na busca e não
-         dependem de a imagem carregar.
+         Os dois últimos casos são marcados com [data-caso-extra] e ficam
+         VISÍVEIS no HTML entregue. Quem esconde é o results.js, que só então
+         mostra o botão "ver mais". Feito ao contrário — [hidden] na marcação —
+         os dois casos sumiriam de vez se o script não rodasse, e o botão que
+         os revelaria também não funcionaria. Mesma regra dos controles do
+         carrossel: o HTML entregue precisa ser completo por si só.
          ================================================================== -->
-    <ul class="resultados__lista" data-reveal-group>
+    <ul class="resultados__lista">
 
-      <li>
-        <figure class="caso reveal">
-          <div class="caso__par">
-            <div class="caso__lado">
-              <span class="caso__marca">Antes</span>
-              <img src="assets/img/caso-diastema-antes.jpg"
-                   alt="Arcada superior com espaço entre os incisivos centrais"
+      <li class="caso reveal">
+        <figure class="ba caso__figura">
+          <div class="ba__stage" data-ba>
+            <img class="ba__img" src="assets/img/caso-diastema-depois.jpg"
+                 alt="Arcada com o espaço entre os incisivos centrais fechado"
+                 width="1200" height="900" loading="lazy" decoding="async">
+            <div class="ba__overlay">
+              <img class="ba__img" src="assets/img/caso-diastema-antes.jpg"
+                   alt="A mesma arcada com espaço visível entre os incisivos centrais"
                    width="1200" height="900" loading="lazy" decoding="async">
             </div>
-            <div class="caso__lado">
-              <span class="caso__marca caso__marca--depois">Depois</span>
-              <img src="assets/img/caso-diastema-depois.jpg"
-                   alt="A mesma arcada com o espaço entre os incisivos fechado"
-                   width="1200" height="900" loading="lazy" decoding="async">
-            </div>
+            <span class="ba__tag ba__tag--fisico" aria-hidden="true">Antes</span>
+            <span class="ba__tag ba__tag--digital" aria-hidden="true">Depois</span>
+            <span class="ba__line" aria-hidden="true"></span>
+            <input class="ba__range" type="range" min="0" max="100" value="50" step="1"
+                   data-ba-range
+                   aria-label="Fechamento de diastema: arraste para comparar antes e depois, ou use as setas do teclado">
           </div>
-          <figcaption class="caso__legenda">
-            <h3 class="caso__titulo">Fechamento de diastema</h3>
-            <p class="caso__texto">
-              Espaço entre os incisivos centrais fechado com resina ou lâminas,
-              conforme a proporção que cada dente pede.
-            </p>
-          </figcaption>
         </figure>
+        <div class="caso__legenda">
+          <h3 class="caso__titulo">Fechamento de diastema</h3>
+          <p class="caso__texto">
+            Espaço entre os incisivos centrais fechado com resina ou lâminas,
+            conforme a proporção que cada dente pede.
+          </p>
+        </div>
       </li>
 
-      <li>
-        <figure class="caso reveal">
-          <div class="caso__par">
-            <div class="caso__lado">
-              <span class="caso__marca">Antes</span>
-              <img src="assets/img/caso-alinhamento-antes.jpg"
-                   alt="Arcada inferior com apinhamento nos dentes anteriores"
+      <li class="caso reveal">
+        <figure class="ba caso__figura">
+          <div class="ba__stage" data-ba>
+            <img class="ba__img" src="assets/img/caso-alinhamento-depois.jpg"
+                 alt="Arcada inferior com os dentes anteriores alinhados"
+                 width="1200" height="900" loading="lazy" decoding="async">
+            <div class="ba__overlay">
+              <img class="ba__img" src="assets/img/caso-alinhamento-antes.jpg"
+                   alt="A mesma arcada com apinhamento nos dentes anteriores"
                    width="1200" height="900" loading="lazy" decoding="async">
             </div>
-            <div class="caso__lado">
-              <span class="caso__marca caso__marca--depois">Depois</span>
-              <img src="assets/img/caso-alinhamento-depois.jpg"
-                   alt="A mesma arcada com os dentes anteriores alinhados"
-                   width="1200" height="900" loading="lazy" decoding="async">
-            </div>
+            <span class="ba__tag ba__tag--fisico" aria-hidden="true">Antes</span>
+            <span class="ba__tag ba__tag--digital" aria-hidden="true">Depois</span>
+            <span class="ba__line" aria-hidden="true"></span>
+            <input class="ba__range" type="range" min="0" max="100" value="50" step="1"
+                   data-ba-range
+                   aria-label="Alinhamento ortodôntico: arraste para comparar antes e depois, ou use as setas do teclado">
           </div>
-          <figcaption class="caso__legenda">
-            <h3 class="caso__titulo">Alinhamento ortodôntico</h3>
-            <p class="caso__texto">
-              Apinhamento anterior corrigido com alinhadores transparentes, com
-              duração fechada desde a primeira consulta.
-            </p>
-          </figcaption>
         </figure>
+        <div class="caso__legenda">
+          <h3 class="caso__titulo">Alinhamento ortodôntico</h3>
+          <p class="caso__texto">
+            Apinhamento anterior corrigido com alinhadores transparentes, com
+            duração fechada desde a primeira consulta.
+          </p>
+        </div>
       </li>
 
-      <li>
-        <figure class="caso reveal">
-          <div class="caso__par">
-            <div class="caso__lado">
-              <span class="caso__marca">Antes</span>
-              <img src="assets/img/caso-lentes-antes.jpg"
-                   alt="Dentes anteriores com desgaste nas bordas e proporção irregular"
+      <li class="caso reveal" data-caso-extra>
+        <figure class="ba caso__figura">
+          <div class="ba__stage" data-ba>
+            <img class="ba__img" src="assets/img/caso-lentes-depois.jpg"
+                 alt="Dentes anteriores com bordas e proporção recompostas"
+                 width="1200" height="900" loading="lazy" decoding="async">
+            <div class="ba__overlay">
+              <img class="ba__img" src="assets/img/caso-lentes-antes.jpg"
+                   alt="Os mesmos dentes com desgaste nas bordas e proporção irregular"
                    width="1200" height="900" loading="lazy" decoding="async">
             </div>
-            <div class="caso__lado">
-              <span class="caso__marca caso__marca--depois">Depois</span>
-              <img src="assets/img/caso-lentes-depois.jpg"
-                   alt="Os mesmos dentes com bordas e proporção recompostas"
-                   width="1200" height="900" loading="lazy" decoding="async">
-            </div>
+            <span class="ba__tag ba__tag--fisico" aria-hidden="true">Antes</span>
+            <span class="ba__tag ba__tag--digital" aria-hidden="true">Depois</span>
+            <span class="ba__line" aria-hidden="true"></span>
+            <input class="ba__range" type="range" min="0" max="100" value="50" step="1"
+                   data-ba-range
+                   aria-label="Recontorno com lentes: arraste para comparar antes e depois, ou use as setas do teclado">
           </div>
-          <figcaption class="caso__legenda">
-            <h3 class="caso__titulo">Recontorno com lentes</h3>
-            <p class="caso__texto">
-              Bordas desgastadas e proporções irregulares recompostas com
-              lâminas de porcelana, simuladas antes de qualquer preparo.
-            </p>
-          </figcaption>
         </figure>
+        <div class="caso__legenda">
+          <h3 class="caso__titulo">Recontorno com lentes</h3>
+          <p class="caso__texto">
+            Bordas desgastadas e proporções irregulares recompostas com lâminas
+            de porcelana, simuladas antes de qualquer preparo.
+          </p>
+        </div>
       </li>
 
-      <li>
-        <figure class="caso reveal">
-          <div class="caso__par">
-            <div class="caso__lado">
-              <span class="caso__marca">Antes</span>
-              <img src="assets/img/caso-implante-antes.jpg"
-                   alt="Espaço sem dente entre dois dentes vizinhos"
+      <li class="caso reveal" data-caso-extra>
+        <figure class="ba caso__figura">
+          <div class="ba__stage" data-ba>
+            <img class="ba__img" src="assets/img/caso-implante-depois.jpg"
+                 alt="Espaço ocupado por coroa sobre implante"
+                 width="1200" height="900" loading="lazy" decoding="async">
+            <div class="ba__overlay">
+              <img class="ba__img" src="assets/img/caso-implante-antes.jpg"
+                   alt="O mesmo espaço sem dente, entre dois dentes vizinhos"
                    width="1200" height="900" loading="lazy" decoding="async">
             </div>
-            <div class="caso__lado">
-              <span class="caso__marca caso__marca--depois">Depois</span>
-              <img src="assets/img/caso-implante-depois.jpg"
-                   alt="O mesmo espaço ocupado por coroa sobre implante"
-                   width="1200" height="900" loading="lazy" decoding="async">
-            </div>
+            <span class="ba__tag ba__tag--fisico" aria-hidden="true">Antes</span>
+            <span class="ba__tag ba__tag--digital" aria-hidden="true">Depois</span>
+            <span class="ba__line" aria-hidden="true"></span>
+            <input class="ba__range" type="range" min="0" max="100" value="50" step="1"
+                   data-ba-range
+                   aria-label="Reposição unitária: arraste para comparar antes e depois, ou use as setas do teclado">
           </div>
-          <figcaption class="caso__legenda">
-            <h3 class="caso__titulo">Reposição unitária</h3>
-            <p class="caso__texto">
-              Dente ausente reposto com implante de titânio, com a posição
-              definida em software antes da cirurgia.
-            </p>
-          </figcaption>
         </figure>
+        <div class="caso__legenda">
+          <h3 class="caso__titulo">Reposição unitária</h3>
+          <p class="caso__texto">
+            Dente ausente reposto com implante de titânio, com a posição
+            definida em software antes da cirurgia.
+          </p>
+        </div>
       </li>
 
     </ul>
+
+    <div class="resultados__acoes">
+      <button type="button" class="btn btn--ghost" data-ver-mais hidden
+              aria-expanded="false">
+        Ver os outros dois casos
+      </button>
+    </div>
 
     <p class="resultados__nota">
       Imagens ilustrativas de casos representativos, geradas para demonstração
