@@ -87,25 +87,21 @@
 }
 
 /* --------------------------------------------------------------------------
-   Telas estreitas — o comparador em sangria
+   Telas estreitas
 
-   Medido a 393px: dentro do container, o comparador ficava com 330px de
-   largura e 248px de altura. Comparar duas versões do mesmo sorriso a esse
-   tamanho é difícil — a diferença entre os casos está em milímetros de dente.
+   Houve uma versão com sangria aqui, encostando o comparador nas bordas da
+   janela para ganhar os ~19% de largura que o recuo do container consome. Foi
+   removida: no site inteiro, só o Hero ocupa a tela de ponta a ponta. Uma
+   segunda seção fazendo isso não lê como ênfase, lê como inconsistência — e
+   o Hero perde o que o torna especial.
 
-   A sangria devolve a largura da janela (393px, +19% de lado, +41% de área)
-   sem recortar nada: a proporção 4/3 é a mesma das imagens de origem. O texto
-   continua com o recuo do container, então só a imagem encosta nas bordas —
-   que é o que faz ela parecer maior do que a página.
+   O ganho de tamanho veio pela altura, que é o que sobra num telefone: o
+   comparador passa a 4/5 em vez de 4/3. A largura continua a do container,
+   igual à de todas as outras imagens da página.
    -------------------------------------------------------------------------- */
 @media (max-width: 64rem) {
-  .caso__figura {
-    margin-inline: calc(var(--space-container) * -1);
-    border-radius: 0;   /* encostada na borda, canto arredondado lê como erro */
-  }
-
   .caso__figura .ba__stage {
-    border-radius: 0;
+    aspect-ratio: 4 / 5;
   }
 }
 

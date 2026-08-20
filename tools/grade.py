@@ -199,6 +199,44 @@ def hex_para_oklab(hx):
     return linear_para_oklab(srgb_para_linear(rgb))[0, 0]
 
 
+def _degrau(x, borda0, borda1):
+    """Transição suave de 0 a 1 entre duas bordas (smoothstep)."""
+    t = np.clip((x - borda0) / (borda1 - borda0), 0.0, 1.0)
+    return t * t * (3.0 - 2.0 * t)
+
+
+def mascara_pele(lab):
+    """Peso contínuo de 0 a 1 para "isto é pele/lábio".
+
+    Era binária: (matiz entre 25° e 85°) e (croma > 0,02), 1 ou 0. Duas falhas
+    apareceram no primeiro par de fotos com rosto.
+
+    1. O LÁBIO ficava de fora. Medido em caso-alinhamento: bochecha com matiz
+       média de 40,5° (dentro), lábio inferior com 29,4° — colado no limite,
+       com 20% dos pixels abaixo dele. Esses 20% levavam o verde da marca
+       cheio enquanto a pele ao redor estava protegida, e o lábio saiu
+       esverdeado.
+
+    2. Todo limite rígido produz borda visível. Mesmo acertando a faixa, o
+       pixel a 24,9° recebia tratamento completamente diferente do vizinho a
+       25,1° — é assim que aparece mancha em vez de transição.
+
+    Agora a faixa desce até o vermelho do lábio e as bordas são suaves, então
+    não existe ponto onde o tratamento salta.
+    """
+    matiz = np.degrees(np.arctan2(lab[..., 2], lab[..., 1])) % 360
+    croma = np.hypot(lab[..., 1], lab[..., 2])
+
+    # Sobe de 0 a 1 entre 5° e 20° (entrando no vermelho de lábio), fica cheia
+    # até 70° (pele) e desce até 95° (já saindo para o amarelo-esverdeado).
+    peso_matiz = _degrau(matiz, 5.0, 20.0) * (1.0 - _degrau(matiz, 70.0, 95.0))
+
+    # Croma baixo demais não é pele nem lábio — é parede, dente, cabelo grisalho.
+    peso_croma = _degrau(croma, 0.010, 0.030)
+
+    return peso_matiz * peso_croma
+
+
 # ---------- o pipeline ----------------------------------------------------
 
 def graduar(img, leve=False):
@@ -214,9 +252,7 @@ def graduar(img, leve=False):
     # de rosto: a máscara pegava 87,3% dos pixels antes do balanço e só 36,9%
     # depois, com o croma da pele caindo de 0,069 para 0,021.
     lab0 = linear_para_oklab(lin)
-    matiz0 = np.degrees(np.arctan2(lab0[..., 2], lab0[..., 1])) % 360
-    croma0 = np.hypot(lab0[..., 1], lab0[..., 2])
-    eh_pele = ((matiz0 > 25) & (matiz0 < 85) & (croma0 > 0.02)).astype(np.float64)
+    eh_pele = mascara_pele(lab0)
     fator_pele = 1.0 - eh_pele * PROTECAO_PELE
 
     # 1. Balanço de branco por gray-world, em luz linear (a média só faz
@@ -357,9 +393,7 @@ def fracao_pele(caminho):
     im = Image.open(caminho).convert("RGB").resize((80, 80))
     arr = np.asarray(im, dtype=np.float64) / 255.0
     lab = linear_para_oklab(srgb_para_linear(arr))
-    matiz = np.degrees(np.arctan2(lab[..., 2], lab[..., 1])) % 360
-    croma = np.hypot(lab[..., 1], lab[..., 2])
-    return float(((matiz > 25) & (matiz < 85) & (croma > 0.02)).mean())
+    return float(mascara_pele(lab).mean())   # mesma máscara do pipeline
 
 
 def main():
