@@ -87,6 +87,29 @@
 }
 
 /* --------------------------------------------------------------------------
+   Telas estreitas — o comparador em sangria
+
+   Medido a 393px: dentro do container, o comparador ficava com 330px de
+   largura e 248px de altura. Comparar duas versões do mesmo sorriso a esse
+   tamanho é difícil — a diferença entre os casos está em milímetros de dente.
+
+   A sangria devolve a largura da janela (393px, +19% de lado, +41% de área)
+   sem recortar nada: a proporção 4/3 é a mesma das imagens de origem. O texto
+   continua com o recuo do container, então só a imagem encosta nas bordas —
+   que é o que faz ela parecer maior do que a página.
+   -------------------------------------------------------------------------- */
+@media (max-width: 64rem) {
+  .caso__figura {
+    margin-inline: calc(var(--space-container) * -1);
+    border-radius: 0;   /* encostada na borda, canto arredondado lê como erro */
+  }
+
+  .caso__figura .ba__stage {
+    border-radius: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
    Ações e nota
    -------------------------------------------------------------------------- */
 .resultados__acoes {

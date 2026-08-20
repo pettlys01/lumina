@@ -140,6 +140,19 @@ CORTE_GRAFICO = 0.48
 # parte que interessa e deixaria bancada sobrando embaixo.
 QUADRADO_ANCORA = 0.38
 
+# --------------------------------------------------------------------------
+# Teto de resolução na saída.
+#
+# As fotos de caso chegaram em 2400px e pesavam 5,6 MB no conjunto — mais que
+# o resto do site inteiro. O maior espaço em que qualquer uma delas aparece é
+# o comparador em tela larga, ~800px; 1600px cobre isso com folga em tela de
+# alta densidade (2x) e nada além disso é visto por ninguém.
+#
+# O original em raw/ continua no tamanho que veio: quem manda no arquivo
+# entregue é este número, e ele pode subir depois sem perda.
+# --------------------------------------------------------------------------
+LARGURA_MAX = 1600
+
 VERDE_MARCA = "#285C4D"
 
 
@@ -195,9 +208,36 @@ def graduar(img, leve=False):
     dessaturação e sem split toning. Ver GRAFICOS, acima."""
     lin = srgb_para_linear(img)
 
+    # Máscara de pele medida na imagem ORIGINAL, antes de qualquer correção.
+    # Tem que ser aqui: o balanço de branco abaixo já tira o calor da pele, e
+    # depois dele a detecção não acha mais o que procurava. Medido num close
+    # de rosto: a máscara pegava 87,3% dos pixels antes do balanço e só 36,9%
+    # depois, com o croma da pele caindo de 0,069 para 0,021.
+    lab0 = linear_para_oklab(lin)
+    matiz0 = np.degrees(np.arctan2(lab0[..., 2], lab0[..., 1])) % 360
+    croma0 = np.hypot(lab0[..., 1], lab0[..., 2])
+    eh_pele = ((matiz0 > 25) & (matiz0 < 85) & (croma0 > 0.02)).astype(np.float64)
+    fator_pele = 1.0 - eh_pele * PROTECAO_PELE
+
     # 1. Balanço de branco por gray-world, em luz linear (a média só faz
     #    sentido física aqui; feita em sRGB ela é enviesada pelo gama).
-    media = lin.reshape(-1, 3).mean(axis=0)
+    #
+    #    A média sai dos pixels SEM PELE. Gray-world parte da premissa de que a
+    #    cena inteira deveria dar cinza — o que é razoável para um corredor e
+    #    desastroso para um rosto, onde a cena É a pele quente. Medido, ele
+    #    aplicava R×0,648 e B×1,746 e devolvia um rosto cinza-esverdeado.
+    #    Medindo só o fundo, o balanço passa a corrigir a LUZ do ambiente, que
+    #    é o que ele deveria fazer, sem tratar a pessoa como desvio de cor.
+    peso_fundo = (1.0 - eh_pele)[..., None]
+    soma_fundo = peso_fundo.sum()
+    if soma_fundo > lin[..., 0].size * 0.08:   # há fundo suficiente para medir
+        media = (lin * peso_fundo).reshape(-1, 3).sum(axis=0) / soma_fundo
+    else:
+        # Quadro quase todo pele: não há referência neutra confiável, então o
+        # balanço recua em vez de inventar uma.
+        media = lin.reshape(-1, 3).mean(axis=0)
+        media = media + (media.mean() - media) * 0.7
+
     alvo = media.mean()
     ganho = np.where(media > 1e-6, alvo / media, 1.0)
     ganho = 1.0 + (ganho - 1.0) * FORCA_WB
@@ -223,9 +263,21 @@ def graduar(img, leve=False):
     suave = Ln * Ln * (3.0 - 2.0 * Ln)          # smoothstep = S natural
     L = Ln * (1.0 - FORCA_CURVA_S) + suave * FORCA_CURVA_S
 
-    # 3. Dessaturação.
-    a = lab[..., 1] * ESCALA_CROMA
-    b = lab[..., 2] * ESCALA_CROMA
+    # A máscara de pele (eh_pele / fator_pele) vem medida lá de cima, na imagem
+    # original. Ela pesa QUATRO etapas: balanço de branco, dessaturação, split
+    # toning e trim. Proteger só o split — como era antes — não bastava: as
+    # outras três continuavam puxando a pele para o verde da marca, e as fotos
+    # de rosto saíam cinza-esverdeadas.
+    #
+    # É o que uma sala de cor de verdade faz: grada a cena e protege o tom de
+    # pele, porque o olho perdoa uma parede fora de cor e não perdoa um rosto
+    # doente.
+
+    # 3. Dessaturação, atenuada onde há pele: a cena inteira perde croma, o
+    #    rosto conserva quase todo o dele.
+    escala = ESCALA_CROMA + (1.0 - ESCALA_CROMA) * eh_pele * PROTECAO_PELE
+    a = lab[..., 1] * escala
+    b = lab[..., 2] * escala
 
     # 4. Split toning. Peso quadrático: concentra o verde nas sombras em vez
     #    de espalhar por toda a imagem.
@@ -236,13 +288,7 @@ def graduar(img, leve=False):
     peso_sombra = (1.0 - np.clip(L, 0.0, 1.0)) ** 2
     peso_luz = np.clip(L, 0.0, 1.0) ** 2
 
-    # 5. Proteção de pele: matiz aproximada de pele em OKLab fica em torno de
-    #    40°-70°, com croma presente. Onde isso acontece, o split recua.
-    matiz = np.degrees(np.arctan2(b, a)) % 360
-    croma = np.hypot(a, b)
-    eh_pele = ((matiz > 25) & (matiz < 85) & (croma > 0.02)).astype(np.float64)
-    fator_pele = 1.0 - eh_pele * PROTECAO_PELE
-
+    # 5. O split toning recua sobre pele, usando a mesma máscara medida acima.
     a = a + dir_verde[0] * FORCA_SPLIT * peso_sombra * fator_pele
     b = b + dir_verde[1] * FORCA_SPLIT * peso_sombra * fator_pele
 
@@ -269,10 +315,26 @@ def graduar(img, leve=False):
     # A 0.85 e nao 1.0 de proposito: forcar a media exata apagaria diferencas
     # legitimas de conteudo (uma foto cheia de planta TEM mais verde que um
     # teto branco, e deve ter).
+    #
+    # O erro medido a partir dos pixels SEM pele. Num retrato de rosto inteiro
+    # a pele domina o quadro, então incluí-la na média faria o trim tentar
+    # "corrigir" o tom de pele para verde — e o resto da cena junto. Medindo só
+    # o fundo, o alvo passa a ser o ambiente, que é o que precisa casar com as
+    # outras fotos do site.
     alvo_a = dir_verde[0] * VIES_COMUM
     alvo_b = dir_verde[1] * VIES_COMUM
-    a = a + (alvo_a - a.mean()) * FORCA_TRIM
-    b = b + (alvo_b - b.mean()) * FORCA_TRIM
+
+    peso_fundo = 1.0 - eh_pele
+    total_fundo = peso_fundo.sum()
+    if total_fundo > a.size * 0.05:      # há fundo suficiente para medir
+        media_a = (a * peso_fundo).sum() / total_fundo
+        media_b = (b * peso_fundo).sum() / total_fundo
+    else:                                 # quadro quase todo pele: usa tudo
+        media_a, media_b = a.mean(), b.mean()
+
+    # E o deslocamento também recua sobre a pele.
+    a = a + (alvo_a - media_a) * FORCA_TRIM * fator_pele
+    b = b + (alvo_b - media_b) * FORCA_TRIM * fator_pele
 
     saida = np.stack([L, a, b], axis=-1)
     return linear_para_srgb(oklab_para_linear(saida))
@@ -288,6 +350,16 @@ def medir(caminho):
     arr = np.asarray(im, dtype=np.float64) / 255.0
     lab = linear_para_oklab(srgb_para_linear(arr))
     return lab[..., 0].mean() * 100, lab[..., 1].mean(), lab[..., 2].mean()
+
+
+def fracao_pele(caminho):
+    """Quanto do quadro é pele. Separa retrato de fotografia de ambiente."""
+    im = Image.open(caminho).convert("RGB").resize((80, 80))
+    arr = np.asarray(im, dtype=np.float64) / 255.0
+    lab = linear_para_oklab(srgb_para_linear(arr))
+    matiz = np.degrees(np.arctan2(lab[..., 2], lab[..., 1])) % 360
+    croma = np.hypot(lab[..., 1], lab[..., 2])
+    return float(((matiz > 25) & (matiz < 85) & (croma > 0.02)).mean())
 
 
 def main():
@@ -321,6 +393,12 @@ def main():
                 lado = im.width
                 topo = int((im.height - lado) * QUADRADO_ANCORA)
                 im = im.crop((0, topo, lado, topo + lado))
+
+            if max(im.size) > LARGURA_MAX:
+                escala = LARGURA_MAX / max(im.size)
+                novo = (round(im.width * escala), round(im.height * escala))
+                im = im.resize(novo, Image.LANCZOS)
+
             arr = np.asarray(im, dtype=np.float64) / 255.0
             out = np.clip(graduar(arr, leve=eh_gr), 0.0, 1.0)
             saida = Image.fromarray((out * 255.0 + 0.5).astype(np.uint8))
@@ -331,21 +409,66 @@ def main():
                            progressive=True, subsampling=1)
 
         Ld, ad, bd = medir(destino) if destino.exists() else (La, aa, ba)
-        antes.append((aa, ba))
-        depois.append((ad, bd))
+        # Retrato ou ambiente? A pele legitimamente vive noutro ponto do eixo
+        # de cor, e forçá-la ao mesmo ponto das paredes foi o que produziu os
+        # rostos cinzas. Os dois grupos são medidos separadamente.
+        retrato = fracao_pele(destino if destino.exists() else origem) > 0.35
+        antes.append((aa, ba, retrato))
+        depois.append((ad, bd, retrato))
         print(f"{origem.name:22}{La:8.1f}{aa:9.3f}{ba:9.3f}"
-              f"{Ld:8.1f}{ad:9.3f}{bd:9.3f}")
+              f"{Ld:8.1f}{ad:9.3f}{bd:9.3f}  {'retrato' if retrato else ''}")
 
     def dispersao(pontos):
+        if len(pontos) < 2:
+            return 0.0
         return max(np.hypot(p[0] - q[0], p[1] - q[1])
                    for p in pontos for q in pontos)
 
-    da, dd = dispersao(antes), dispersao(depois)
+    def so(pontos, eh_retrato):
+        return [(a, b) for a, b, r in pontos if r == eh_retrato]
+
     print("-" * 76)
-    print(f"maior diferenca de dominante entre duas imagens (OKLab a/b):")
-    print(f"   antes : {da:.4f}")
-    print(f"   depois: {dd:.4f}   ({'OK' if dd < 0.020 else 'AINDA ALTA'})")
-    print(f"   reducao: {(1 - dd / da) * 100:.0f}%")
+    print("maior diferenca de dominante entre duas imagens (OKLab a/b)")
+    print("medida por grupo: pele e ambiente nao devem cair no mesmo ponto.\n")
+
+    for rotulo, flag in (("ambiente", False), ("retratos", True)):
+        da = dispersao(so(antes, flag))
+        dd = dispersao(so(depois, flag))
+        n = len(so(depois, flag))
+        if n < 2:
+            print(f"  {rotulo:9} ({n} imagem) — nada a comparar")
+            continue
+        veredito = "OK" if dd < 0.020 else "AINDA ALTA"
+        reducao = f"  reducao {(1 - dd / da) * 100:3.0f}%" if da > 0 else ""
+        print(f"  {rotulo:9} ({n:2} imagens)  antes {da:.4f}  ->  "
+              f"depois {dd:.4f}  ({veredito}){reducao}")
+
+    # ---- O par antes/depois consigo mesmo -------------------------------
+    # Esta é a verificação mais dura das três, e a única cujo defeito o
+    # usuário veria na hora: as duas metades de um comparador ficam uma sobre
+    # a outra, e qualquer diferença de dominante entre elas aparece como um
+    # salto de cor no instante em que o divisor passa. Entre imagens de seções
+    # diferentes uma folga passa despercebida; aqui, não.
+    print()
+    print("cada par antes/depois consigo mesmo (o divisor os sobrepõe):")
+    piores = 0
+    for origem in arquivos:
+        if not origem.name.endswith("-antes.jpg"):
+            continue
+        par = origem.with_name(origem.name.replace("-antes.jpg", "-depois.jpg"))
+        da_, db_ = DESTINO / origem.name, DESTINO / par.name
+        if not (da_.exists() and db_.exists()):
+            continue
+        _, a1, b1 = medir(da_)
+        _, a2, b2 = medir(db_)
+        d = np.hypot(a1 - a2, b1 - b2)
+        ok = d < 0.004
+        if not ok:
+            piores += 1
+        rotulo = origem.name.replace("caso-", "").replace("-antes.jpg", "")
+        print(f"  {rotulo:14} {d:.4f}  {'ok' if ok else 'SALTO DE COR VISIVEL'}")
+    if piores:
+        print(f"\n  {piores} par(es) com diferenca perceptivel entre as metades.")
     return 0
 
 

@@ -1,2 +1,6 @@
 # Saídas de build e capturas de revisão — regeneráveis a partir do fonte.
 build/
+
+# Cache do Python, gerado quando um tool e importado em vez de executado.
+__pycache__/
+*.pyc
