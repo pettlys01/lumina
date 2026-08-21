@@ -61,17 +61,23 @@
   inline-size: 86vw;
 }
 
+.espaco__item picture {
+  display: block;
+  block-size: 100%;
+}
+
 .espaco__item img {
   display: block;
   inline-size: 100%;
   block-size: 100%;
   object-fit: cover;
 
-  /* Retrato no telefone. Empilhada, a foto tinha 330x248; aqui passa a
-     ~338x422 — quase o dobro de área, usando a tela vertical que o aparelho
-     tem de sobra. Fotografia de ambiente precisa de tamanho para transmitir
-     a sensação do lugar. */
-  aspect-ratio: 4 / 5;
+  /* Acompanha a proporção das imagens de origem (4:3). Uma versão anterior
+     usava 4/5 para ganhar altura, mas isso obrigava o object-fit a recortar
+     as laterais de toda foto — e recortar fotografia de ambiente joga fora
+     justamente a amplitude que ela existe para mostrar. O tamanho vem da
+     largura (86vw), não de esticar a moldura. */
+  aspect-ratio: 4 / 3;
 
   transition: transform var(--duration-slow) var(--ease-out);
 }
@@ -122,9 +128,8 @@
     grid-column: 1 / -1;
   }
 
-  /* Os itens de largura inteira ficam bem mais baixos em proporção. Com 4/3
-     eles tomariam a altura de uma tela sozinhos e o conjunto perderia o
-     caráter de galeria. */
+  /* A recepção ocupa a linha inteira e usa a fonte panorâmica — proporção
+     casada com a imagem que o <picture> serve nesta largura. */
   .espaco__item--largo img { aspect-ratio: 21 / 9; }
 }
 

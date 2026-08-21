@@ -95,15 +95,14 @@
    segunda seção fazendo isso não lê como ênfase, lê como inconsistência — e
    o Hero perde o que o torna especial.
 
-   O ganho de tamanho veio pela altura, que é o que sobra num telefone: o
-   comparador passa a 4/5 em vez de 4/3. A largura continua a do container,
-   igual à de todas as outras imagens da página.
+   Houve também uma versão em 4/5, para ganhar altura. Foi pior: as fotos de
+   caso são 4/3, e forçá-las a uma moldura mais alta fazia o object-fit
+   recortar as laterais — o rosto chegava perto demais e a imagem parecia
+   ampliada, com muita altura e pouca largura. Num antes/depois isso atrapalha
+   o que importa, que é ver o sorriso inteiro nas duas versões.
+
+   O palco acompanha a proporção da fonte, e nada é recortado.
    -------------------------------------------------------------------------- */
-@media (max-width: 64rem) {
-  .caso__figura .ba__stage {
-    aspect-ratio: 4 / 5;
-  }
-}
 
 /* --------------------------------------------------------------------------
    Ações e nota

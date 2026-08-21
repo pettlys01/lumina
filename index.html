@@ -620,48 +620,57 @@
       </div>
 
       <!-- ==================================================================
-           Galeria do espaço.
+           Cinco ambientes, não seis. Cinco fecham a grade de duas colunas sem
+           sobra: a recepção ocupa a linha inteira e os quatro restantes formam
+           2x2 embaixo.
 
-           Grade estática, sem carrossel nem lightbox. A Home já tem carrossel
-           nas Especialidades e comparador arrastável em duas seções; um
-           terceiro padrão interativo aqui faria a página parecer uma vitrine de
-           componentes. Fotografia de ambiente também não pede interação — ela
-           funciona quando é vista de uma vez, em conjunto.
+           A recepção tem DUAS versões da mesma cena, e é o <picture> que
+           escolhe. Em tela larga ela é panorâmica (21:9), que é o que dá a
+           sensação de amplitude; num telefone essa proporção viraria uma fita
+           de ~90px de altura, então entra a versão 4:3, enquadrada de novo para
+           a tela vertical em vez de recortada por CSS.
 
-           <ul> porque são seis itens irmãos de mesmo peso, e o leitor de tela
-           anuncia a contagem antes de percorrer.
+           Trocar a FONTE em vez de recortar a mesma imagem importa: recorte por
+           object-fit descarta as bordas que o fotógrafo escolheu manter; aqui
+           cada proporção tem seu próprio enquadramento.
            ================================================================== -->
       <ul class="espaco__grade" data-reveal-group>
+
         <li class="espaco__item espaco__item--largo">
-          <img src="assets/img/espaco-1.jpg"
-               alt="Recepção da clínica, com assentos baixos e luz natural"
-               width="1900" height="815" loading="lazy" decoding="async">
+          <picture>
+            <source media="(min-width: 48rem)"
+                    srcset="assets/img/espaco-1.jpg"
+                    width="1600" height="679">
+            <img src="assets/img/espaco-1-retrato.jpg"
+                 alt="Recepção da clínica, com assentos baixos, balcão de atendimento e luz natural"
+                 width="1600" height="1195" loading="lazy" decoding="async">
+          </picture>
         </li>
+
         <li class="espaco__item">
           <img src="assets/img/espaco-2.jpg"
-               alt="Corredor de acesso aos consultórios"
-               width="1400" height="1050" loading="lazy" decoding="async">
+               alt="Corredor de acesso aos consultórios, com parede verde e vasos de planta"
+               width="1600" height="1195" loading="lazy" decoding="async">
         </li>
+
         <li class="espaco__item">
           <img src="assets/img/espaco-3.jpg"
-               alt="Sala de atendimento, com cadeira e janela ao fundo"
-               width="1400" height="1050" loading="lazy" decoding="async">
+               alt="Sala de atendimento, com cadeira odontológica, equipo e janela ao fundo"
+               width="1600" height="1195" loading="lazy" decoding="async">
         </li>
+
         <li class="espaco__item">
           <img src="assets/img/espaco-4.jpg"
-               alt="Sala de planejamento digital, com monitor de tomografia"
-               width="1400" height="1050" loading="lazy" decoding="async">
+               alt="Sala de planejamento digital, com monitor exibindo o plano do sorriso"
+               width="1600" height="1195" loading="lazy" decoding="async">
         </li>
+
         <li class="espaco__item">
           <img src="assets/img/espaco-5.jpg"
-               alt="Central de esterilização, com bancada e equipamentos"
-               width="1400" height="1050" loading="lazy" decoding="async">
+               alt="Central de esterilização, com bancada, autoclave e instrumentos organizados"
+               width="1600" height="1195" loading="lazy" decoding="async">
         </li>
-        <li class="espaco__item espaco__item--largo">
-          <img src="assets/img/espaco-6.jpg"
-               alt="Vista ampla do ambiente da clínica"
-               width="1900" height="815" loading="lazy" decoding="async">
-        </li>
+
       </ul>
 
     </div>
