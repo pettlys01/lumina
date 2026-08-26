@@ -227,5 +227,17 @@
   .navbar--open {
     background-color: var(--surface-page);
     border-block-end-color: var(--border-subtle);
+
+    /* backdrop-filter (via .navbar--scrolled) cria um novo bloco de
+       contenção para descendentes position:fixed — mesmo efeito de
+       transform/perspective/filter. O painel do menu (.navbar__nav) é
+       fixed e descendente da própria .navbar: com o blur ativo, ele passa
+       a se posicionar relativo à barra (~77px de altura) em vez do
+       viewport inteiro, encolhendo pra caber dentro dela em vez de cobrir
+       a tela — e o conteúdo real da página, rolada atrás, aparece por
+       baixo. Com o menu aberto o fundo já é sólido (regra acima), então
+       o blur não faz falta mesmo — desligá-lo aqui remove o bloco de
+       contenção e devolve o viewport inteiro como referência de tamanho. */
+    backdrop-filter: none;
   }
 }

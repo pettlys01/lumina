@@ -45,6 +45,16 @@
   var FOCAVEIS = 'a[href], button:not(:disabled), input, select, textarea, [tabindex]:not([tabindex="-1"])';
   var aberto = false;
 
+  // Referência única, compartilhada entre abrir() e fechar(), para a
+  // animação em andamento no painel. Sem isso, um toque rápido demais no
+  // botão (abrir→fechar→abrir antes dos 220ms terminarem) deixa duas
+  // instâncias de menu.animate() competindo pelo mesmo elemento ao mesmo
+  // tempo — cada uma com seu próprio finished/setTimeout mexendo em opacity
+  // e na classList do navbar de forma fora de ordem. O sintoma real (visto
+  // em dispositivo): o painel "abre" mas sem fundo aplicado direito,
+  // deixando o conteúdo da página por trás aparecer através dele.
+  var animAtual = null;
+
   // Abrir/fechar o painel via WAAPI, não via transição de display em CSS.
   // Testado nesta sessão (Fase 6): a combinação interpolate-size +
   // @starting-style + transition-behavior:allow-discrete para animar um
@@ -82,6 +92,10 @@
     document.body.style.overflow = "hidden";
 
     if (podeAnimar) {
+      // Cancela a animação de fechamento anterior, se ainda estiver em
+      // andamento — ver comentário de animAtual, acima.
+      if (animAtual) animAtual.cancel();
+
       var animAbertura = menu.animate(
         [
           { opacity: 0, transform: "translateY(-8px)" },
@@ -89,6 +103,8 @@
         ],
         { duration: DURACAO_PAINEL, easing: EASING_PAINEL }
       );
+      animAtual = animAbertura;
+
       // Sem isto, se o timeline da animação nunca avançar (mesma condição
       // documentada em components/FAQ/faq.js), o painel ficaria com
       // opacity:0 congelada para sempre — visível no layout (display:flex),
@@ -99,6 +115,7 @@
       var cancelarAbertura = function () {
         if (jaCancelou) return;
         jaCancelou = true;
+        if (animAtual === animAbertura) animAtual = null;
         animAbertura.cancel();
       };
       animAbertura.finished.then(cancelarAbertura).catch(cancelarAbertura);
@@ -144,11 +161,16 @@
       // ver components/FAQ/faq.js) fique competindo com a próxima animação
       // de abrir, na próxima vez que o painel abrir.
       if (anim) anim.cancel();
+      if (animAtual === anim) animAtual = null;
       navbar.classList.remove("navbar--open");
       document.body.style.overflow = "";
     }
 
     if (podeAnimar) {
+      // Cancela a animação de abertura anterior, se ainda estiver em
+      // andamento — ver comentário de animAtual, acima.
+      if (animAtual) animAtual.cancel();
+
       anim = menu.animate(
         [
           { opacity: 1, transform: "translateY(0)" },
@@ -156,6 +178,7 @@
         ],
         { duration: DURACAO_PAINEL, easing: EASING_PAINEL }
       );
+      animAtual = anim;
       anim.finished.then(finalizarFechamento).catch(finalizarFechamento);
       // Rede de segurança: mesmo raciocínio do FAQ (components/FAQ/faq.js) —
       // "finished" pode nunca resolver em certas condições reais (aba em
